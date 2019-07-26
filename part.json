@@ -1,0 +1,12 @@
+{
+	"name": "angular",
+	"dependencies": {
+		"node-sass-middleware": "*",
+		"svg-fontify": "*",
+		"js-minify": "*"
+	},
+	"router": [{
+		"name": "Base",
+		"src": "router.js"
+	}]
+}
