@@ -1,8 +1,7 @@
 {
 	"name": "angular",
 	"dependencies": {
-		"node-sass-middleware": "*",
-		"svg-fontify": "*",
+		"node-sass": "*",
 		"js-minify": "*"
 	},
 	"router": [{
