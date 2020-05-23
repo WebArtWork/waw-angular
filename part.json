@@ -1,11 +1,10 @@
 {
-	"name": "angular",
-	"dependencies": {
-		"node-sass": "*",
-		"js-minify": "*"
+	"name": "Angular",
+	"priority": 900,
+	"runner": "runner.js",
+	"router": "index.js",
+	"git": {
+		"repo": "https://github.com/WebArtWork/angular.git"
 	},
-	"router": [{
-		"name": "Base",
-		"src": "router.js"
-	}]
+	"dependencies": {}
 }
