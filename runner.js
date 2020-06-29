@@ -1,3 +1,21 @@
+const new_page = function(params){
+	
+	console.log(params, process.cwd());
+}
+module.exports.page = new_page;
+
+
+
+
+
+
+
+
+
+
+
+
+
 const new_service = function(params){
 
 }
@@ -7,8 +25,3 @@ const new_pipe = function(params){
 
 }
 module.exports.pipe = new_pipe;
-
-const new_page = function(params){
-	
-}
-module.exports.page = new_page;
