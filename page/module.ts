@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '@common';
+import { CommonModule } from '@common';
 import { CNAMEComponent } from './NAME.component';
 import { Routes, RouterModule } from '@angular/router';
 
@@ -10,8 +10,8 @@ const routes: Routes = [{
 
 @NgModule({
 	imports: [
-		RouterModule.forChild(routes)
-		SharedModule
+		RouterModule.forChild(routes),
+		CommonModule
 	],
 	declarations: [
 		CNAMEComponent

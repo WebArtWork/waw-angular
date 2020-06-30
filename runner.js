@@ -40,8 +40,7 @@ const new_page = function(params){
 		console.log('Page already exists');
 		process.exit(0);
 	}
-	exe('ng g c '+path, function(){
-		fs.unlinkSync(base+'.component.spec.ts');
+	exe('ng g m '+path, function(){
 		let html = fs.readFileSync(__dirname+'/page/component.html', 'utf8');
 		html = html.split('CNAME').join(Name);
 		html = html.split('NAME').join(name);
@@ -54,6 +53,16 @@ const new_page = function(params){
 		ts = ts.split('CNAME').join(Name);
 		ts = ts.split('NAME').join(name);
 		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
+		let mod = fs.readFileSync(__dirname+'/page/module.ts', 'utf8');
+		mod = mod.split('CNAME').join(Name);
+		mod = mod.split('NAME').join(name);
+		fs.writeFileSync(base+'.module.ts', mod, 'utf8');
+		let config = fs.readFileSync(process.cwd() + '/src/app/app.module.ts', 'utf8');
+		let search = '/* '+params.argv[0]+' */';
+		if(config && config.indexOf(search)>-1){
+			config = config.replace(search, search+"{\n\t\tpath: '"+name+"',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '"+Name+"'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./"+path+'/'+name+".module').then(m => m."+Name+"Module)\n\t}, ");
+			fs.writeFileSync(process.cwd() + '/src/app/app.module.ts', config, 'utf8');
+		}
 		console.log('Page has been created');
 		process.exit(1);
 	});
@@ -92,7 +101,7 @@ const new_filter = function(params){
 		console.log('Filter already exists');
 		process.exit(0);
 	}
-	exe('ng g p '+path, function(){
+	exe('ng g p '+path+' --module=common/common.module', function(){
 		fs.unlinkSync(base+'.pipe.spec.ts');
 		let ts = fs.readFileSync(__dirname+'/filter/filter.ts', 'utf8');
 		ts = ts.split('CNAME').join(Name);
@@ -106,6 +115,12 @@ const new_filter = function(params){
 				index_exports += (index_exports.length&&"\n"||"")+code;
 				fs.writeFileSync(index, index_exports, 'utf8');
 			}
+		}
+		let config = fs.readFileSync(process.cwd() + '/src/app/common/common.module.ts', 'utf8');
+		let search = '/* filters */';
+		if(config && config.indexOf(search)>-1){
+			config = config.replace(search, search+'\n\t\t'+Name+'Pipe,');
+			fs.writeFileSync(process.cwd() + '/src/app/common/common.module.ts', config, 'utf8');
 		}
 		console.log('Filter has been created');
 		process.exit(1);
@@ -137,10 +152,12 @@ const new_component = function(params){
 		console.log('Component has been created');
 		process.exit(1);
 	});
-
 }
 module.exports.component = new_component;
 module.exports.c = new_component;
+
+
+
 
 const new_alert = function(params){
 	console.log('NEW ALERT');
