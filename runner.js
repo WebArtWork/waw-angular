@@ -96,6 +96,10 @@ module.exports.service = new_service;
 module.exports.s = new_service;
 
 const new_filter = function(params){
+	if (!fs.existsSync(process.cwd() + '/src/app/filters')) {
+		fs.mkdirSync(process.cwd() + '/src/app/filters');
+		fs.writeFileSync(process.cwd() + '/src/app/filters/index.ts', '', 'utf8');
+	}
 	const {path, name, Name, base} = make_path(params.argv, 'filters');
 	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
 		console.log('Filter already exists');
