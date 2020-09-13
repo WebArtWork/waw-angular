@@ -13,12 +13,16 @@ export class CNAMEService {
 		});
 	}
 	create(NAME) {
+		if(NAME) reutrn this.save(NAME);
 		this.mongo.create('NAME', NAME); 
 	}
 	update(NAME) {
 		this.mongo.afterWhile(NAME, ()=> {
-			this.mongo.update('NAME', NAME);
+			this.save(NAME);
 		});
+	}
+	save(NAME){
+		this.mongo.update('NAME', NAME);
 	}
 	delete(NAME) {
 		this.mongo.delete('NAME', NAME);

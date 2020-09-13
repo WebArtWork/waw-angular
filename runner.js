@@ -34,6 +34,14 @@ const make_path = function(argv, folder, double_name){
 	}
 	return {path, name, Name, base};
 }
+const add_code = function(opts){
+	if(!fs.existsSync(opts.file)) return;
+	let code = fs.readFileSync(opts.file, 'utf8');
+	if(code && code.indexOf(opts.search)>-1){
+		code = code.replace(opts.search, opts.replace);
+		fs.writeFileSync(opts.file, code, 'utf8');
+	}
+}
 const new_page = function(params){
 	const {path, name, Name, base} = make_path(params.argv, 'pages', true);
 	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
@@ -57,12 +65,11 @@ const new_page = function(params){
 		mod = mod.split('CNAME').join(Name);
 		mod = mod.split('NAME').join(name);
 		fs.writeFileSync(base+'.module.ts', mod, 'utf8');
-		let config = fs.readFileSync(process.cwd() + '/src/app/app.module.ts', 'utf8');
-		let search = '/* '+params.argv[0]+' */';
-		if(config && config.indexOf(search)>-1){
-			config = config.replace(search, search+"{\n\t\tpath: '"+name+"',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '"+Name+"'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./"+path+'/'+name+".module').then(m => m."+Name+"Module)\n\t}, ");
-			fs.writeFileSync(process.cwd() + '/src/app/app.module.ts', config, 'utf8');
-		}
+		add_code({
+			file: process.cwd() + '/src/app/app.module.ts',
+			search: '/* '+params.argv[0]+' */',
+			replace: '/* '+params.argv[0]+" */{\n\t\tpath: '"+name+"',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '"+Name+"'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./"+path+'/'+name+".module').then(m => m."+Name+"Module)\n\t}, "
+		});
 		console.log('Page has been created');
 		process.exit(1);
 	});
@@ -160,29 +167,132 @@ const new_component = function(params){
 module.exports.component = new_component;
 module.exports.c = new_component;
 
-
-
-
 const new_alert = function(params){
-	console.log('NEW ALERT');
+	const {path, name, Name, base} = make_path(params.argv, 'alerts', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
+		console.log('Alert already exists');
+		process.exit(0);
+	}
+	exe('ng g c '+path, function(){
+		fs.unlinkSync(base+'.component.spec.ts');
+		let html = fs.readFileSync(__dirname+'/alert/component.html', 'utf8');
+		html = html.split('CNAME').join(Name);
+		html = html.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.html', html, 'utf8');
+		let scss = fs.readFileSync(__dirname+'/alert/component.scss', 'utf8');
+		scss = scss.split('CNAME').join(Name);
+		scss = scss.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
+		let ts = fs.readFileSync(__dirname+'/alert/component.ts', 'utf8');
+		ts = ts.split('CNAME').join(Name);
+		ts = ts.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
+		add_code({
+			file: process.cwd() + '/src/app/app.module.ts',
+			search: '/* alerts */',
+			replace: "/* alerts */\n\t\t\t" + name + ": " + Name + "Component,"
+		});
+		console.log('Alert has been created');
+		process.exit(1);
+	});
 }
 module.exports.alert = new_alert;
 module.exports.a = new_alert;
 
-const new_modal = function(params){
 
+const new_modal = function(params){
+	const {path, name, Name, base} = make_path(params.argv, 'modals', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
+		console.log('Modal already exists');
+		process.exit(0);
+	}
+	exe('ng g c '+path, function(){
+		fs.unlinkSync(base+'.component.spec.ts');
+		let html = fs.readFileSync(__dirname+'/modal/component.html', 'utf8');
+		html = html.split('CNAME').join(Name);
+		html = html.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.html', html, 'utf8');
+		let scss = fs.readFileSync(__dirname+'/modal/component.scss', 'utf8');
+		scss = scss.split('CNAME').join(Name);
+		scss = scss.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
+		let ts = fs.readFileSync(__dirname+'/modal/component.ts', 'utf8');
+		ts = ts.split('CNAME').join(Name);
+		ts = ts.split('NAME').join(name);
+		add_code({
+			file: process.cwd() + '/src/app/app.module.ts',
+			search: '/* modals */',
+			replace: "/* modals */\n\t\t\t" + name + ": " + Name + "Component,"
+		});
+		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
+		console.log('Modal has been created');
+		process.exit(1);
+	});
 }
 module.exports.modal = new_modal;
 module.exports.m = new_modal;
 
-const new_loader = function(params){
 
+const new_loader = function(params){
+	const {path, name, Name, base} = make_path(params.argv, 'loaders', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
+		console.log('Loader already exists');
+		process.exit(0);
+	}
+	exe('ng g c '+path, function(){
+		fs.unlinkSync(base+'.component.spec.ts');
+		let html = fs.readFileSync(__dirname+'/loader/component.html', 'utf8');
+		html = html.split('CNAME').join(Name);
+		html = html.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.html', html, 'utf8');
+		let scss = fs.readFileSync(__dirname+'/loader/component.scss', 'utf8');
+		scss = scss.split('CNAME').join(Name);
+		scss = scss.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
+		let ts = fs.readFileSync(__dirname+'/loader/component.ts', 'utf8');
+		ts = ts.split('CNAME').join(Name);
+		ts = ts.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
+		add_code({
+			file: process.cwd() + '/src/app/app.module.ts',
+			search: '/* loaders */',
+			replace: "/* loaders */\n\t\t\t" + name + ": " + Name + "Component,"
+		});
+		console.log('Loader has been created');
+		process.exit(1);
+	});
 }
 module.exports.loader = new_loader;
 module.exports.l = new_loader;
 
-const new_popup = function(params){
 
+const new_popup = function(params){
+	const {path, name, Name, base} = make_path(params.argv, 'popups', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
+		console.log('Popup already exists');
+		process.exit(0);
+	}
+	exe('ng g c '+path, function(){
+		fs.unlinkSync(base+'.component.spec.ts');
+		let html = fs.readFileSync(__dirname+'/popup/component.html', 'utf8');
+		html = html.split('CNAME').join(Name);
+		html = html.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.html', html, 'utf8');
+		let scss = fs.readFileSync(__dirname+'/popup/component.scss', 'utf8');
+		scss = scss.split('CNAME').join(Name);
+		scss = scss.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
+		let ts = fs.readFileSync(__dirname+'/popup/component.ts', 'utf8');
+		ts = ts.split('CNAME').join(Name);
+		ts = ts.split('NAME').join(name);
+		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
+		add_code({
+			file: process.cwd() + '/src/app/app.module.ts',
+			search: '/* popups */',
+			replace: "/* popups */\n\t\t\t" + name + ": " + Name + "Component,"
+		});
+		console.log('Popup has been created');
+		process.exit(1);
+	});
 }
 module.exports.popup = new_popup;
-module.exports.h = new_popup;
