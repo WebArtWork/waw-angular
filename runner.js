@@ -1,298 +1,155 @@
 const { exec } = require('child_process');
 const fs = require('fs');
-const exe = function(command, cb=()=>{}){
-	if(!command) return cb();
-	exec(command, (err, stdout, stderr) => {
-		cb({err, stdout, stderr});
-	});
-}
-const make_path = function(argv, folder, double_name){
-	if(!argv.length){
-		console.log('Provide Name');
-		process.exit(0);
-	}
-	let path_argv = argv.slice();
-	let path = path_argv[0];
-	if(path_argv[0].indexOf('/')==-1){
-		path = folder;
-		while(path_argv.length){
-			path += '/' + path_argv.shift();
-		}
-	}
-	path = path.toLowerCase();
-	let name_argv = argv.slice();
-	let name = name_argv[name_argv.length-1];
-	if(name.indexOf('/')>-1){
-		name = name.split('/');
-		name = name[name.length-1];
-	}
-	name = name.toLowerCase();
-	let Name = name.slice(0, 1).toUpperCase() + name.slice(1);
-	let base = process.cwd() + '/src/app/'+path;
-	if(double_name){
-		base += '/'+name;
-	}
-	return {path, name, Name, base};
-}
-const add_code = function(opts){
-	if(!fs.existsSync(opts.file)) return;
-	let code = fs.readFileSync(opts.file, 'utf8');
-	if(code && code.indexOf(opts.search)>-1){
-		code = code.replace(opts.search, opts.replace);
-		fs.writeFileSync(opts.file, code, 'utf8');
-	}
-}
-const new_page = function(params){
-	const {path, name, Name, base} = make_path(params.argv, 'pages', true);
-	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
-		console.log('Page already exists');
-		process.exit(0);
-	}
-	exe('ng g m '+path, function(){
-		let html = fs.readFileSync(__dirname+'/page/component.html', 'utf8');
-		html = html.split('CNAME').join(Name);
-		html = html.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.html', html, 'utf8');
-		let scss = fs.readFileSync(__dirname+'/page/component.scss', 'utf8');
-		scss = scss.split('CNAME').join(Name);
-		scss = scss.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
-		let ts = fs.readFileSync(__dirname+'/page/component.ts', 'utf8');
-		ts = ts.split('CNAME').join(Name);
-		ts = ts.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
-		let mod = fs.readFileSync(__dirname+'/page/module.ts', 'utf8');
-		mod = mod.split('CNAME').join(Name);
-		mod = mod.split('NAME').join(name);
-		fs.writeFileSync(base+'.module.ts', mod, 'utf8');
-		add_code({
-			file: process.cwd() + '/src/app/app.module.ts',
-			search: '/* '+params.argv[0]+' */',
-			replace: '/* '+params.argv[0]+" */{\n\t\tpath: '"+name+"',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '"+Name+"'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./"+path+'/'+name+".module').then(m => m."+Name+"Module)\n\t}, "
+const waw = {
+	fs: fs,
+	exe: function(command, cb=()=>{}){
+		if(!command) return cb();
+		exec(command, (err, stdout, stderr) => {
+			cb({err, stdout, stderr});
 		});
-		console.log('Page has been created');
-		process.exit(1);
-	});
-}
-module.exports.page = new_page;
-module.exports.p = new_page;
-
-const new_service = function(params){
-	const {name, Name, base, folder} = make_path(params.argv, 'services');
-	if (fs.existsSync(base+'.service.ts')) {
-		console.log('Service already exists');
-		process.exit(0);
-	}
-	let ts = fs.readFileSync(__dirname+'/service/service.ts', 'utf8');
-	ts = ts.split('CNAME').join(Name);
-	ts = ts.split('NAME').join(name);
-	fs.writeFileSync(base+'.service.ts', ts, 'utf8');
-	let index = process.cwd() + '/src/app/services/index.ts';
-	if (fs.existsSync(index)) {
-		let index_exports = fs.readFileSync(index, 'utf8') || '';
-		let code = "export { "+Name+"Service } from './"+name+".service';";
-		if(index_exports.indexOf(code)==-1){
-			index_exports += (index_exports.length&&"\n"||"")+code;
-			fs.writeFileSync(index, index_exports, 'utf8');
+	},
+	make_path: function(argv, folder, double_name){
+		if(!argv.length){
+			console.log('Provide Name');
+			process.exit(0);
 		}
-	}
-	console.log('Service has been created');
-	process.exit(1);
-}
-module.exports.service = new_service;
-module.exports.s = new_service;
-
-const new_filter = function(params){
-	if (!fs.existsSync(process.cwd() + '/src/app/filters')) {
-		fs.mkdirSync(process.cwd() + '/src/app/filters');
-		fs.writeFileSync(process.cwd() + '/src/app/filters/index.ts', '', 'utf8');
-	}
-	const {path, name, Name, base} = make_path(params.argv, 'filters');
-	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
-		console.log('Filter already exists');
-		process.exit(0);
-	}
-	exe('ng g p '+path+' --module=common/common.module', function(){
-		fs.unlinkSync(base+'.pipe.spec.ts');
-		let ts = fs.readFileSync(__dirname+'/filter/filter.ts', 'utf8');
-		ts = ts.split('CNAME').join(Name);
-		ts = ts.split('NAME').join(name);
-		fs.writeFileSync(base+'.pipe.ts', ts, 'utf8');
-		let index = process.cwd() + '/src/app/filters/index.ts';
-		if (fs.existsSync(index)) {
-			let index_exports = fs.readFileSync(index, 'utf8') || '';
-			let code = "export { "+Name+"Pipe } from './"+name+".pipe';";
-			if(index_exports.indexOf(code)==-1){
-				index_exports += (index_exports.length&&"\n"||"")+code;
-				fs.writeFileSync(index, index_exports, 'utf8');
+		let path_argv = argv.slice();
+		waw.path = path_argv[0];
+		if(path_argv[0].indexOf('/')==-1){
+			waw.path = folder;
+			while(path_argv.length){
+				waw.path += '/' + path_argv.shift();
 			}
 		}
-		let config = fs.readFileSync(process.cwd() + '/src/app/common/common.module.ts', 'utf8');
-		let search = '/* filters */';
-		if(config && config.indexOf(search)>-1){
-			config = config.replace(search, search+'\n\t\t'+Name+'Pipe,');
-			fs.writeFileSync(process.cwd() + '/src/app/common/common.module.ts', config, 'utf8');
+		waw.path = waw.path.toLowerCase();
+		let name_argv = argv.slice();
+		waw.name = name_argv[name_argv.length-1];
+		if(waw.name.indexOf('/')>-1){
+			waw.name = waw.name.split('/');
+			waw.name = waw.name[waw.name.length-1];
 		}
-		console.log('Filter has been created');
-		process.exit(1);
-	});
-}
-module.exports.filter = new_filter;
-module.exports.f = new_filter;
-
-const new_component = function(params){
-	const {path, name, Name, base} = make_path(params.argv, 'common', true);
-	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
-		console.log('Component already exists');
-		process.exit(0);
+		waw.name = waw.name.toLowerCase();
+		waw.Name = waw.name.slice(0, 1).toUpperCase() + waw.name.slice(1);
+		waw.base = process.cwd() + '/src/app/'+waw.path;
+		if(double_name){
+			waw.base += '/'+waw.name;
+		}
+	},
+	add_code: function(opts){
+		if(!fs.existsSync(opts.file)) return;
+		let code = fs.readFileSync(opts.file, 'utf8');
+		if(code && code.indexOf(opts.search)>-1){
+			code = code.replace(opts.search, opts.replace);
+			fs.writeFileSync(opts.file, code, 'utf8');
+		}
 	}
-	exe('ng g c '+path, function(){
-		fs.unlinkSync(base+'.component.spec.ts');
-		let html = fs.readFileSync(__dirname+'/component/component.html', 'utf8');
-		html = html.split('CNAME').join(Name);
-		html = html.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.html', html, 'utf8');
-		let scss = fs.readFileSync(__dirname+'/component/component.scss', 'utf8');
-		scss = scss.split('CNAME').join(Name);
-		scss = scss.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
-		let ts = fs.readFileSync(__dirname+'/component/component.ts', 'utf8');
-		ts = ts.split('CNAME').join(Name);
-		ts = ts.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
-		console.log('Component has been created');
-		process.exit(1);
-	});
-}
-module.exports.component = new_component;
-module.exports.c = new_component;
-
+};
 const new_alert = function(params){
-	const {path, name, Name, base} = make_path(params.argv, 'alerts', true);
-	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
+	waw.params = params;
+	waw.make_path(params.argv, 'alerts', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
 		console.log('Alert already exists');
 		process.exit(0);
 	}
-	exe('ng g c '+path, function(){
-		fs.unlinkSync(base+'.component.spec.ts');
-		let html = fs.readFileSync(__dirname+'/alert/component.html', 'utf8');
-		html = html.split('CNAME').join(Name);
-		html = html.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.html', html, 'utf8');
-		let scss = fs.readFileSync(__dirname+'/alert/component.scss', 'utf8');
-		scss = scss.split('CNAME').join(Name);
-		scss = scss.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
-		let ts = fs.readFileSync(__dirname+'/alert/component.ts', 'utf8');
-		ts = ts.split('CNAME').join(Name);
-		ts = ts.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
-		add_code({
-			file: process.cwd() + '/src/app/app.module.ts',
-			search: '/* alerts */',
-			replace: "/* alerts */\n\t\t\t" + name + ": " + Name + "Component,"
-		});
-		console.log('Alert has been created');
-		process.exit(1);
-	});
+	require(__dirname+'/alert/cli.js')(waw);
 }
 module.exports.alert = new_alert;
 module.exports.a = new_alert;
 
-
-const new_modal = function(params){
-	const {path, name, Name, base} = make_path(params.argv, 'modals', true);
-	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
-		console.log('Modal already exists');
+const new_component = function(params){
+	waw.params = params;
+	waw.make_path(params.argv, 'common', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
+		console.log('Component already exists');
 		process.exit(0);
 	}
-	exe('ng g c '+path, function(){
-		fs.unlinkSync(base+'.component.spec.ts');
-		let html = fs.readFileSync(__dirname+'/modal/component.html', 'utf8');
-		html = html.split('CNAME').join(Name);
-		html = html.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.html', html, 'utf8');
-		let scss = fs.readFileSync(__dirname+'/modal/component.scss', 'utf8');
-		scss = scss.split('CNAME').join(Name);
-		scss = scss.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
-		let ts = fs.readFileSync(__dirname+'/modal/component.ts', 'utf8');
-		ts = ts.split('CNAME').join(Name);
-		ts = ts.split('NAME').join(name);
-		add_code({
-			file: process.cwd() + '/src/app/app.module.ts',
-			search: '/* modals */',
-			replace: "/* modals */\n\t\t\t" + name + ": " + Name + "Component,"
-		});
-		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
-		console.log('Modal has been created');
-		process.exit(1);
-	});
+	require(__dirname+'/component/cli.js')(waw);
 }
-module.exports.modal = new_modal;
-module.exports.m = new_modal;
+module.exports.component = new_component;
+module.exports.c = new_component;
 
+const new_filter = function(params){
+	waw.params = params;
+	if (!fs.existsSync(process.cwd() + '/src/app/filters')) {
+		fs.mkdirSync(process.cwd() + '/src/app/filters');
+		fs.writeFileSync(process.cwd() + '/src/app/filters/index.ts', '', 'utf8');
+	}
+	waw.make_path(params.argv, 'filters');
+	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
+		console.log('Filter already exists');
+		process.exit(0);
+	}
+	require(__dirname+'/filter/cli.js')(waw);
+}
+module.exports.filter = new_filter;
+module.exports.f = new_filter;
 
 const new_loader = function(params){
-	const {path, name, Name, base} = make_path(params.argv, 'loaders', true);
-	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
+	waw.params = params;
+	waw.make_path(params.argv, 'loaders', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
 		console.log('Loader already exists');
 		process.exit(0);
 	}
-	exe('ng g c '+path, function(){
-		fs.unlinkSync(base+'.component.spec.ts');
-		let html = fs.readFileSync(__dirname+'/loader/component.html', 'utf8');
-		html = html.split('CNAME').join(Name);
-		html = html.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.html', html, 'utf8');
-		let scss = fs.readFileSync(__dirname+'/loader/component.scss', 'utf8');
-		scss = scss.split('CNAME').join(Name);
-		scss = scss.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
-		let ts = fs.readFileSync(__dirname+'/loader/component.ts', 'utf8');
-		ts = ts.split('CNAME').join(Name);
-		ts = ts.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
-		add_code({
-			file: process.cwd() + '/src/app/app.module.ts',
-			search: '/* loaders */',
-			replace: "/* loaders */\n\t\t\t" + name + ": " + Name + "Component,"
-		});
-		console.log('Loader has been created');
-		process.exit(1);
-	});
+	require(__dirname+'/loader/cli.js')(waw);
 }
 module.exports.loader = new_loader;
 module.exports.l = new_loader;
 
+const new_modal = function(params){
+	waw.params = params;
+	waw.make_path(params.argv, 'modals', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
+		console.log('Modal already exists');
+		process.exit(0);
+	}
+	require(__dirname+'/modal/cli.js')(waw);
+}
+module.exports.modal = new_modal;
+module.exports.m = new_modal;
+
+const new_page = function(params){
+	waw.params = params;
+	waw.make_path(params.argv, 'pages', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
+		console.log('Page already exists');
+		process.exit(0);
+	}
+	require(__dirname+'/page/cli.js')(waw);
+}
+module.exports.page = new_page;
+module.exports.p = new_page;
 
 const new_popup = function(params){
-	const {path, name, Name, base} = make_path(params.argv, 'popups', true);
-	if (fs.existsSync(process.cwd() + '/src/app/'+path)) {
+	waw.params = params;
+	waw.make_path(params.argv, 'popups', true);
+	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
 		console.log('Popup already exists');
 		process.exit(0);
 	}
-	exe('ng g c '+path, function(){
-		fs.unlinkSync(base+'.component.spec.ts');
-		let html = fs.readFileSync(__dirname+'/popup/component.html', 'utf8');
-		html = html.split('CNAME').join(Name);
-		html = html.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.html', html, 'utf8');
-		let scss = fs.readFileSync(__dirname+'/popup/component.scss', 'utf8');
-		scss = scss.split('CNAME').join(Name);
-		scss = scss.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.scss', scss, 'utf8');
-		let ts = fs.readFileSync(__dirname+'/popup/component.ts', 'utf8');
-		ts = ts.split('CNAME').join(Name);
-		ts = ts.split('NAME').join(name);
-		fs.writeFileSync(base+'.component.ts', ts, 'utf8');
-		add_code({
-			file: process.cwd() + '/src/app/app.module.ts',
-			search: '/* popups */',
-			replace: "/* popups */\n\t\t\t" + name + ": " + Name + "Component,"
-		});
-		console.log('Popup has been created');
-		process.exit(1);
-	});
+	require(__dirname+'/popup/cli.js')(waw);
 }
 module.exports.popup = new_popup;
+
+const new_service = function(params){
+	waw.params = params;
+	waw.make_path(params.argv, 'services');	
+	if (fs.existsSync(waw.base+'.service.ts')) {
+		console.log('Service already exists');
+		process.exit(0);
+	}
+	require(__dirname+'/service/cli.js')(waw);	
+}
+module.exports.service = new_service;
+module.exports.s = new_service;
+
+const new_custom = function(params){
+
+
+
+	
+	/* clone folder to project */
+	/* allow default to be re-written */
+	/* allow modify replace code */
+}
+module.exports.new = new_custom;
