@@ -1,7 +1,7 @@
 module.exports = function(waw){
 	waw.exe('ng g p '+waw.path+' --module=common/common.module', function(){
 		waw.fs.unlinkSync(waw.base+'.pipe.spec.ts');
-		let ts = waw.fs.readFileSync(__dirname+'/filter.ts', 'utf8');
+		let ts = waw.fs.readFileSync(waw.params.template+'/filter.ts', 'utf8');
 		ts = ts.split('CNAME').join(waw.Name);
 		ts = ts.split('NAME').join(waw.name);
 		waw.fs.writeFileSync(waw.base+'.pipe.ts', ts, 'utf8');

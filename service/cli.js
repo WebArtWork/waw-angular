@@ -1,5 +1,5 @@
 module.exports = function(waw){
-	let ts = waw.fs.readFileSync(__dirname+'/service.ts', 'utf8');
+	let ts = waw.fs.readFileSync(waw.params.template+'/service.ts', 'utf8');
 	ts = ts.split('CNAME').join(waw.Name);
 	ts = ts.split('NAME').join(waw.name);
 	waw.fs.writeFileSync(waw.base+'.service.ts', ts, 'utf8');
