@@ -74,7 +74,7 @@ const waw = {
 				next();
 			});
 		}else{
-			params.template = this.defaults[element];
+			params.template = this.defaults[element].default;
 			next();
 		}
 	},
@@ -113,7 +113,7 @@ const new_alert = function(params){
 		console.log('Alert already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.alert = new_alert;
 module.exports.a = new_alert;
@@ -126,7 +126,7 @@ const new_component = function(params){
 		console.log('Component already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.component = new_component;
 module.exports.c = new_component;
@@ -143,7 +143,7 @@ const new_filter = function(params){
 		console.log('Filter already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.filter = new_filter;
 module.exports.f = new_filter;
@@ -156,7 +156,7 @@ const new_loader = function(params){
 		console.log('Loader already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.loader = new_loader;
 module.exports.l = new_loader;
@@ -169,7 +169,7 @@ const new_modal = function(params){
 		console.log('Modal already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.modal = new_modal;
 module.exports.m = new_modal;
@@ -182,7 +182,7 @@ const new_page = function(params){
 		console.log('Page already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.page = new_page;
 module.exports.p = new_page;
@@ -195,7 +195,7 @@ const new_popup = function(params){
 		console.log('Popup already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.popup = new_popup;
 
@@ -207,7 +207,7 @@ const new_service = function(params){
 		console.log('Service already exists');
 		process.exit(0);
 	}
-	require(waw.params.template+'/cli.js')(waw);	
+	require(params.template+'/cli.js')(waw);	
 }
 module.exports.service = new_service;
 module.exports.s = new_service;
