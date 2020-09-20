@@ -17,6 +17,11 @@ module.exports = function(waw){
 			search: '/* modals */',
 			replace: "/* modals */\n\t\t\t" + waw.name + ": " + waw.Name + "Component,"
 		});
+		waw.add_code({
+			file: process.cwd() + '/src/app/app.module.ts',
+			search: '/* entryComponents */',
+			replace: "/* entryComponents */\n\t\t" + waw.Name + "Component,"
+		});
 		waw.fs.writeFileSync(waw.base+'.component.ts', ts, 'utf8');
 		console.log('Modal has been created');
 		process.exit(1);

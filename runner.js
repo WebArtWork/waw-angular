@@ -10,7 +10,7 @@ const getDirectories = source => {
 	if (!fs.existsSync(source)) {
 		return []; 
 	}
-	return fs.readdirSync(source).map(name => require('path').join(source, name)).filter(isDirectory);
+	return fs.readdirSync(source).map(name => path.join(source, name)).filter(isDirectory);
 }
 const waw = {
 	fs: fs,
