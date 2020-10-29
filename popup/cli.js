@@ -1,6 +1,8 @@
 module.exports = function(waw){
 	waw.exe('ng g c '+waw.path, function(){
-		waw.fs.unlinkSync(waw.base+'.component.spec.ts');
+		if (waw.fs.existsSync(waw.base+'.component.spec.ts')) {
+			waw.fs.unlinkSync(waw.base+'.component.spec.ts');
+		}
 		let html = waw.fs.readFileSync(waw.params.template+'/popup/component.html', 'utf8');
 		html = html.split('CNAME').join(waw.Name);
 		html = html.split('NAME').join(waw.name);
