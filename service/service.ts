@@ -12,8 +12,8 @@ export class CNAMEService {
 			this._NAMEs = obj;
 		});
 	}
-	create(NAME) {
-		if(NAME) reutrn this.save(NAME);
+	create(NAME:any={}) {
+		if(NAME._id) return this.save(NAME);
 		this.mongo.create('NAME', NAME, created=>{
 			this.alert.show({
 				text: 'NAME has been created.'
