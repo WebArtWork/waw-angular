@@ -4,22 +4,26 @@
 ## Getting Started
 ### Create New Page
 `waw page NAME`
+`waw p NAME`
 ### Create New Component
 `waw component NAME`
+`waw c NAME`
 ### Create New Service
 `waw service NAME`
+`waw s NAME`
 ### Create New Pipe
 `waw pipe NAME`
 ### Create New Modal
 `waw modal NAME`
+`waw m NAME`
 ### Create New Alert
 `waw alert NAME`
-### Create New Pipe
-`waw pipe NAME`
-### Create New Popup
-`waw popup NAME`
+`waw a NAME`
 ### Create New Loader
 `waw loader NAME`
+`waw l NAME`
+### Create New Popup
+`waw popup NAME`
 
 ## Customization
 ### will generate new folder `template/ELEMENT/NAME` with default code of that element
