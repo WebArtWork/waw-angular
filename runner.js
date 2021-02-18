@@ -152,24 +152,15 @@ const new_loader = function(params){
 module.exports.loader = new_loader;
 module.exports.l = new_loader;
 
-
-
-
-
-
-
-
-
-
-
-
 const new_modal = function(params){
-	if(!params.template) return waw.read_customization(params, 'modal', ()=>{ new_modal(params) });
 	waw.params = params;
 	waw.make_path(params.argv, 'modals', true);
 	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
 		console.log('Modal already exists');
 		process.exit(0);
+	}
+	if(!params.template){
+		return waw.read_customization(params, 'modal', ()=>{ new_modal(params) });
 	}
 	require(params.template+'/cli.js')(waw);
 }
@@ -177,12 +168,14 @@ module.exports.modal = new_modal;
 module.exports.m = new_modal;
 
 const new_page = function(params){
-	if(!params.template) return waw.read_customization(params, 'page', ()=>{ new_page(params) });
 	waw.params = params;
 	waw.make_path(params.argv, 'pages', true);
 	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
 		console.log('Page already exists');
 		process.exit(0);
+	}
+	if(!params.template){
+		return waw.read_customization(params, 'page', ()=>{ new_page(params) });
 	}
 	require(params.template+'/cli.js')(waw);
 }
@@ -204,24 +197,28 @@ const new_pipe = function(params){
 module.exports.pipe = new_pipe;
 
 const new_popup = function(params){
-	if(!params.template) return waw.read_customization(params, 'popup', ()=>{ new_popup(params) });
 	waw.params = params;
 	waw.make_path(params.argv, 'popups', true);
 	if (fs.existsSync(process.cwd() + '/src/app/'+waw.path)) {
 		console.log('Popup already exists');
 		process.exit(0);
 	}
+	if(!params.template){
+		return waw.read_customization(params, 'popup', ()=>{ new_popup(params) });
+	}
 	require(params.template+'/cli.js')(waw);
 }
 module.exports.popup = new_popup;
 
 const new_service = function(params){
-	if(!params.template) return waw.read_customization(params, 'service', ()=>{ new_service(params) });
 	waw.params = params;
 	waw.make_path(params.argv, 'services');	
 	if (fs.existsSync(waw.base+'.service.ts')) {
 		console.log('Service already exists');
 		process.exit(0);
+	}
+	if(!params.template){
+		return waw.read_customization(params, 'service', ()=>{ new_service(params) });
 	}
 	require(params.template+'/cli.js')(waw);	
 }

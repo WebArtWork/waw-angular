@@ -1,9 +1,26 @@
+var angular;
+try {
+	const root = require('child_process').execSync('npm root -g').toString().trim();
+	angular = require(root + '/@angular/cli');
+} catch (err) {
+	console.log("You should install '@angular/cli' global. 'npm i -g @angular/cli'");
+	process.exit(1);
+}
+const fs = require('fs');
 module.exports = function(waw){
-	waw.exe('ng g p '+waw.path+' --module=common/common.module', function(){
-		if (waw.fs.existsSync(waw.base+'.pipe.spec.ts')) {
-			waw.fs.unlinkSync(waw.base+'.pipe.spec.ts');
-		}
-		let ts = waw.fs.readFileSync(waw.params.template+'/filter.ts', 'utf8');
+	angular.default({
+		cliArgs: [
+			'generate',
+			'pipe',
+			waw.path
+		]
+	}).then(function () {
+		//console.log('then', arguments);
+	}).catch(function () {
+		//console.log('catch', arguments);
+	}).finally(function () {
+		//console.log('finally', arguments);
+		let ts = waw.fs.readFileSync(waw.params.template+'/pipe.ts', 'utf8');
 		ts = ts.split('CNAME').join(waw.Name);
 		ts = ts.split('NAME').join(waw.name);
 		waw.fs.writeFileSync(waw.base+'.pipe.ts', ts, 'utf8');
@@ -16,13 +33,13 @@ module.exports = function(waw){
 				waw.fs.writeFileSync(index, index_exports, 'utf8');
 			}
 		}
-		let config = waw.fs.readFileSync(process.cwd() + '/src/app/common/common.module.ts', 'utf8');
+		let config = waw.fs.readFileSync(process.cwd() + '/src/app/core/core.module.ts', 'utf8');
 		let search = '/* pipes */';
 		if(config && config.indexOf(search)>-1){
 			config = config.replace(search, search+'\n\t\t'+waw.Name+'Pipe,');
-			waw.fs.writeFileSync(process.cwd() + '/src/app/common/common.module.ts', config, 'utf8');
+			waw.fs.writeFileSync(process.cwd() + '/src/app/core/core.module.ts', config, 'utf8');
 		}
-		console.log('Filter has been created');
+		console.log('Pipe has been created');
 		process.exit(1);
 	});
 }
