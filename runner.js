@@ -225,7 +225,7 @@ const new_service = function(params){
 module.exports.service = new_service;
 module.exports.s = new_service;
 
-const new_custom = function(params){
+const generate = function(params){
 	if(!params.element){
 		if(params.argv.length && waw.defaults[params.argv[0].toLowerCase()]){
 			params.element = params.argv[0].toLowerCase();
@@ -239,13 +239,13 @@ const new_custom = function(params){
 			return readline.question(text, function(answer){
 				if(!answer||!repos[parseInt(answer)]) return new_project();
 				params.element = repos[parseInt(answer)];
-				new_custom(params);
+				generate(params);
 			});
 		}
 	}
 	if(!waw.defaults[params.element]){
 		delete params.element;
-		return new_custom(params);
+		return generate(params);
 	}
 	if(!params.name){
 		if(params.argv.length>1){
@@ -253,7 +253,7 @@ const new_custom = function(params){
 		}else{
 			return readline.question('Provide name for customization: ', function(answer){
 				params.name = answer.toLowerCase();
-				new_custom(params);
+				generate(params);
 			});
 		}
 	}
@@ -269,4 +269,5 @@ const new_custom = function(params){
 		process.exit(1);
 	});
 }
-module.exports.new = new_custom;
+module.exports.generate = generate;
+module.exports.g = generate;
