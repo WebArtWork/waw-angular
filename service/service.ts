@@ -18,7 +18,7 @@ export class CNAMEService {
 		}); 
 	}
 	doc(NAMEId){
-		return mongo.fetch('NAME', {
+		return this.mongo.fetch('NAME', {
 			query: {
 				_id: NAMEId
 			}
