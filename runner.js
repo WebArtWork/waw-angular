@@ -94,7 +94,8 @@ const waw = {
 			default: __dirname+'/modal'
 		},
 		page: {
-			default: __dirname+'/page'
+			default: __dirname+'/page/default',
+			table: __dirname+'/page/table'
 		},
 		pipe: {
 			default: __dirname+'/pipe'

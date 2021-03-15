@@ -6,11 +6,8 @@ import { MongoService, AlertService } from 'wacom';
 })
 export class CNAMEService {
 	public NAMEs: any = [];
-	public _NAMEs: any = {};
 	constructor(private mongo: MongoService, private alert: AlertService) { 
-		this.NAMEs = mongo.get('NAME', (arr, obj) => {
-			this._NAMEs = obj;
-		});
+		this.NAMEs = mongo.get('NAME');
 	}
 	create(NAME:any={}) {
 		if(NAME._id) return this.save(NAME);
@@ -19,6 +16,13 @@ export class CNAMEService {
 				text: 'NAME has been created.'
 			});
 		}); 
+	}
+	doc(NAMEId){
+		return mongo.fetch('NAME', {
+			query: {
+				_id: NAMEId
+			}
+		});
 	}
 	update(NAME) {
 		this.mongo.afterWhile(NAME, ()=> {
