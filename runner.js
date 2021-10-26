@@ -8,7 +8,7 @@ const fs = require('fs');
 const isDirectory = source => fs.lstatSync(source).isDirectory();
 const getDirectories = source => {
 	if (!fs.existsSync(source)) {
-		return []; 
+		return [];
 	}
 	return fs.readdirSync(source).map(name => path.join(source, name)).filter(isDirectory);
 }
@@ -105,6 +105,9 @@ const waw = {
 		},
 		service: {
 			default: __dirname+'/service'
+		},
+		module: {
+			default: __dirname+'/module/default'
 		}
 	}
 };
@@ -213,7 +216,7 @@ module.exports.popup = new_popup;
 
 const new_service = function(params){
 	waw.params = params;
-	waw.make_path(params.argv, 'services');	
+	waw.make_path(params.argv, 'services');
 	if (fs.existsSync(waw.base+'.service.ts')) {
 		console.log('Service already exists');
 		process.exit(0);
@@ -221,7 +224,7 @@ const new_service = function(params){
 	if(!params.template){
 		return waw.read_customization(params, 'service', ()=>{ new_service(params) });
 	}
-	require(params.template+'/cli.js')(waw);	
+	require(params.template+'/cli.js')(waw);
 }
 module.exports.service = new_service;
 module.exports.s = new_service;
@@ -272,3 +275,24 @@ const generate = function(params){
 }
 module.exports.generate = generate;
 module.exports.g = generate;
+
+const new_module = function (params) {
+	waw.params = params;
+	waw.make_path(params.argv, 'modules');
+	if (fs.existsSync(process.cwd() + '/src/app/' + waw.path)) {
+		console.log('Module already exists');
+		process.exit(0);
+	}
+	if (!fs.existsSync(process.cwd() + '/src/app/modules')) {
+		fs.mkdirSync(process.cwd() + '/src/app/modules');
+	}
+	if (!fs.existsSync(process.cwd() + '/src/app/modules/index.ts')) {
+		fs.writeFileSync(process.cwd() + '/src/app/modules/index.ts', '');
+	}
+	if (!params.template) {
+		return waw.read_customization(params, 'module', () => { new_module(params) });
+	}
+	require(params.template + '/cli.js')(waw);
+}
+module.exports.install = new_module;
+module.exports.i = new_module;
