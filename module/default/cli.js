@@ -13,6 +13,12 @@ module.exports = function (waw) {
 		}
 	}
 	const create = ()=>{
+		if (fs.existsSync(base + '/' + name + '.component.css')) {
+			fs.unlink(base + '/' + name + '.component.css', (err) => {})
+		}
+		if (fs.existsSync(base + '/' + name + '.component.spec.ts')) {
+			fs.unlink(base + '/' + name + '.component.spec.ts', (err) => {})
+		}
 		let html = waw.fs.readFileSync(waw.params.template + '/component.html', 'utf8');
 		html = html.split('CNAME').join(cname);
 		html = html.split('NAME').join(name);

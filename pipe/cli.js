@@ -20,6 +20,9 @@ module.exports = function(waw){
 		//console.log('catch', arguments);
 	}).finally(function () {
 		//console.log('finally', arguments);
+		if (fs.existsSync(waw.base+'.pipe.spec.ts')) {
+			fs.unlink(waw.base+'.pipe.spec.ts', (err) => {})
+		}
 		let ts = waw.fs.readFileSync(waw.params.template+'/pipe.ts', 'utf8');
 		ts = ts.split('CNAME').join(waw.Name);
 		ts = ts.split('NAME').join(waw.name);
@@ -34,7 +37,7 @@ module.exports = function(waw){
 			}
 		}
 		let config = waw.fs.readFileSync(process.cwd() + '/src/app/core/core.module.ts', 'utf8');
-		let search = '/* pipes */';
+		let search = '/* exports */';
 		if(config && config.indexOf(search)>-1){
 			config = config.replace(search, search+'\n\t\t'+waw.Name+'Pipe,');
 			waw.fs.writeFileSync(process.cwd() + '/src/app/core/core.module.ts', config, 'utf8');

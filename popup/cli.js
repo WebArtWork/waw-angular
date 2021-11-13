@@ -20,6 +20,12 @@ module.exports = function(waw){
 		//console.log('catch', arguments);
 	}).finally(function () {
 		//console.log('finally', arguments);
+		if (fs.existsSync(waw.base+'.component.css')) {
+			fs.unlink(waw.base+'.component.css', (err) => {})
+		}
+		if (fs.existsSync(waw.base+'.component.spec.ts')) {
+			fs.unlink(waw.base+'.component.spec.ts', (err) => {})
+		}
 		let html = waw.fs.readFileSync(waw.params.template+'/component.html', 'utf8');
 		html = html.split('CNAME').join(waw.Name);
 		html = html.split('NAME').join(waw.name);
@@ -35,7 +41,7 @@ module.exports = function(waw){
 		waw.add_code({
 			file: process.cwd() + '/src/app/app.module.ts',
 			search: '/* popups */',
-			replace: "/* popups */\n\t\t\t" + waw.name + ": " + waw.Name + "Component,"
+			replace: "/* popups */\n\t\t\t\t\t" + waw.name + ": " + waw.Name + "Component,"
 		});
 		console.log('Popup has been created');
 		process.exit(1);

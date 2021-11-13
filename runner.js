@@ -1,7 +1,7 @@
 const { exec } = require('child_process');
 const readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
+	input: process.stdin,
+	output: process.stdout
 });
 const path = require('path');
 const fs = require('fs');
@@ -94,8 +94,7 @@ const waw = {
 			default: __dirname+'/modal'
 		},
 		page: {
-			default: __dirname+'/page/default',
-			table: __dirname+'/page/table'
+			default: __dirname+'/page/default'
 		},
 		pipe: {
 			default: __dirname+'/pipe'
@@ -267,7 +266,6 @@ const generate = function(params){
 		console.log('Customization already exists');
 		process.exit(0);
 	}
-	console.log(path);
 	waw.exe('cp -rf '+__dirname+'/'+params.element+' '+path, ()=>{
 		console.log('Customization '+params.element+' '+params.name+' created');
 		process.exit(1);

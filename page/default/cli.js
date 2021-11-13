@@ -20,6 +20,12 @@ module.exports = function(waw){
 		//console.log('catch', arguments);
 	}).finally(function () {
 		//console.log('finally', arguments);
+		if (fs.existsSync(waw.base+'.component.css')) {
+			fs.unlink(waw.base+'.component.css', (err) => {})
+		}
+		if (fs.existsSync(waw.base+'.component.spec.ts')) {
+			fs.unlink(waw.base+'.component.spec.ts', (err) => {})
+		}
 		let html = waw.fs.readFileSync(waw.params.template+'/component.html', 'utf8');
 		html = html.split('CNAME').join(waw.Name);
 		html = html.split('NAME').join(waw.name);

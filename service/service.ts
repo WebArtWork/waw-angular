@@ -27,20 +27,19 @@ export class CNAMEService {
 			});
 		}
 		return this._NAMEs[NAMEId];
-		
 	}
 	update(NAME, text = 'NAME has been updated.') {
-		this.mongo.afterWhile(NAME, ()=> {
-			this.save(NAME);
+		this.mongo.afterWhile(NAME, _=> {
+			this.save(NAME, text);
 		});
 	}
 	save(NAME, text = 'NAME has been updated.'){
-		this.mongo.update('NAME', NAME, ()=>{
-			this.alert.show({ text });
+		this.mongo.update('NAME', NAME, _=>{
+			if(text) this.alert.show({ text, unique: NAME });
 		});
 	}
 	delete(NAME, text = 'NAME has been deleted.') {
-		this.mongo.delete('NAME', NAME, ()=>{
+		this.mongo.delete('NAME', NAME, _=>{
 			if(text) this.alert.show({ text });
 		});
 	}
