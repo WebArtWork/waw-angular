@@ -4,6 +4,7 @@ const readline = require('readline').createInterface({
 	output: process.stdout
 });
 const path = require('path');
+const https = require('https');
 const fs = require('fs');
 const isDirectory = source => fs.lstatSync(source).isDirectory();
 const getDirectories = source => {
@@ -294,3 +295,88 @@ const new_module = function (params) {
 }
 module.exports.install = new_module;
 module.exports.i = new_module;
+
+const add_token = waw => {
+	if (fs.existsSync(waw.waw_root+'/config.json')) {
+		let waw_conf = JSON.parse(fs.readFileSync(waw.waw_root+'/config.json'));
+		if(waw_conf.token){
+			waw.ngx_config.token = waw_conf.token;
+			fs.writeFileSync(process.cwd()+'/angular.json', JSON.stringify(waw.ngx_config, null, 2));
+			return upload_files(waw);	
+		}
+	}
+	const req = https.request({
+		hostname: 'webart.work',
+		port: 443,
+		path: '/api/user/token',
+		method: 'GET'
+	}, resp => {
+		resp.on('data', data => {
+			const json = JSON.parse(data.toString());
+			waw.ngx_config.token = json.token;
+			fs.writeFileSync(process.cwd()+'/angular.json', JSON.stringify(waw.ngx_config, null, 2));
+			if (fs.existsSync(waw.waw_root+'/config.json')) {
+				let waw_conf = JSON.parse(fs.readFileSync(waw.waw_root+'/config.json'));
+				waw_conf.token = json.token;
+				fs.writeFileSync(waw.waw_root+'/config.json', JSON.stringify(waw_conf, null, 2));
+			}
+		})
+	});
+	req.on('error', error => {
+		console.error(error)
+	});
+	req.end();
+}
+const upload_file = (waw, file, done) => {
+	/*
+	waw.ngx_config.name
+	waw.ngx_config.token
+	file
+	*/
+}
+const upload_files = waw => {
+	const req = https.request({
+		hostname: 'webart.work',
+		port: 443,
+		path: '/api/user/prepare',
+		method: 'GET'
+	}, resp => {
+		resp.on('data', data => {
+			const json = JSON.parse(data.toString());
+			if(!json.ready){
+				console.log('Something went wrong');
+				process.exit(1);
+			}
+			const files = waw.getFilesRecursively(process.cwd()+'/dist/app');
+			let counter = files.length;
+			for (var i = files.length - 1; i >= 0; i--) {
+				files[i]
+				this.upload_file(waw, files[i], ()=>{
+					if(--counter === 0){
+						console.log('Uploaded properly');
+						process.exit(1);
+					}
+				});
+			}
+		});
+	});
+	req.on('error', error => {
+		console.error(error)
+	});
+	req.end();
+}
+const upload = waw => {
+	if (!fs.existsSync(process.cwd()+'/angular.json')) {
+		console.log('This is not angular project');
+		process.exit(1);
+	}
+	waw.ngx_config = JSON.parse(fs.readFileSync(process.cwd()+'/angular.json'));
+	if(!waw.ngx_config.name){
+		waw.ngx_config.name = path.basename(process.cwd());
+		fs.writeFileSync(process.cwd()+'/angular.json', JSON.stringify(waw.ngx_config, null, 2));
+	}
+	if(!waw.ngx_config.token) add_token(waw);
+	else upload_files(waw);
+}
+module.exports.upload = upload;
+module.exports.u = upload;
