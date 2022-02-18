@@ -1,68 +1,55 @@
+var angular;
+try {
+	const root = require('child_process').execSync('npm root -g').toString().trim();
+	angular = require(root + '/@angular/cli');
+} catch (err) {
+	console.log("You should install '@angular/cli' global. 'npm i -g @angular/cli'");
+	process.exit(1);
+}
 const fs = require('fs');
 module.exports = function (waw) {
-	let base = process.cwd() + '/src/app/modules/' + waw.params.argv[0];
-	let name = waw.params.argv[0];
-	let cname = name.slice(0, 1).toUpperCase() + name.slice(1);
-	const add_index = ()=>{
+	angular.default({
+		cliArgs: [
+			'generate',
+			'module',
+			waw.path
+		]
+	}).then(function () {
+		//console.log('then', arguments);
+	}).catch(function () {
+		//console.log('catch', arguments);
+	}).finally(function () {
+		//console.log('finally', arguments);
+		if (fs.existsSync(waw.base + '.component.css')) {
+			fs.unlink(waw.base + '.component.css', (err) => { })
+		}
+		if (fs.existsSync(waw.base + '.component.spec.ts')) {
+			fs.unlink(waw.base + '.component.spec.ts', (err) => { })
+		}
+		let html = fs.readFileSync(waw.template + '/component.html', 'utf8');
+		html = html.split('CNAME').join(waw.Name);
+		html = html.split('NAME').join(waw.name);
+		fs.writeFileSync(waw.base + '.component.html', html, 'utf8');
+		let scss = fs.readFileSync(waw.template + '/component.scss', 'utf8');
+		scss = scss.split('CNAME').join(waw.Name);
+		scss = scss.split('NAME').join(waw.name);
+		fs.writeFileSync(waw.base + '.component.scss', scss, 'utf8');
+		let ts = fs.readFileSync(waw.template + '/component.ts', 'utf8');
+		ts = ts.split('CNAME').join(waw.Name);
+		ts = ts.split('NAME').join(waw.name);
+		fs.writeFileSync(waw.base + '.component.ts', ts, 'utf8');
+		let mod = fs.readFileSync(waw.template + '/module.ts', 'utf8');
+		mod = mod.split('CNAME').join(waw.Name);
+		mod = mod.split('NAME').join(waw.name);
+		fs.writeFileSync(waw.base + '.module.ts', mod, 'utf8');
 		let index = process.cwd() + '/src/app/modules/index.ts';
-		let index_exports = waw.fs.readFileSync(index, 'utf8') || '';
-		let code = "export { " + cname + "Module } from './" + name + "/" + name + ".module';";
+		let index_exports = fs.readFileSync(index, 'utf8') || '';
+		let code = "export { " + waw.Name + "Module } from './" + waw.name + "/" + waw.name + ".module';";
 		if (index_exports.indexOf(code) == -1) {
 			index_exports += (index_exports.length && "\n" || "") + code;
-			waw.fs.writeFileSync(index, index_exports, 'utf8');
+			fs.writeFileSync(index, index_exports, 'utf8');
 		}
-	}
-	const create = ()=>{
-		if (fs.existsSync(base + '/' + name + '.component.css')) {
-			fs.unlink(base + '/' + name + '.component.css', (err) => {})
-		}
-		if (fs.existsSync(base + '/' + name + '.component.spec.ts')) {
-			fs.unlink(base + '/' + name + '.component.spec.ts', (err) => {})
-		}
-		let html = waw.fs.readFileSync(waw.params.template + '/component.html', 'utf8');
-		html = html.split('CNAME').join(cname);
-		html = html.split('NAME').join(name);
-		waw.fs.writeFileSync(base + '/' + name + '.component.html', html, 'utf8');
-		let scss = waw.fs.readFileSync(waw.params.template + '/component.scss', 'utf8');
-		scss = scss.split('CNAME').join(cname);
-		scss = scss.split('NAME').join(name);
-		waw.fs.writeFileSync(base + '/' + name + '.component.scss', scss, 'utf8');
-		let ts = waw.fs.readFileSync(waw.params.template + '/component.ts', 'utf8');
-		ts = ts.split('CNAME').join(cname);
-		ts = ts.split('NAME').join(name);
-		waw.fs.writeFileSync(base + '/' + name + '.component.ts', ts, 'utf8');
-		let mod = waw.fs.readFileSync(waw.params.template + '/module.ts', 'utf8');
-		mod = mod.split('CNAME').join(cname);
-		mod = mod.split('NAME').join(name);
-		waw.fs.writeFileSync(base + '/' + name + '.module.ts', mod, 'utf8');
 		console.log('Module has been created');
-		add_index();
 		process.exit(1);
-	}
-	if (!fs.existsSync(base)) {
-		fs.mkdirSync(base, { recursive: true });
-	}
-	if (waw.params.argv.length > 1) {
-		let repo = waw.params.git(base);
-		repo.init(function () {
-			repo.addRemote('origin', waw.params.argv[1], function (err) {
-				if (err) return create();
-				repo.fetch('--all', function (err) {
-					if (err) return create();
-					let branch = 'master';
-					if (waw.params.argv.length > 2) {
-						branch = waw.params.argv[2];
-					}
-					repo.reset('origin/' + branch, err => {
-						if (err) return create();
-						console.log('Module has been created');
-						add_index();
-						process.exit(1);
-					});
-				});
-			});
-		});
-	}else {
-		create();
-	}
+	});
 }

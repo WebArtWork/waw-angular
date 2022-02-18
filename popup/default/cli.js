@@ -26,19 +26,24 @@ module.exports = function(waw){
 		if (fs.existsSync(waw.base+'.component.spec.ts')) {
 			fs.unlink(waw.base+'.component.spec.ts', (err) => {})
 		}
-		let html = fs.readFileSync(waw.params.template+'/component.html', 'utf8');
+		let html = fs.readFileSync(waw.template+'/component.html', 'utf8');
 		html = html.split('CNAME').join(waw.Name);
 		html = html.split('NAME').join(waw.name);
 		fs.writeFileSync(waw.base+'.component.html', html, 'utf8');
-		let scss = fs.readFileSync(waw.params.template+'/component.scss', 'utf8');
+		let scss = fs.readFileSync(waw.template+'/component.scss', 'utf8');
 		scss = scss.split('CNAME').join(waw.Name);
 		scss = scss.split('NAME').join(waw.name);
 		fs.writeFileSync(waw.base+'.component.scss', scss, 'utf8');
-		let ts = fs.readFileSync(waw.params.template+'/component.ts', 'utf8');
+		let ts = fs.readFileSync(waw.template+'/component.ts', 'utf8');
 		ts = ts.split('CNAME').join(waw.Name);
 		ts = ts.split('NAME').join(waw.name);
 		fs.writeFileSync(waw.base+'.component.ts', ts, 'utf8');
-		console.log('Component has been created');
+		waw.add_code({
+			file: process.cwd() + '/src/app/app.module.ts',
+			search: '/* popups */',
+			replace: "/* popups */\n\t\t\t\t\t" + waw.name + ": " + waw.Name + "Component,"
+		});
+		console.log('Popup has been created');
 		process.exit(1);
 	});
 }
