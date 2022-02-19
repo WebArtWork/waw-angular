@@ -1,7 +1,3 @@
-const readline = require('readline').createInterface({
-	input: process.stdin,
-	output: process.stdout
-});
 const path = require('path');
 const fs = require('fs');
 const defaults = {
@@ -33,150 +29,125 @@ const defaults = {
 		default: __dirname + '/module/default'
 	}
 }
-const read_customization = (waw, element, next) => {
-	let elements = waw.getDirectories(process.cwd() + '/template/' + element);
-	for (var i = 0; i < elements.length; i++) {
-		defaults[element][path.basename(elements[i])] = elements[i];
-	}
-	if (Object.keys(defaults[element]).length > 1) {
-		waw.template = defaults[element];
-		let text = 'Which element you want to use?', counter = 0, repos = {};
-		for (let key in defaults[element]) {
-			repos[++counter] = defaults[element][key];
-			text += '\n' + counter + ') ' + key;
-		}
-		text += '\nChoose number: ';
-		return readline.question(text, (answer) => {
-			if (!answer || !repos[parseInt(answer)]) {
-				return this.read_customization(waw, element, next);
-			}
-			waw.template = repos[parseInt(answer)];
-			next();
-		});
-	} else {
-		waw.template = defaults[element].default;
-		next();
-	}
-}
 /*
-	Alert
+*	Alert
 */
 const new_alert = (waw) => {
 	if (!waw.path) {
-		if(waw.ensure('alerts', 'Alert already exists')) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'alerts', 'Alert already exists')) return;
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'alert', () => { new_alert(waw) });
+		return waw.read_customization(defaults, 'alert', () => { new_alert(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.alert = new_alert;
 /*
-	Component
+*	Component
 */
 const new_component = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('core/components', 'Component already exists')) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'core/components', 'Component already exists')) return;
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'component', () => { new_component(waw) });
+		return waw.read_customization(defaults, 'component', () => { new_component(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.component = new_component;
 module.exports.c = new_component;
 /*
-	Loader
+*	Loader
 */
 const new_loader = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('loaders', 'Loader already exists')) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'loaders', 'Loader already exists')) return;
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'loader', () => { new_loader(waw) });
+		return waw.read_customization(defaults, 'loader', () => { new_loader(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.loader = new_loader;
 module.exports.l = new_loader;
 /*
-	Popup
+*	Popup
 */
 const new_popup = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('popups', 'Popup already exists')) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'popups', 'Popup already exists')) return;
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'popup', () => { new_popup(waw) });
+		return waw.read_customization(defaults, 'popup', () => { new_popup(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.popup = new_popup;
 /*
-	Modal
+*	Modal
 */
 const new_modal = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('modals', 'Modal already exists')) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'modals', 'Modal already exists')) return;
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'modal', () => { new_modal(waw) });
+		return waw.read_customization(defaults, 'modal', () => { new_modal(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.modal = new_modal;
 module.exports.m = new_modal;
 /*
-	Page
+*	Page
 */
 const new_page = function (waw) {
 	// waw page user profile REPO
 	if (!waw.path) {
-		if(waw.ensure('pages', 'Page already exists')) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'pages', 'Page already exists')) return;
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'page', () => { new_page(waw) });
+		return waw.read_customization(defaults, 'page', () => { new_page(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.page = new_page;
 module.exports.p = new_page;
 /*
-	Pipe
+*	Pipe
 */
 const new_pipe = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('core/pipes', 'Pipe already exists', false)) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'core/pipes', 'Pipe already exists', false)) return;
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'pipe', () => { new_pipe(waw) });
+		return waw.read_customization(defaults, 'pipe', () => { new_pipe(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.pipe = new_pipe;
 /*
-	Service
+*	Service
 */
 const new_service = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('services', 'Service already exists', false)) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'services', 'Service already exists', false)) return;
 	}
 	if (!fs.existsSync(process.cwd() + '/src/app/services/index.ts')) {
 		fs.writeFileSync(process.cwd() + '/src/app/services/index.ts', '');
 	}
 	if (!waw.template) {
-		return read_customization(waw, 'service', () => { new_service(waw) });
+		return waw.read_customization(defaults, 'service', () => { new_service(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
 module.exports.service = new_service;
 module.exports.s = new_service;
 /*
-	Customization
+*	Customization
 */
 const generate = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('services', 'Service already exists')) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'services', 'Service already exists')) return;
 	}
 	if (!waw.element) {
 		if (waw.argv.length && defaults[waw.argv[0].toLowerCase()]) {
@@ -188,7 +159,7 @@ const generate = function (waw) {
 				text += '\n' + counter + ') ' + key;
 			}
 			text += '\nChoose number: ';
-			return readline.question(text, function (answer) {
+			return waw.readline.question(text, function (answer) {
 				if (!answer || !repos[parseInt(answer)]) return new_project();
 				waw.element = repos[parseInt(answer)];
 				generate(waw);
@@ -203,7 +174,7 @@ const generate = function (waw) {
 		if (waw.argv.length > 1) {
 			waw.name = waw.argv[1].toLowerCase();
 		} else {
-			return readline.question('Provide name for customization: ', function (answer) {
+			return waw.readline.question('Provide name for customization: ', function (answer) {
 				waw.name = answer.toLowerCase();
 				generate(waw);
 			});
@@ -223,19 +194,19 @@ const generate = function (waw) {
 module.exports.generate = generate;
 module.exports.g = generate;
 /*
-	Module
+*	Module
 */
 const new_module = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure('modules', 'Module already exists', false)) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'modules', 'Module already exists', false)) return;
 	}
 	if (!fs.existsSync(process.cwd() + '/src/app/modules/index.ts')) {
 		fs.writeFileSync(process.cwd() + '/src/app/modules/index.ts', '');
 	}
-	if (!params.template) {
-		return read_customization(params, 'module', () => { new_module(params) });
+	if (!waw.template) {
+		return waw.read_customization(defaults, waw, 'module', () => { new_module(waw) });
 	}
-	require(params.template + '/cli.js')(waw);
+	require(waw.template + '/cli.js')(waw);
 }
 module.exports.add = new_module;
 module.exports.a = new_module;
@@ -279,7 +250,7 @@ const fetch_module = function (waw) {
 module.exports.fetch = fetch_module;
 module.exports.f = fetch_module;
 /*
-	Upload
+*	Upload
 */
 const add_token = waw => {
 	if (fs.existsSync(waw.waw_root + '/config.json')) {
@@ -314,7 +285,7 @@ const add_token = waw => {
 }
 const upload_file = (waw, file, done) => {
 	/*
-	waw.ngx_config.name
+*	waw.ngx_config.name
 	waw.ngx_config.token
 	file
 	*/
@@ -366,5 +337,5 @@ const upload = waw => {
 module.exports.upload = upload;
 module.exports.u = upload;
 /*
-	End Of
+*	End Of
 */
