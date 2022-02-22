@@ -9,6 +9,9 @@ import { CNAMEComponent } from './NAME.component';
 	declarations: [
 		CNAMEComponent
 	],
+	exports: [
+		CNAMEComponent
+	],
 	providers: []
 
 })

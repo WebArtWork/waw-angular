@@ -198,13 +198,13 @@ module.exports.g = generate;
 */
 const new_module = function (waw) {
 	if (!waw.path) {
-		if(waw.ensure(process.cwd() + '/src/app/', 'modules', 'Module already exists', false)) return;
+		if(waw.ensure(process.cwd() + '/src/app/', 'modules', 'Module already exists')) return;
 	}
 	if (!fs.existsSync(process.cwd() + '/src/app/modules/index.ts')) {
 		fs.writeFileSync(process.cwd() + '/src/app/modules/index.ts', '');
 	}
 	if (!waw.template) {
-		return waw.read_customization(defaults, waw, 'module', () => { new_module(waw) });
+		return waw.read_customization(defaults, 'module', () => { new_module(waw) });
 	}
 	require(waw.template + '/cli.js')(waw);
 }
