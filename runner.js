@@ -225,7 +225,21 @@ const _fetch_module = (waw, location, callback) => {
 			// console.log(json.repo);
 			// console.log(location + '/module.json');
 		}
-		callback(!err);
+		json = waw.readJson(location + '/module.json');
+		if (json.dependencies) {
+			waw.each(json.dependencies, (name, version, next) => {
+				waw.npmi({
+					path: process.cwd(),
+					name,
+					version,
+					save: true
+				}, next);
+			}, ()=>{
+				callback(!err);
+			});
+		} else {
+			callback(!err);
+		}
 	});
 }
 const fetch_module = function (waw) {
