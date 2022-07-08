@@ -5,6 +5,9 @@
 ### Create New Page
 `waw page NAME`
 `waw p NAME`
+### Create New Module
+`waw add NAME`
+`waw a NAME`
 ### Create New Component
 `waw component NAME`
 `waw c NAME`
@@ -19,11 +22,6 @@
 ### Create New Alert
 `waw alert NAME`
 `waw a NAME`
-### Create New Loader
-`waw loader NAME`
-`waw l NAME`
-### Create New Popup
-`waw popup NAME`
 
 ## Customization
 ### will generate new folder `template/ELEMENT/NAME` with default code of that element
@@ -35,9 +33,7 @@
 | Project | Description | Issues | Forks | Stars | License |
 | ------- | ------- | ------- | ------- | ------- |:-----:|
 | [**`Base`**](https://github.com/WebArtWork/wawNgx) | User management | [![GitHub issues](https://img.shields.io/github/issues/WebArtWork/wawNgx)](https://github.com/WebArtWork/wawNgx/issues) | [![GitHub forks](https://img.shields.io/github/forks/WebArtWork/wawNgx)](https://github.com/WebArtWork/wawNgx/network) | [![GitHub stars](https://img.shields.io/github/stars/WebArtWork/wawNgx)](https://github.com/WebArtWork/wawNgx/stargazers) | [![GitHub license](https://img.shields.io/github/license/WebArtWork/wawNgx)](https://github.com/WebArtWork/wawNgx/blob/master/LICENSE)
-| [**`CRM`**](https://github.com/WebArtWork/wawNgxCrm) | Base plus tasks and timelogs | [![GitHub issues](https://img.shields.io/github/issues/WebArtWork/wawNgxCrm)](https://github.com/WebArtWork/wawNgxCrm/issues) | [![GitHub forks](https://img.shields.io/github/forks/WebArtWork/wawNgxCrm)](https://github.com/WebArtWork/wawNgxCrm/network) | [![GitHub stars](https://img.shields.io/github/stars/WebArtWork/wawNgxCrm)](https://github.com/WebArtWork/wawNgxCrm/stargazers) | [![GitHub license](https://img.shields.io/github/license/WebArtWork/wawNgxCrm)](https://github.com/WebArtWork/wawNgxCrm/blob/master/LICENSE)
-| [**`eCommerce`**](https://github.com/WebArtWork/wawNgxeCommerce) | Base plus stores, tags, products, services, locations and orders | [![GitHub issues](https://img.shields.io/github/issues/WebArtWork/wawNgxeCommerce)](https://github.com/WebArtWork/wawNgxeCommerce/issues) | [![GitHub forks](https://img.shields.io/github/forks/WebArtWork/wawNgxeCommerce)](https://github.com/WebArtWork/wawNgxeCommerce/network) | [![GitHub stars](https://img.shields.io/github/stars/WebArtWork/wawNgxeCommerce)](https://github.com/WebArtWork/wawNgxeCommerce/stargazers) | [![GitHub license](https://img.shields.io/github/license/WebArtWork/wawNgxeCommerce)](https://github.com/WebArtWork/wawNgxeCommerce/blob/master/LICENSE)
-| [**`Social`**](https://github.com/WebArtWork/wawNgxSocial) | Base plus posts, commets and notifications | [![GitHub issues](https://img.shields.io/github/issues/WebArtWork/wawNgxSocial)](https://github.com/WebArtWork/wawNgxSocial/issues) | [![GitHub forks](https://img.shields.io/github/forks/WebArtWork/wawNgxSocial)](https://github.com/WebArtWork/wawNgxSocial/network) | [![GitHub stars](https://img.shields.io/github/stars/WebArtWork/wawNgxSocial)](https://github.com/WebArtWork/wawNgxSocial/stargazers) | [![GitHub license](https://img.shields.io/github/license/WebArtWork/wawNgxSocial)](https://github.com/WebArtWork/wawNgxSocial/blob/master/LICENSE)
+| [**`Platform`**](https://github.com/WebArtWork/wawNgxPlatform) | Base plus tasks and timelogs | [![GitHub issues](https://img.shields.io/github/issues/WebArtWork/wawNgxPlatform)](https://github.com/WebArtWork/wawNgxPlatform/issues) | [![GitHub forks](https://img.shields.io/github/forks/WebArtWork/wawNgxPlatform)](https://github.com/WebArtWork/wawNgxPlatform/network) | [![GitHub stars](https://img.shields.io/github/stars/WebArtWork/wawNgxPlatform)](https://github.com/WebArtWork/wawNgxPlatform/stargazers) | [![GitHub license](https://img.shields.io/github/license/WebArtWork/wawNgxPlatform)](https://github.com/WebArtWork/wawNgxPlatform/blob/master/LICENSE)
 | [**`wacom`**](https://github.com/WebArtWork/wacom) | Package for any Angular client with many usefull content | [![GitHub issues](https://img.shields.io/github/issues/WebArtWork/wacom)](https://github.com/WebArtWork/wacom/issues) | [![GitHub forks](https://img.shields.io/github/forks/WebArtWork/wacom)](https://github.com/WebArtWork/wacom/network) | [![GitHub stars](https://img.shields.io/github/stars/WebArtWork/wacom)](https://github.com/WebArtWork/wacom/stargazers) | [![GitHub license](https://img.shields.io/github/license/WebArtWork/wacom)](https://github.com/WebArtWork/wacom/blob/master/LICENSE)
 
 ## Contributing
