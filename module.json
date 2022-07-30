@@ -1,6 +1,6 @@
 {
 	"name": "Angular",
-	"priority": 2,
+	"priority": 930,
 	"runner": "runner.js",
 	"router": "index.js",
 	"git": {
