@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 @Component({
-	selector: 'NAME',
+	selector: 'core-NAME',
 	templateUrl: './NAME.component.html',
 	styleUrls: ['./NAME.component.scss']
 })
