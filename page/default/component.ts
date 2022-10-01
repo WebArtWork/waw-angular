@@ -3,6 +3,6 @@ import { Component } from '@angular/core';
 	templateUrl: './NAME.component.html',
 	styleUrls: ['./NAME.component.scss']
 })
-export class CNAMEComponent{
+export class CNAMEComponent {
 	constructor() {}
 }

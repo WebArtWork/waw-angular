@@ -103,7 +103,15 @@ module.exports.m = new_modal;
 const new_page = function (waw) {
 	// waw page user profile REPO
 	if (!waw.path) {
-		if (waw.ensure(process.cwd() + '/src/app/', 'pages', 'Page already exists')) return;
+		if (
+			waw.ensure(
+				process.cwd() + '/src/app/',
+				'pages',
+				'Page already exists'
+			)
+		) {
+			return;
+		}
 	}
 	if (!waw.template) {
 		return waw.read_customization(defaults, 'page', () => { new_page(waw) });
