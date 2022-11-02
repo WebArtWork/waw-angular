@@ -12,32 +12,29 @@ const capitalize = (string) => {
 	return string ? string.charAt(0).toUpperCase() + string.slice(1) : "";
 }
 module.exports = function(waw){
-	if (
-		Array.isArray(waw._argv) &&
-		waw._argv.length > 3
-	) {
-		waw.Name = '';
-		waw.name = '';
-		waw._argv.shift();
-		waw.path = 'pages/' + waw._argv.shift() + '/';
-		while (waw._argv.length) {
-			const folder = waw._argv.shift();
-			if (waw.Name) {
-				waw.name = waw.name + '-' + folder;
-				waw.Name = waw.Name + capitalize(folder);
-			} else {
-				waw.name = folder;
-				waw.Name = folder;
-			}
-			if (waw._argv.length) {
-				waw.path += folder + '/';
-			} else {
-				waw.path_base = waw.path + waw.name;
-				waw.path += waw.Name;
-			}
+	waw.Name = '';
+	waw.name = '';
+	waw._argv.shift();
+	waw.path = 'pages/' + waw._argv.shift() + '/';
+	while (waw._argv.length) {
+		const folder = waw._argv.shift();
+		if (waw.Name) {
+			waw.name = waw.name + '-' + folder;
+			waw.Name = waw.Name + capitalize(folder);
+		} else {
+			waw.name = folder;
+			waw.Name = folder;
 		}
-		waw.base = path.join(process.cwd(), 'src/app', waw.path_base, waw.name);
+		if (waw._argv.length) {
+			waw.path += folder + '/';
+		} else {
+			waw.path_base = waw.path + waw.name;
+			waw.path += waw.Name;
+		}
 	}
+	waw.base = path.join(process.cwd(), 'src/app', waw.path_base, waw.name);
+	waw.module = path.join(waw.path_base, waw.name+'.module');
+	waw.module = waw.module.split('\\').join('/');
 	angular.default({
 		cliArgs: [
 			'generate',
@@ -49,7 +46,6 @@ module.exports = function(waw){
 	}).catch(function () {
 		//console.log('catch', arguments);
 	}).finally(function () {
-	console.log('this is the end');
 		//console.log('finally', arguments);
 		let html = fs.readFileSync(waw.template+'/component.html', 'utf8');
 		html = html.split('CNAME').join(waw.Name);
@@ -70,7 +66,7 @@ module.exports = function(waw){
 		waw.add_code({
 			file: process.cwd() + '/src/app/app.module.ts',
 			search: '/* '+waw.argv[1].split('/')[1]+' */',
-			replace: '/* '+waw.argv[1].split('/')[1]+" */{\n\t\tpath: '"+waw.name+"',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '"+waw.Name+"'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./"+waw.path+'/'+waw.name+".module').then(m => m."+waw.Name+"Module)\n\t}, "
+			replace: '/* ' + waw.argv[1].split('/')[1] + " */\n\t\t\t{\n\t\t\t\tpath: '" + waw.name.replace('-', '/') + "',\n\t\t\t\tcanActivate: [MetaGuard],\n\t\t\t\tdata: {\n\t\t\t\t\tmeta: {\n\t\t\t\t\t\ttitle: '" + waw.Name + "'\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tloadChildren: () => import('./" + waw.module + "').then(m => m." + waw.Name +"Module)\n\t\t\t}, "
 		});
 		console.log('Page has been created');
 		process.exit(1);
