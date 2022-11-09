@@ -14,7 +14,8 @@ const defaults = {
 		default: __dirname + '/modal/default'
 	},
 	page: {
-		default: __dirname + '/page/default'
+		default: __dirname + '/page/default',
+		crud: __dirname + '/page/crud'
 	},
 	pipe: {
 		default: __dirname + '/pipe/default'
@@ -23,12 +24,14 @@ const defaults = {
 		default: __dirname + '/popup/default'
 	},
 	service: {
-		default: __dirname + '/service/default'
+		default: __dirname + '/service/default',
+		crud: __dirname + '/service/crud'
 	},
 	module: {
 		default: __dirname + '/module/default'
 	}
 }
+
 /*
 *	Alert
 */
