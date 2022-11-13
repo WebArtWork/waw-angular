@@ -1,5 +1,7 @@
 const path = require('path');
+
 const fs = require('fs');
+
 const defaults = {
 	alert: {
 		default: __dirname + '/alert/default'
@@ -32,33 +34,122 @@ const defaults = {
 	}
 }
 
+const initialize = waw => {
+	waw.argv.shift();
+
+	if (!waw.argv.length) {
+		console.log('Please provide name');
+
+		process.exit(1);
+	}
+
+	waw.name = waw.argv[waw.argv.length - 1];
+
+	if (waw.name.startsWith('ngx-')) {
+		waw.name  = waw.argv[waw.argv.length-1].replace('ngx-', '');
+
+		waw.argv[waw.argv.length - 1] = waw.name;
+
+		waw.repo = 'https://github.com/WebArtWork/ngx-' + waw.name + '.git';
+	} else {
+		waw.Name = waw.name[0].toUpperCase() + waw.name.slice(1, waw.name.length);
+	}
+
+	waw.base = path.join(process.cwd(), 'src', 'app', waw.module);
+
+	for (let i = 0; i < waw.argv.length - 1; i++) {
+		waw.argv[i] = waw.argv[i].toLowerCase();
+	}
+
+	waw.base = path.join(waw.base, waw.argv.join(path.sep));
+
+	waw.component = path.join(waw.base, waw.name);
+}
+
+const fetch = waw => {
+	fs.mkdirSync(waw.base, {
+		recursive: true
+	});
+
+	waw.fetch(waw.base, waw.repo, (err) => {
+		if (err) console.log('Repository was not found');
+		else console.log('Code is successfully installed');
+		process.exit(1);
+	});
+}
+
 /*
 *	Alert
 */
-const new_alert = (waw) => {
-	if (!waw.path) {
-		if (waw.ensure(process.cwd() + '/src/app/', 'alerts', 'Alert already exists')) return;
+const new_alert = waw => {
+	waw.module = 'alert';
+
+	initialize(waw);
+
+	if (waw.repo) {
+		fetch(waw);
+	} else {
+		require(path.join(__dirname, 'alert', 'default', 'cli.js'))(waw);
 	}
-	if (!waw.template) {
-		return waw.read_customization(defaults, 'alert', () => { new_alert(waw) });
-	}
-	require(waw.template + '/cli.js')(waw);
 }
+
 module.exports.alert = new_alert;
+
 /*
 *	Component
 */
 const new_component = function (waw) {
-	if (!waw.path) {
-		if (waw.ensure(process.cwd() + '/src/app/', 'core/components', 'Component already exists')) return;
-	}
-	if (!waw.template) {
-		return waw.read_customization(defaults, 'component', () => { new_component(waw) });
-	}
-	require(waw.template + '/cli.js')(waw);
+
+	console.log(waw.argv);
+
+	process.exit(1);
+
+	if (fetch(waw, 'alerts')) return;
+
+	require(__dirname + '/component/cli.js')(waw);
+
+	// if (!waw.path) {
+	// 	if (waw.ensure(process.cwd() + '/src/app/', 'core/components', 'Component already exists')) return;
+	// }
+	// if (!waw.template) {
+	// 	return waw.read_customization(defaults, 'component', () => { new_component(waw) });
+	// }
+	// require(waw.template + '/cli.js')(waw);
 }
 module.exports.component = new_component;
 module.exports.c = new_component;
+
+
+
+/*
+*	Page
+*/
+
+const new_page = function (waw) {
+	// waw page user profile REPO
+	if (!waw.path) {
+		if (
+			waw.ensure(
+				process.cwd() + '/src/app/',
+				'pages',
+				'Page already exists'
+			)
+		) {
+			return;
+		}
+	}
+	if (!waw.template) {
+		return waw.read_customization(defaults, 'page', () => { new_page(waw) });
+	}
+	require(waw.template + '/cli.js')(waw);
+}
+module.exports.page = new_page;
+module.exports.p = new_page;
+
+
+
+
+
 /*
 *	Loader
 */
@@ -100,29 +191,7 @@ const new_modal = function (waw) {
 }
 module.exports.modal = new_modal;
 module.exports.m = new_modal;
-/*
-*	Page
-*/
-const new_page = function (waw) {
-	// waw page user profile REPO
-	if (!waw.path) {
-		if (
-			waw.ensure(
-				process.cwd() + '/src/app/',
-				'pages',
-				'Page already exists'
-			)
-		) {
-			return;
-		}
-	}
-	if (!waw.template) {
-		return waw.read_customization(defaults, 'page', () => { new_page(waw) });
-	}
-	require(waw.template + '/cli.js')(waw);
-}
-module.exports.page = new_page;
-module.exports.p = new_page;
+
 /*
 *	Pipe
 */
