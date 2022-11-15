@@ -1,7 +1,5 @@
 const path = require('path');
-
 const fs = require('fs');
-
 const defaults = {
 	alert: {
 		default: __dirname + '/alert/default'
@@ -55,7 +53,7 @@ const initialize = waw => {
 		waw.Name = waw.name[0].toUpperCase() + waw.name.slice(1, waw.name.length);
 	}
 
-	waw.base = path.join(process.cwd(), 'src', 'app', waw.module);
+	waw.base = path.join(process.cwd(), 'src', 'app', waw.folder);
 
 	for (let i = 0; i < waw.argv.length - 1; i++) {
 		waw.argv[i] = waw.argv[i].toLowerCase();
@@ -63,8 +61,30 @@ const initialize = waw => {
 
 	waw.base = path.join(waw.base, waw.argv.join(path.sep));
 
-	waw.component = [waw.module, waw.argv.join('/')].join('/');
+	waw.component = [waw.folder, waw.argv.join('/')].join('/');
 }
+
+const template = (waw, next) => {
+	if (Object.keys(defaults[waw.module]).length > 1) {
+		let text = 'Which module you want to use?', counter = 0, repos = {};
+		for (let key in defaults[waw.module]) {
+			repos[++counter] = defaults[waw.module][key];
+			text += '\n' + counter + ') ' + key;
+		}
+		text += '\nChoose number: ';
+		waw.readline.question(text, (answer) => {
+			if (!answer || !repos[parseInt(answer)]) {
+				template(waw, next);
+			} else {
+				waw.template = repos[parseInt(answer)];
+				next();
+			}
+		});
+	} else {
+		waw.template = defaults[waw.module].default;
+		next();
+	}
+};
 
 const fetch = waw => {
 	fs.mkdirSync(waw.base, {
@@ -82,17 +102,16 @@ const fetch = waw => {
 *	Alert
 */
 const new_alert = waw => {
-	waw.module = 'alerts';
-
-	waw.template = path.join(__dirname, 'alert', 'default');
-
+	waw.module = 'alert';
+	waw.folder = 'alerts';
 	initialize(waw);
-
-	if (waw.repo) {
-		fetch(waw);
-	} else {
-		require(path.join(waw.template, 'cli.js'))(waw);
-	}
+	template(waw, ()=>{
+		if (waw.repo) {
+			fetch(waw);
+		} else {
+			require(path.join(waw.template, 'cli.js'))(waw);
+		}
+	});
 }
 
 module.exports.alert = new_alert;
