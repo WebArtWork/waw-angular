@@ -63,7 +63,7 @@ const initialize = waw => {
 
 	waw.base = path.join(waw.base, waw.argv.join(path.sep));
 
-	waw.component = path.join(waw.base, waw.name);
+	waw.component = [waw.module, waw.argv.join('/')].join('/');
 }
 
 const fetch = waw => {
@@ -82,14 +82,16 @@ const fetch = waw => {
 *	Alert
 */
 const new_alert = waw => {
-	waw.module = 'alert';
+	waw.module = 'alerts';
+
+	waw.template = path.join(__dirname, 'alert', 'default');
 
 	initialize(waw);
 
 	if (waw.repo) {
 		fetch(waw);
 	} else {
-		require(path.join(__dirname, 'alert', 'default', 'cli.js'))(waw);
+		require(path.join(waw.template, 'cli.js'))(waw);
 	}
 }
 
