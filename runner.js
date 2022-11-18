@@ -43,6 +43,7 @@ const initialize = waw => {
 
 	waw.name = waw.argv[waw.argv.length - 1];
 
+
 	if (waw.name.startsWith('ngx-')) {
 		waw.name  = waw.argv[waw.argv.length-1].replace('ngx-', '');
 
@@ -62,7 +63,25 @@ const initialize = waw => {
 	waw.base = path.join(waw.base, waw.argv.join(path.sep));
 
 	waw.component = [waw.folder, waw.argv.join('/')].join('/');
-}
+
+	waw.fileName = waw.name;
+
+	for (let i = 0; i < waw.fileName.length; i++) {
+		if (waw.fileName[i].match(/^[A-Z]*$/)) {
+			waw.fileName = waw.fileName.slice(0, i) + '-' + waw.fileName.slice(i);
+
+			i++;
+		}
+	}
+
+	waw.fileName = waw.fileName.toLowerCase();
+
+	const base = waw.base.split(path.sep);
+
+	base.pop();
+
+	waw.base = path.join(base.join(path.sep), waw.fileName);
+};
 
 const template = (waw, next) => {
 	if (Object.keys(defaults[waw.module]).length > 1) {
@@ -96,80 +115,30 @@ const fetch = waw => {
 		else console.log('Code is successfully installed');
 		process.exit(1);
 	});
-}
+};
 
-/*
-*	Alert
-*/
-const new_alert = waw => {
-	waw.module = 'alert';
-	waw.folder = 'alerts';
-	initialize(waw);
-	template(waw, ()=>{
+const run = (module, folder) => {
+	return waw => {
+		waw.module = module;
+		waw.folder = folder;
+		initialize(waw);
 		if (waw.repo) {
 			fetch(waw);
 		} else {
-			require(path.join(waw.template, 'cli.js'))(waw);
-		}
-	});
-}
-
-module.exports.alert = new_alert;
-
-/*
-*	Component
-*/
-const new_component = function (waw) {
-
-	console.log(waw.argv);
-
-	process.exit(1);
-
-	if (fetch(waw, 'alerts')) return;
-
-	require(__dirname + '/component/cli.js')(waw);
-
-	// if (!waw.path) {
-	// 	if (waw.ensure(process.cwd() + '/src/app/', 'core/components', 'Component already exists')) return;
-	// }
-	// if (!waw.template) {
-	// 	return waw.read_customization(defaults, 'component', () => { new_component(waw) });
-	// }
-	// require(waw.template + '/cli.js')(waw);
-}
-module.exports.component = new_component;
-module.exports.c = new_component;
-
-
-
-/*
-*	Page
-*/
-
-const new_page = function (waw) {
-	// waw page user profile REPO
-	if (!waw.path) {
-		if (
-			waw.ensure(
-				process.cwd() + '/src/app/',
-				'pages',
-				'Page already exists'
-			)
-		) {
-			return;
+			template(waw, () => {
+				require(path.join(waw.template, 'cli.js'))(waw);
+			});
 		}
 	}
-	if (!waw.template) {
-		return waw.read_customization(defaults, 'page', () => { new_page(waw) });
-	}
-	require(waw.template + '/cli.js')(waw);
 }
-module.exports.page = new_page;
-module.exports.p = new_page;
 
+module.exports.alert = run('alert', 'alerts');
 
+module.exports.component = run('component', 'core/components');
+module.exports.c = run('component', 'core/components');
 
-
+module.exports.page = run('page', 'pages');
+module.exports.p = run('page', 'pages');
 
 /*
 *	Loader

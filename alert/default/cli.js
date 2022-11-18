@@ -4,17 +4,23 @@ const exe = require('child_process').execSync;
 const root = exe('npm root -g').toString().trim();
 if (!fs.existsSync(root + '/@angular/cli')) {
 	console.log("You should install '@angular/cli' global. 'npm i -g @angular/cli'");
-	process.exit(1);
+	process.exit(0);
 }
 
 module.exports = async waw => {
-	exe('ng g c ' + waw.component);
+	try {
+		exe('ng g c ' + waw.component);
+	} catch (error) {
+		console.log('\x1b[33m%s\x1b[0m', "You probably should install or re-install node modules, try:");
+		console.log('\x1b[36m%s\x1b[0m', 'npm install');
+		process.exit(0);
+	}
 
 	fs.mkdirSync(waw.base, {
 		recursive: true
 	});
 
-	waw.base = path.join(waw.base, waw.name);
+	waw.base = path.join(waw.base, waw.fileName);
 
 	let html = fs.readFileSync(waw.template+'/component.html', 'utf8');
 	html = html.split('CNAME').join(waw.Name);
