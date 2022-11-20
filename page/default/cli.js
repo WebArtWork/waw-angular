@@ -8,8 +8,10 @@ if (!fs.existsSync(root + '/@angular/cli')) {
 }
 
 module.exports = async waw => {
-	console.log(waw.base, waw.component, waw.fileName, waw.argv[2]);
-	process.exit(1);
+	if (waw.argv.length < 2) {
+		console.log('\x1b[33m%s\x1b[0m', "Please specify role");
+		process.exit(0);
+	}
 
 	try {
 		exe('ng g m ' + waw.component);
@@ -18,6 +20,7 @@ module.exports = async waw => {
 		console.log('\x1b[36m%s\x1b[0m', 'npm install');
 		process.exit(0);
 	}
+
 	exe('ng g c ' + waw.component);
 
 	fs.mkdirSync(waw.base, {
@@ -25,6 +28,14 @@ module.exports = async waw => {
 	});
 
 	waw.base = path.join(waw.base, waw.fileName);
+
+	if (fs.existsSync(waw.base + '.component.css')) {
+		fs.unlink(waw.base + '.component.css', (err) => { })
+	}
+
+	if (fs.existsSync(waw.base + '.component.spec.ts')) {
+		fs.unlink(waw.base + '.component.spec.ts', (err) => { })
+	}
 
 	let html = fs.readFileSync(waw.template + '/component.html', 'utf8');
 	html = html.split('CNAME').join(waw.Name);
@@ -41,19 +52,18 @@ module.exports = async waw => {
 	ts = ts.split('NAME').join(waw.name);
 	fs.writeFileSync(waw.base + '.component.ts', ts, 'utf8');
 
-	waw.add_code({
-		file: process.cwd() + '/src/app/app.module.ts',
-		search: '/* alerts */',
-		replace: "/* alerts */\n\t\t\t\t\t" + waw.name + ": " + waw.Name + "Component,"
-	});
+	let mod = fs.readFileSync(waw.template + '/module.ts', 'utf8');
+	mod = mod.split('CNAME').join(waw.Name);
+	mod = mod.split('NAME').join(waw.name);
+	fs.writeFileSync(waw.base + '.module.ts', mod, 'utf8');
 
 	waw.add_code({
 		file: process.cwd() + '/src/app/app.module.ts',
-		search: '/* ' + waw.argv[2].split('/')[2] + ' */',
-		replace: '/* ' + waw.argv[2].split('/')[2] + " */{\n\t\tpath: '" + waw.name + "',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '" + waw.Name + "'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./" + waw.path + '/' + waw.name + ".module').then(m => m." + waw.Name + "Module)\n\t}, "
+		search: '/* ' + waw.argv[0].split('/')[0] + ' */',
+		replace: '/* ' + waw.argv[0].split('/')[0] + " */{\n\t\tpath: '" + waw.name + "',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '" + waw.Name + "'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./" + waw.path + '/' + waw.name + ".module').then(m => m." + waw.Name + "Module)\n\t}, "
 	});
 
-	console.log('Alert has been created');
+	console.log('Page has been created');
 
 	process.exit(1);
 }
