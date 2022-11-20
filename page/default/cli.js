@@ -8,7 +8,7 @@ if (!fs.existsSync(root + '/@angular/cli')) {
 }
 
 module.exports = async waw => {
-	console.log(waw.base, waw.component, waw.fileName);
+	console.log(waw.base, waw.component, waw.fileName, waw.argv[2]);
 	process.exit(1);
 
 	try {
@@ -18,6 +18,7 @@ module.exports = async waw => {
 		console.log('\x1b[36m%s\x1b[0m', 'npm install');
 		process.exit(0);
 	}
+	exe('ng g c ' + waw.component);
 
 	fs.mkdirSync(waw.base, {
 		recursive: true
@@ -44,6 +45,12 @@ module.exports = async waw => {
 		file: process.cwd() + '/src/app/app.module.ts',
 		search: '/* alerts */',
 		replace: "/* alerts */\n\t\t\t\t\t" + waw.name + ": " + waw.Name + "Component,"
+	});
+
+	waw.add_code({
+		file: process.cwd() + '/src/app/app.module.ts',
+		search: '/* ' + waw.argv[2].split('/')[2] + ' */',
+		replace: '/* ' + waw.argv[2].split('/')[2] + " */{\n\t\tpath: '" + waw.name + "',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '" + waw.Name + "'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./" + waw.path + '/' + waw.name + ".module').then(m => m." + waw.Name + "Module)\n\t}, "
 	});
 
 	console.log('Alert has been created');
