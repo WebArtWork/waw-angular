@@ -5,20 +5,27 @@ import { MongoService, AlertService } from 'wacom';
 	providedIn: 'root'
 })
 export class CNAMEService {
-	public NAMEs: any = [];
-	public _NAMEs: any = {};
-	constructor(private mongo: MongoService, private alert: AlertService) { 
-		this.NAMEs = mongo.get('NAME', {}, (arr, obj)=>{
+	NAMEs: any = [];
+
+	_NAMEs: any = {};
+
+	constructor(
+		private mongo: MongoService,
+		private alert: AlertService
+	) {
+		this.NAMEs = mongo.get('NAME', {}, (arr: any, obj: any) => {
 			this._NAMEs = obj;
 		});
 	}
+
 	create(NAME:any={}, text = 'NAME has been created.') {
 		if(NAME._id) return this.save(NAME);
-		this.mongo.create('NAME', NAME, created=>{
+		this.mongo.create('NAME', NAME, () => {
 			this.alert.show({ text });
-		}); 
+		});
 	}
-	doc(NAMEId){
+
+	doc(NAMEId: string): any{
 		if(!this._NAMEs[NAMEId]){
 			this._NAMEs[NAMEId] = this.mongo.fetch('NAME', {
 				query: {
@@ -28,18 +35,21 @@ export class CNAMEService {
 		}
 		return this._NAMEs[NAMEId];
 	}
-	update(NAME, text = 'NAME has been updated.') {
-		this.mongo.afterWhile(NAME, _=> {
+
+	update(NAME: any, text = 'NAME has been updated.'): void {
+		this.mongo.afterWhile(NAME, ()=> {
 			this.save(NAME, text);
 		});
 	}
-	save(NAME, text = 'NAME has been updated.'){
-		this.mongo.update('NAME', NAME, _=>{
+
+	save(NAME: any, text = 'NAME has been updated.'): void {
+		this.mongo.update('NAME', NAME, () => {
 			if(text) this.alert.show({ text, unique: NAME });
 		});
 	}
-	delete(NAME, text = 'NAME has been deleted.') {
-		this.mongo.delete('NAME', NAME, _=>{
+
+	delete(NAME: any, text = 'NAME has been deleted.'): void {
+		this.mongo.delete('NAME', NAME, () => {
 			if(text) this.alert.show({ text });
 		});
 	}

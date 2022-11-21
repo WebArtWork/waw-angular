@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 @Component({
 	selector: 'core-NAME',
-	templateUrl: './NAME.component.html',
-	styleUrls: ['./NAME.component.scss']
+	templateUrl: './FILENAME.component.html',
+	styleUrls: ['./FILENAME.component.scss']
 })
 export class CNAMEComponent {}

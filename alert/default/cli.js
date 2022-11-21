@@ -22,6 +22,14 @@ module.exports = async waw => {
 
 	waw.base = path.join(waw.base, waw.fileName);
 
+	if (fs.existsSync(waw.base + '.component.css')) {
+		fs.unlink(waw.base + '.component.css', (err) => { })
+	}
+
+	if (fs.existsSync(waw.base + '.component.spec.ts')) {
+		fs.unlink(waw.base + '.component.spec.ts', (err) => { })
+	}
+
 	let html = fs.readFileSync(waw.template+'/component.html', 'utf8');
 	html = html.split('CNAME').join(waw.Name);
 	html = html.split('NAME').join(waw.name);
@@ -33,6 +41,7 @@ module.exports = async waw => {
 	fs.writeFileSync(waw.base + '.component.scss', scss, 'utf8');
 
 	let ts = fs.readFileSync(waw.template+'/component.ts', 'utf8');
+	ts = ts.split('FILENAME').join(waw.fileName);
 	ts = ts.split('CNAME').join(waw.Name);
 	ts = ts.split('NAME').join(waw.name);
 	fs.writeFileSync(waw.base + '.component.ts', ts, 'utf8');

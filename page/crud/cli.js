@@ -16,8 +16,8 @@ module.exports = async waw => {
 	try {
 		exe('ng g m ' + waw.component);
 	} catch (error) {
-		console.log('\x1b[33m%s\x1b[0m', "You probably should install or re-install node modules, try:");
-		console.log('\x1b[36m%s\x1b[0m', 'npm install');
+		// console.log('\x1b[33m%s\x1b[0m', "You probably should install or re-install node modules, try:");
+		// console.log('\x1b[36m%s\x1b[0m', 'npm install');
 		process.exit(0);
 	}
 
@@ -48,11 +48,13 @@ module.exports = async waw => {
 	fs.writeFileSync(waw.base + '.component.scss', scss, 'utf8');
 
 	let ts = fs.readFileSync(waw.template + '/component.ts', 'utf8');
+	ts = ts.split('FILENAME').join(waw.fileName);
 	ts = ts.split('CNAME').join(waw.Name);
 	ts = ts.split('NAME').join(waw.name);
 	fs.writeFileSync(waw.base + '.component.ts', ts, 'utf8');
 
 	let mod = fs.readFileSync(waw.template + '/module.ts', 'utf8');
+	mod = mod.split('FILENAME').join(waw.fileName);
 	mod = mod.split('CNAME').join(waw.Name);
 	mod = mod.split('NAME').join(waw.name);
 	fs.writeFileSync(waw.base + '.module.ts', mod, 'utf8');
@@ -60,7 +62,7 @@ module.exports = async waw => {
 	waw.add_code({
 		file: process.cwd() + '/src/app/app.module.ts',
 		search: '/* ' + waw.argv[0].split('/')[0] + ' */',
-		replace: '/* ' + waw.argv[0].split('/')[0] + " */{\n\t\tpath: '" + waw.name + "',\n\t\tcanActivate: [MetaGuard],\n\t\tdata: {\n\t\t\tmeta: {\n\t\t\t\ttitle: '" + waw.Name + "'\n\t\t\t}\n\t\t},\n\t\tloadChildren: () => import('./" + waw.path + '/' + waw.name + ".module').then(m => m." + waw.Name + "Module)\n\t}, "
+		replace: '/* ' + waw.argv[0].split('/')[0] + " */\n\t\t\t{\n\t\t\t\tpath: '" + waw.name + "',\n\t\t\t\tcanActivate: [MetaGuard],\n\t\t\t\tdata: {\n\t\t\t\t\tmeta: {\n\t\t\t\t\t\ttitle: '" + waw.Name + "'\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tloadChildren: () => import('./" + waw.fileComponent + '/' + waw.fileName + ".module').then(m => m." + waw.Name + "Module)\n\t\t\t}, "
 	});
 
 	console.log('Page has been created');
