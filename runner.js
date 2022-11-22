@@ -1,34 +1,35 @@
+const exe = require('child_process').execSync;
 const path = require('path');
 const fs = require('fs');
 const defaults = {
 	alert: {
-		default: __dirname + '/alert/default'
+		default: path.join(__dirname, 'alert', 'default')
 	},
 	component: {
-		default: __dirname + '/component/default'
+		default: path.join(__dirname, 'component', 'default')
 	},
 	loader: {
-		default: __dirname + '/loader/default'
+		default: path.join(__dirname, 'loader', 'default')
 	},
 	modal: {
-		default: __dirname + '/modal/default'
+		default: path.join(__dirname, 'modal', 'default')
 	},
 	page: {
-		default: __dirname + '/page/default',
-		crud: __dirname + '/page/crud'
+		default: path.join(__dirname, 'page', 'default'),
+		crud: path.join(__dirname, 'page', 'crud')
 	},
 	pipe: {
-		default: __dirname + '/pipe/default'
+		default: path.join(__dirname, 'pipe', 'default')
 	},
 	popup: {
-		default: __dirname + '/popup/default'
+		default: path.join(__dirname, 'popup', 'default')
 	},
 	service: {
-		default: __dirname + '/service/default',
-		crud: __dirname + '/service/crud'
+		default: path.join(__dirname, 'service', 'default'),
+		crud: path.join(__dirname, 'service', 'crud')
 	},
 	module: {
-		default: __dirname + '/module/default'
+		default: path.join(__dirname, 'module', 'default')
 	}
 }
 
@@ -42,7 +43,6 @@ const initialize = waw => {
 	}
 
 	waw.name = waw.argv[waw.argv.length - 1];
-
 
 	if (waw.name.startsWith('ngx-')) {
 		waw.name  = waw.argv[waw.argv.length-1].replace('ngx-', '');
@@ -90,6 +90,20 @@ const initialize = waw => {
 };
 
 const template = (waw, next) => {
+	const base = path.join(process.cwd(), 'template');
+	const customizations = waw.getDirectories(base);
+	for (const customization of customizations) {
+		const def = path.basename(customization);
+		if (!defaults[def]) {
+			defaults[def] = {};
+		}
+		const customs = waw.getDirectories(customization);
+		for (const custom of customs){
+			const name = path.basename(custom);
+			defaults[def][name] = custom;
+		}
+	}
+
 	if (Object.keys(defaults[waw.module]).length > 1) {
 		let text = 'Which module you want to use?', counter = 0, repos = {};
 		for (let key in defaults[waw.module]) {
@@ -111,6 +125,24 @@ const template = (waw, next) => {
 	}
 };
 
+const install = (waw, location, callback) => {
+	const json = waw.readJson(path.join(location, 'module.json'));
+	if (json.dependencies) {
+		waw.each(json.dependencies, (name, version, next) => {
+			waw.npmi({
+				path: process.cwd(),
+				name,
+				version,
+				save: true
+			}, next);
+		}, () => {
+			callback(!err);
+		});
+	} else {
+		callback(!err);
+	}
+}
+
 const fetch = waw => {
 	fs.mkdirSync(waw.base, {
 		recursive: true
@@ -119,7 +151,9 @@ const fetch = waw => {
 	waw.fetch(waw.base, waw.repo, (err) => {
 		if (err) console.log('Repository was not found');
 		else console.log('Code is successfully installed');
-		process.exit(1);
+		install(waw, waw.base, ()=>{
+			process.exit(1);
+		});
 	});
 };
 
@@ -163,7 +197,7 @@ module.exports.module = run('module', 'modules');
 module.exports.add = run('module', 'modules');
 module.exports.a = run('module', 'modules');
 
-const _fetch_module = (waw, location, callback) => {
+const fetch_module = (waw, location, callback) => {
 	if (!fs.existsSync(location + '/module.json')) {
 		return callback(false);
 	}
@@ -172,34 +206,29 @@ const _fetch_module = (waw, location, callback) => {
 		return callback(false);
 	}
 	waw.fetch(path.normalize(location), json.repo, err => {
-		json = waw.readJson(location + '/module.json');
-		if (json.dependencies) {
-			waw.each(json.dependencies, (name, version, next) => {
-				waw.npmi({
-					path: process.cwd(),
-					name,
-					version,
-					save: true
-				}, next);
-			}, () => {
-				callback(!err);
-			});
-		} else {
-			callback(!err);
-		}
+		waw.install(waw, location, callback);
 	});
-}
-const fetch_module = async waw => {
+};
+
+const fetch_modules = async waw => {
 	if (waw.argv.length > 1) {
-		_fetch_module(waw, process.cwd() + '/src/app/modules/' + waw.argv[1].toLowerCase(), done => {
-			if (done) console.log(waw.argv[1] + ' were fetched from the repo');
-			else console.log(waw.argv[1] + " don't have repo");
-		});
+		fetch_module(
+			waw,
+			process.cwd() + '/src/app/modules/' + waw.argv[1].toLowerCase(),
+			done => {
+				if (done) {
+					console.log('Module ' + waw.argv[1] + ' were fetched from the repo');
+				} else {
+					console.log('Module ' + waw.argv[1] + " don't have an repo");
+				}
+				process.exit(1);
+			}
+		);
 	} else {
-		let folders = waw.getDirectories(process.cwd() + '/src/app/modules');
+		const folders = waw.getDirectories(process.cwd() + '/src/app/modules');
 		let counter = folders.length;
 		for (let i = 0; i < folders.length; i++) {
-			_fetch_module(waw, folders[i], () => {
+			fetch_module(waw, folders[i], () => {
 				if (--counter === 0) {
 					console.log('All possible modules were fetched from their repositories');
 					process.exit(1);
@@ -207,58 +236,68 @@ const fetch_module = async waw => {
 			});
 		}
 	}
-}
-module.exports.fetch = fetch_module;
-module.exports.f = fetch_module;
+};
+module.exports.fetch = fetch_modules;
+module.exports.f = fetch_modules;
 
 const generate = async waw => {
-	if (!waw.path) {
-		if (waw.ensure(process.cwd() + '/src/app/', 'services', 'Service already exists')) return;
+	waw.argv.shift();
+
+	if (waw.argv.length && defaults[waw.argv[0].toLowerCase()]) {
+		waw.element = waw.argv[0].toLowerCase();
 	}
+
 	if (!waw.element) {
-		if (waw.argv.length && defaults[waw.argv[0].toLowerCase()]) {
-			waw.element = waw.argv[0].toLowerCase();
-		} else {
-			let text = 'Which element you want to customize?', counter = 0, repos = {};
-			for (let key in defaults) {
-				repos[++counter] = key;
-				text += '\n' + counter + ') ' + key;
-			}
-			text += '\nChoose number: ';
-			return waw.readline.question(text, function (answer) {
-				if (!answer || !repos[parseInt(answer)]) return new_project();
-				waw.element = repos[parseInt(answer)];
-				generate(waw);
-			});
+		let text = 'Which element you want to customize?', counter = 0, repos = {};
+		for (let key in defaults) {
+			repos[++counter] = key;
+			text += '\n' + counter + ') ' + key;
 		}
+		text += '\nChoose number: ';
+		return waw.readline.question(text, function (answer) {
+			if (!answer || !repos[parseInt(answer)]) return new_project();
+			waw.element = repos[parseInt(answer)];
+			generate(waw);
+		});
 	}
+
 	if (!defaults[waw.element]) {
 		delete waw.element;
 		return generate(waw);
 	}
-	if (!waw.name) {
-		if (waw.argv.length > 1) {
-			waw.name = waw.argv[1].toLowerCase();
-		} else {
-			return waw.readline.question('Provide name for customization: ', function (answer) {
-				waw.name = answer.toLowerCase();
-				generate(waw);
-			});
-		}
+
+	if (waw.argv.length > 1) {
+		waw.name = waw.argv[1].toLowerCase();
 	}
-	let path = process.cwd() + '/template/' + waw.element + '/' + waw.name;
-	fs.mkdirSync(process.cwd() + '/template/' + waw.element, { recursive: true });
-	if (fs.existsSync(path)) {
+
+	if (!waw.name) {
+		return waw.readline.question('Provide name for customization: ', function (answer) {
+			waw.name = answer.toLowerCase();
+			generate(waw);
+		});
+	}
+
+	const loc = path.join(process.cwd(), 'template', waw.element, waw.name);
+
+	if (fs.existsSync(loc)) {
 		console.log('Customization already exists');
 		process.exit(0);
 	}
-	waw.exe('cp -rf ' + __dirname + '/' + waw.element + ' ' + path, () => {
-		console.log('Customization ' + waw.element + ' ' + waw.name + ' created');
-		process.exit(1);
+
+	fs.mkdirSync(loc, {
+		recursive: true
 	});
+
+	exe('cp -rf ' + path.join(__dirname, waw.element) + ' ' + loc);
+
+	console.log('Customization ' + waw.element + ' ' + waw.name + ' created');
+
+	process.exit(1);
 }
 module.exports.generate = generate;
 module.exports.g = generate;
+
+// TODO make below work :)
 
 const add_token = waw => {
 	if (fs.existsSync(waw.waw_root + '/config.json')) {
@@ -311,7 +350,12 @@ const upload_files = waw => {
 				console.log('Something went wrong');
 				process.exit(1);
 			}
-			const files = waw.getFilesRecursively(process.cwd() + '/dist/app');
+			const files = waw.getFilesRecursively(
+				path.join(
+					process.cwd(),
+					waw.ngx_config.name || path.join('dist', 'app')
+				)
+			);
 			let counter = files.length;
 			for (var i = files.length - 1; i >= 0; i--) {
 				files[i]
@@ -334,13 +378,18 @@ const upload = waw => {
 		console.log('This is not angular project');
 		process.exit(1);
 	}
+
 	waw.ngx_config = JSON.parse(fs.readFileSync(process.cwd() + '/angular.json'));
-	if (!waw.ngx_config.name) {
-		waw.ngx_config.name = path.basename(process.cwd());
-		fs.writeFileSync(process.cwd() + '/angular.json', JSON.stringify(waw.ngx_config, null, 2));
+
+	if (waw.ngx_config.name && waw.ngx_config.token) {
+		upload_files(waw);
+	} else if (!waw.ngx_config.name) {
+		console.log('You have to add name into angular config json');
+		process.exit(1);
+	} else {
+		console.log('You have to add token into angular config json');
+		process.exit(1);
 	}
-	if (!waw.ngx_config.token) add_token(waw);
-	else upload_files(waw);
 }
 module.exports.upload = upload;
 module.exports.u = upload;
