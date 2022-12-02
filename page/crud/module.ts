@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CoreModule } from 'src/app/core';
-import { CNAMEComponent } from './FILENAME.component';
+import { CNAMEComponent } from './NAME.component';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [{
