@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { FormConfig, FormModules, FormOutputs, FormService } from 'src/app/modules/form/form.service';
+import {
+	FormConfig,
+	FormModules,
+	FormService,
+	ButtonTypes
+} from 'src/app/modules/form/form.service';
+
+import { CSERVICEService, CSERVICE } from "src/app/core/services/SERVICE.service";
 
 @Component({
 	templateUrl: './NAME.component.html',
@@ -8,27 +15,7 @@ import { FormConfig, FormModules, FormOutputs, FormService } from 'src/app/modul
 export class CNAMEComponent {
 	columns = ['name', 'description'];
 
-	config = {
-		create: () => {
-			this._form.modal(this.formCreate, (doc: CNAME) => {
-				this._NAME.create(user);
-			});
-		},
-		update: (doc: CNAME) => {
-			this.formUpdate.components[0].set = user.email;
-			this.formUpdate.components[1].set = user.name;
-			this._form.modal(this.formUpdate, (doc: CNAME) => {
-				this._NAME.save(user);
-			});
-		},
-		delete: (doc: CNAME) => {
-			this._form.modal(this.formVerify, () => {
-				this._NAME.delete(user);
-			});
-		}
-	};
-
-	config: FormConfig = {
+	form: FormConfig = {
 		components: [
 			{
 				module: FormModules.INPUT,
@@ -38,24 +25,45 @@ export class CNAMEComponent {
 			},
 			{
 				module: FormModules.INPUT,
-				placeholder: 'fill name',
-				label: 'Name',
-				input: 'name'
+				placeholder: 'fill description',
+				label: 'Description',
+				input: 'description'
 			},
 			{
 				module: FormModules.BUTTON,
-				type: ButtonTypes.PRIMARY,
-				label: 'Create'
+				type: ButtonTypes.PRIMARY
 			}
 		]
 	};
 
-	get rows(): CNAME[] {
-		return this._NAME.docs;
+	config = {
+		create: () => {
+			this.form.components[0].set = '';
+			this.form.components[1].set = '';
+			this.form.components[2].label = 'Create';
+			this._form.modal(this.form, (doc: CSERVICE) => {
+				this._SERVICENAME.create(doc);
+			});
+		},
+		update: (doc: CSERVICE) => {
+			this.form.components[0].set = doc.name;
+			this.form.components[1].set = doc.description;
+			this.form.components[2].label = 'Update';
+			this._form.modal(this.form, (doc: CSERVICE) => {
+				this._SERVICENAME.save(doc);
+			});
+		},
+		delete: (doc: CSERVICE) => {
+			this._SERVICENAME.delete(doc);
+		}
+	};
+
+	get rows(): CSERVICE[] {
+		return this._SERVICENAME.SERVICEs;
 	}
 
 	constructor(
 		private _form: FormService,
-		private _NAME: CNAMEService
+		private _SERVICENAME: CSERVICEService
 	) {}
 }
