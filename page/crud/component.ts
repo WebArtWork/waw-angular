@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import {
 	FormConfig,
 	FormModules,
-	FormService,
-	ButtonTypes
+	FormService
 } from 'src/app/modules/form/form.service';
 
 import { CSERVICEService, CSERVICE } from "src/app/core/services/SERVICE.service";
+import { ButtonTypes } from 'src/app/modules/button/button.interface';
 
 @Component({
 	templateUrl: './NAME.component.html',
@@ -21,6 +21,7 @@ export class CNAMEComponent {
 				module: FormModules.INPUT,
 				placeholder: 'fill name',
 				label: 'Name',
+				input: 'name',
 				focused: true
 			},
 			{
@@ -41,15 +42,17 @@ export class CNAMEComponent {
 			this.form.components[0].set = '';
 			this.form.components[1].set = '';
 			this.form.components[2].label = 'Create';
-			this._form.modal(this.form, (doc: CSERVICE) => {
-				this._SERVICENAME.create(doc);
+			this._form.modal(this.form, (created: CSERVICE) => {
+				this._SERVICENAME.create(created);
 			});
 		},
 		update: (doc: CSERVICE) => {
 			this.form.components[0].set = doc.name;
 			this.form.components[1].set = doc.description;
 			this.form.components[2].label = 'Update';
-			this._form.modal(this.form, (doc: CSERVICE) => {
+			this._form.modal(this.form, (updated: CSERVICE) => {
+				doc.name = updated.name;
+				doc.description = updated.description;
 				this._SERVICENAME.save(doc);
 			});
 		},
