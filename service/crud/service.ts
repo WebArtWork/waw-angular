@@ -32,7 +32,11 @@ export class CNAMEService {
 		});
 	}
 
-	create(NAME: CNAME = this.new(), callback: (created: CNAME)=>void, text = 'NAME has been created.') {
+	create(
+		NAME: CNAME = this.new(),
+		callback = (created: CNAME) => {},
+		text = 'NAME has been created.'
+	) {
 		if (NAME._id) {
 			this.save(NAME);
 		} else {
@@ -54,19 +58,31 @@ export class CNAMEService {
 		return this._NAMEs[NAMEId];
 	}
 
-	update(NAME: CNAME, callback = (created: CNAME) => {}, text = 'NAME has been updated.'): void {
+	update(
+		NAME: CNAME,
+		callback = (created: CNAME) => {},
+		text = 'NAME has been updated.'
+	): void {
 		this.mongo.afterWhile(NAME, ()=> {
 			this.save(NAME, callback, text);
 		});
 	}
 
-	save(NAME: CNAME, callback = (created: CNAME) => {}, text = 'NAME has been updated.'): void {
+	save(
+		NAME: CNAME,
+		callback = (created: CNAME) => {},
+		text = 'NAME has been updated.'
+	): void {
 		this.mongo.update('NAME', NAME, () => {
 			if(text) this.alert.show({ text, unique: NAME });
 		});
 	}
 
-	delete(NAME: CNAME, callback = (created: CNAME) => {}, text = 'NAME has been deleted.'): void {
+	delete(
+		NAME: CNAME,
+		callback = (created: CNAME) => {},
+		text = 'NAME has been deleted.'
+	): void {
 		this.mongo.delete('NAME', NAME, () => {
 			if(text) this.alert.show({ text });
 		});
