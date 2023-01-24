@@ -37,6 +37,17 @@ export class CNAMEComponent {
 		]
 	};
 
+	formDelete: FormConfig = {
+		title: 'Are you sure you want to delete this NAME?',
+		components: [
+			{
+				module: FormModules.BUTTON,
+				type: ButtonTypes.PRIMARY,
+				label: 'Yes'
+			}
+		]
+	};
+
 	config = {
 		create: () => {
 			this.form.components[0].set = '';
@@ -57,7 +68,9 @@ export class CNAMEComponent {
 			});
 		},
 		delete: (doc: CSERVICE) => {
-			this._SERVICENAME.delete(doc);
+			this._form.modal(this.formDelete, () => {
+				this._SERVICENAME.delete(doc);
+			});
 		}
 	};
 
