@@ -198,6 +198,7 @@ module.exports.add = run('module', 'modules');
 module.exports.a = run('module', 'modules');
 
 const fetch_module = (waw, location, callback) => {
+	location = path.normalize(location);
 	if (!fs.existsSync(location + '/module.json')) {
 		return callback(false);
 	}
@@ -205,8 +206,9 @@ const fetch_module = (waw, location, callback) => {
 	if (!json.repo) {
 		return callback(false);
 	}
-	waw.fetch(path.normalize(location), json.repo, err => {
-		waw.install(waw, location, callback);
+	waw.fetch(location, json.repo, err => {
+		callback();
+		// waw.install(waw, location, callback);
 	});
 };
 
@@ -296,6 +298,72 @@ const generate = async waw => {
 }
 module.exports.generate = generate;
 module.exports.g = generate;
+
+const update_module = async (waw, module, callback) => {
+	const branch = waw.argv.length > 2 ? waw.argv[2] : 'master';
+
+	const location = module.location;
+
+	const temp = path.join(location, 'temp');
+
+	waw.fetch(temp, module.config.repo, err => {
+		fs.rmdirSync(path.join(location, '.git'), { recursive: true});
+
+		fs.renameSync(
+			path.join(temp, '.git'),
+			path.join(location, '.git')
+		);
+
+		fs.rmdirSync(temp, { recursive: true });
+
+		exe('cd ' + location + ' && git add --all .');
+
+		exe('cd ' + location + ' && git commit -m "' + waw.argv[1] + '"');
+
+		exe('cd ' + location + ' && git push origin "' + branch + '"');
+
+		fs.rmdirSync(path.join(location, '.git'), { recursive: true });
+
+		callback();
+	}, branch, false);
+}
+
+module.exports.sync = async waw => {
+	const modules = waw.getDirectories(path.join(process.cwd(), 'src', 'app', 'modules'));
+
+	for (let i = modules.length-1; i >= 0; i--) {
+		modules[i] = {
+			config: waw.readJson(path.join(modules[i], 'module.json')),
+			location: modules[i]
+		};
+
+		if (!modules[i].config.repo) {
+			modules.splice(i, 1);
+		}
+	}
+
+	let countdown = modules.length;
+
+	if (waw.argv.length === 1) {
+		for (const module of modules) {
+			fetch_module(waw, module.location, ()=>{
+				if(--countdown === 0) {
+					console.log('All modules were synchronized');
+					process.exit(1);
+				}
+			});
+		}
+	} else if (waw.argv.length > 1) {
+		for (const module of modules) {
+			update_module(waw, module, () => {
+				if (--countdown === 0) {
+					console.log('All modules were updated and synchronized');
+					process.exit(1);
+				}
+			});
+		}
+	}
+};
 
 // TODO make below work :)
 
