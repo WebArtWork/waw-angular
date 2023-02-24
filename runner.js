@@ -1,6 +1,9 @@
 const exe = require('child_process').execSync;
+
 const path = require('path');
+
 const fs = require('fs');
+
 const defaults = {
 	alert: {
 		default: path.join(__dirname, 'alert', 'default')
@@ -307,22 +310,38 @@ const update_module = async (waw, module, callback) => {
 	const temp = path.join(location, 'temp');
 
 	waw.fetch(temp, module.config.repo, err => {
-		fs.rmdirSync(path.join(location, '.git'), { recursive: true});
+		if (fs.existsSync(path.join(location, '.git'))) {
+			fs.rmSync(path.join(location, '.git'), { recursive: true});
+		}
+
+		if (!path.join(temp, '.git')) {
+			if (fs.existsSync(temp)) {
+				fs.rmSync(temp, { recursive: true});
+			}
+
+			return callback();
+		}
 
 		fs.renameSync(
 			path.join(temp, '.git'),
 			path.join(location, '.git')
 		);
 
-		fs.rmdirSync(temp, { recursive: true });
+		fs.rmSync(temp, { recursive: true });
 
-		exe('cd ' + location + ' && git add --all .');
+		if (fs.existsSync(path.join(location, '.git'))) {
+			const command = 'cd ./src/app/modules/' + module.name + ' && ';
 
-		exe('cd ' + location + ' && git commit -m "' + waw.argv[1] + '"');
+			exe(command + 'git add --all .');
 
-		exe('cd ' + location + ' && git push origin "' + branch + '"');
+			try {
+				exe(command + 'git commit -m "' + waw.argv[1] + '"');
 
-		fs.rmdirSync(path.join(location, '.git'), { recursive: true });
+				exe(command + 'git push origin "' + branch + '"');
+			} catch (error) {}
+
+			fs.rmSync(path.join(location, '.git'), { recursive: true });
+		}
 
 		callback();
 	}, branch, false);
@@ -334,6 +353,7 @@ module.exports.sync = async waw => {
 	for (let i = modules.length-1; i >= 0; i--) {
 		modules[i] = {
 			config: waw.readJson(path.join(modules[i], 'module.json')),
+			name: path.basename(modules[i]),
 			location: modules[i]
 		};
 
