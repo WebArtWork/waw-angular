@@ -1,85 +1,103 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { FormService } from "src/app/modules/form/form.service";
 import {
-	FormConfig,
-	FormModules,
-	FormService
-} from 'src/app/modules/form/form.service';
-
-import { CSERVICEService, CSERVICE } from "src/app/core/services/SERVICE.service";
-import { ButtonTypes } from 'src/app/modules/button/button.interface';
+  CSERVICEService,
+  CSERVICE,
+} from "src/app/core/services/SERVICE.service";
+import { AlertService, CoreService } from "wacom";
+import { TranslateService } from "src/app/modules/translate/translate.service";
+import { FormInterface } from "src/app/modules/form/interfaces/form.interface";
 
 @Component({
-	templateUrl: './NAME.component.html',
-	styleUrls: ['./NAME.component.scss']
+  templateUrl: "./NAME.component.html",
+  styleUrls: ["./NAME.component.scss"],
 })
 export class CNAMEComponent {
-	columns = ['name', 'description'];
+  columns = ["name", "description"];
 
-	form: FormConfig = {
-		components: [
-			{
-				module: FormModules.INPUT,
-				placeholder: 'fill name',
-				label: 'Name',
-				input: 'name',
-				focused: true
-			},
-			{
-				module: FormModules.INPUT,
-				placeholder: 'fill description',
-				label: 'Description',
-				input: 'description'
-			},
-			{
-				module: FormModules.BUTTON,
-				type: ButtonTypes.PRIMARY
-			}
-		]
-	};
+  form: FormInterface = this._form.getForm("NAME", {
+    formId: "NAME",
+    title: "CNAME",
+    components: [
+      {
+        name: "Text",
+        key: "name",
+        focused: true,
+        fields: [
+          {
+            name: "Placeholder",
+            value: "fill NAME title",
+          },
+          {
+            name: "Label",
+            value: "Title",
+          },
+        ],
+      },
+      {
+        name: "Text",
+        key: "description",
+        fields: [
+          {
+            name: "Placeholder",
+            value: "fill NAME description",
+          },
+          {
+            name: "Label",
+            value: "Description",
+          },
+        ],
+      },
+    ],
+  });
 
-	formDelete: FormConfig = {
-		title: 'Are you sure you want to delete this NAME?',
-		components: [
-			{
-				module: FormModules.BUTTON,
-				type: ButtonTypes.PRIMARY,
-				label: 'Yes'
-			}
-		]
-	};
+  config = {
+    create: () => {
+      this._form.modal<CSERVICE>(this.form, {
+        label: "Create",
+        click: (created: unknown, close: () => void) => {
+          this._SERVICENAME.create(created as CSERVICE);
+          close();
+        },
+      });
+    },
+    update: (doc: CSERVICE) => {
+      this._form
+        .modal<CSERVICE>(this.form, [], doc)
+        .then((updated: CSERVICE) => {
+          this._core.copy(updated, doc);
+          this._SERVICENAME.save(doc);
+        });
+    },
+    delete: (doc: CSERVICE) => {
+      this._alert.question({
+        text: this._translate.translate(
+          "Common.Are you sure you want to delete this cservice?"
+        ),
+        buttons: [
+          {
+            text: this._translate.translate("Common.No"),
+          },
+          {
+            text: this._translate.translate("Common.Yes"),
+            callback: () => {
+              this._SERVICENAME.delete(doc);
+            },
+          },
+        ],
+      });
+    },
+  };
 
-	config = {
-		create: () => {
-			this.form.components[0].set = '';
-			this.form.components[1].set = '';
-			this.form.components[2].label = 'Create';
-			this._form.modal(this.form, (created: CSERVICE) => {
-				this._SERVICENAME.create(created);
-			});
-		},
-		update: (doc: CSERVICE) => {
-			this.form.components[0].set = doc.name;
-			this.form.components[1].set = doc.description;
-			this.form.components[2].label = 'Update';
-			this._form.modal(this.form, (updated: CSERVICE) => {
-				doc.name = updated.name;
-				doc.description = updated.description;
-				this._SERVICENAME.save(doc);
-			});
-		},
-		delete: (doc: CSERVICE) => {
-			this._form.modal(this.formDelete, () => {
-				this._SERVICENAME.delete(doc);
-			});
-		}
-	};
+  get rows(): CSERVICE[] {
+    return this._SERVICENAME.SERVICEs;
+  }
 
-	get rows(): CSERVICE[] {
-		return this._SERVICENAME.SERVICEs;
-	}
-
-	constructor(
-		private _form: FormService,
-		private _SERVICENAME: CSERVICEService
-	) {}
+  constructor(
+    private _translate: TranslateService,
+    private _alert: AlertService,
+    private _SERVICENAME: CSERVICEService,
+    private _form: FormService,
+    private _core: CoreService
+  ) {}
 }
