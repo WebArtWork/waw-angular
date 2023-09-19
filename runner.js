@@ -139,10 +139,10 @@ const install = (waw, location, callback) => {
 				save: true
 			}, next);
 		}, () => {
-			callback(!err);
+			callback();
 		});
 	} else {
-		callback(!err);
+		callback();
 	}
 }
 
