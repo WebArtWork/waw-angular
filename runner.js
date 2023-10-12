@@ -347,6 +347,20 @@ const update_module = async (waw, module, callback) => {
 	}, branch, false);
 }
 
+const install_packages = (waw, dependencies) => {
+	waw.each(dependencies, (name, version, next) => {
+		if (!fs.existsSync(path.resolve(process.cwd(), 'node_modules', name.split('@')[0]))) {
+			console.log('Installing node module ' + name.split('@')[0]);
+			waw.npmi({
+				path: process.cwd(),
+				name,
+				version,
+				save: true
+			}, next);
+		}
+	});
+}
+
 module.exports.sync = async waw => {
 	const modules = waw.getDirectories(path.join(process.cwd(), 'src', 'app', 'modules'));
 
@@ -356,6 +370,10 @@ module.exports.sync = async waw => {
 			name: path.basename(modules[i]),
 			location: modules[i]
 		};
+
+		if (typeof modules[i].config.dependencies === 'object') {
+			install_packages(waw, modules[i].config.dependencies);
+		}
 
 		if (!modules[i].config.repo) {
 			modules.splice(i, 1);
