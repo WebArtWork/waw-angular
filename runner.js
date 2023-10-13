@@ -5,6 +5,9 @@ const path = require('path');
 const fs = require('fs');
 
 const defaults = {
+	icon: {
+		default: path.join(__dirname, 'icon', 'default')
+	},
 	alert: {
 		default: path.join(__dirname, 'alert', 'default')
 	},
@@ -176,6 +179,9 @@ const run = (module, folder) => {
 };
 
 module.exports.alert = run('alert', 'alerts');
+
+module.exports.icon = run('component', 'core/icons');
+module.exports.i = run('component', 'core/icons');
 
 module.exports.icon = run('component', 'core/icons');
 module.exports.i = run('component', 'core/icons');
