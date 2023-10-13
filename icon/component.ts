@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 @Component({
-	selector: 'core-NAME',
+	selector: 'NAME-icon',
 	templateUrl: './FILENAME.component.html',
 	styleUrls: ['./FILENAME.component.scss']
 })
