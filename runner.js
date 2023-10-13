@@ -8,6 +8,9 @@ const defaults = {
 	icon: {
 		default: path.join(__dirname, 'icon', 'default')
 	},
+	formcomponents: {
+		default: path.join(__dirname, 'formcomponents', 'default')
+	},
 	alert: {
 		default: path.join(__dirname, 'alert', 'default')
 	},
@@ -182,6 +185,9 @@ module.exports.alert = run('alert', 'alerts');
 
 module.exports.icon = run('icon', 'core/icons');
 module.exports.i = run('icon', 'core/icons');
+
+module.exports.formcomponnet = run('formcomponet', 'core/formcomponets');
+module.exports.fc = run('formcomponet', 'core/formcomponets');
 
 module.exports.component = run('component', 'core/components');
 module.exports.c = run('component', 'core/components');
