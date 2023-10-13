@@ -177,6 +177,9 @@ const run = (module, folder) => {
 
 module.exports.alert = run('alert', 'alerts');
 
+module.exports.icon = run('component', 'core/icons');
+module.exports.i = run('component', 'core/icons');
+
 module.exports.component = run('component', 'core/components');
 module.exports.c = run('component', 'core/components');
 
