@@ -8,8 +8,8 @@ const defaults = {
 	icon: {
 		default: path.join(__dirname, 'icon', 'default')
 	},
-	formcomponents: {
-		default: path.join(__dirname, 'formcomponents', 'default')
+	formcomponent: {
+		default: path.join(__dirname, 'formcomponent', 'default')
 	},
 	alert: {
 		default: path.join(__dirname, 'alert', 'default')
