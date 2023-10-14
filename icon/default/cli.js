@@ -25,8 +25,12 @@ module.exports = async (waw) => {
 		"https://webart.work/api/registry/icon/" + waw.name
 	);
 	if (response.ok) {
-		console.log(await response.json());
-		return;
+		fs.rmdirSync(waw.base, { recursive: true });
+		fs.mkdirSync(waw.base, { recursive: true });
+		const files = await response.json();
+		for (const file in files) {
+			fs.writeFileSync(path.join(waw.base, file), files[file], 'utf8');
+		}
 	} else {
 		fs.mkdirSync(waw.base, {
 			recursive: true,
@@ -63,9 +67,9 @@ module.exports = async (waw) => {
 			search: "/* exports */",
 			replace: "/* exports */\n\t\t" + waw.Name + "Component,",
 		});
-
-		console.log("Icon has been created");
-
-		process.exit(1);
 	}
+
+	console.log("Icon has been created");
+
+	process.exit(1);
 };
