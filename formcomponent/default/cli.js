@@ -69,7 +69,7 @@ module.exports = async (waw) => {
 		});
 	}
 
-	console.log("Icon has been created");
+	console.log("Formcomponent has been created");
 
 	process.exit(1);
 };
