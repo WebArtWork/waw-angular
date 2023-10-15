@@ -1,50 +1,47 @@
 const fs = require("fs");
 const fetch = require("node-fetch");
 const path = require("path");
-const exe = require("child_process").execSync;
-const root = exe("npm root -g").toString().trim();
-if (!fs.existsSync(root + "/@angular/cli")) {
-	console.log(
-		"You should install '@angular/cli' global. 'npm i -g @angular/cli'"
-	);
-	process.exit(0);
-}
 
 module.exports = async (waw) => {
-	try {
-		exe("ng g c " + waw.component);
-	} catch (error) {
-		console.log(
-			"\x1b[33m%s\x1b[0m",
-			"You probably should install or re-install node modules, try:"
-		);
-		console.log("\x1b[36m%s\x1b[0m", "npm install");
-		process.exit(0);
+	let iconsModuleTs = path.normalize(waw.base).split(path.sep);
+	iconsModuleTs.pop();
+	iconsModuleTs = iconsModuleTs.join(path.sep);
+	iconsModuleTs = path.join(iconsModuleTs, 'icons.module.ts');
+
+	fs.mkdirSync(waw.base, { recursive: true });
+
+	if (!fs.existsSync(iconsModuleTs)) {
+		fs.writeFileSync(
+			iconsModuleTs,
+			fs.readFileSync(waw.template + "/icons.module.ts",
+			"utf8"
+		), 'utf8');
 	}
+
+	waw.add_code({
+		file: process.cwd() + '/src/app/core/icons/icons.module.ts',
+		search: '/* icons */',
+		replace: "/* icons */\n\t" + waw.Name + "Component,"
+	});
+
+	waw.add_code({
+		file: process.cwd() + '/src/app/core/icons/icons.module.ts',
+		search: `import { NgModule } from '@angular/core';`,
+		replace: `import { NgModule } from '@angular/core';\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`
+	});
+
 	const response = await fetch(
 		"https://webart.work/api/registry/icon/" + waw.name
 	);
+
 	if (response.ok) {
-		fs.rmdirSync(waw.base, { recursive: true });
-		fs.mkdirSync(waw.base, { recursive: true });
 		const files = await response.json();
+
 		for (const file in files) {
 			fs.writeFileSync(path.join(waw.base, file), files[file], 'utf8');
 		}
 	} else {
-		fs.mkdirSync(waw.base, {
-			recursive: true,
-		});
-
 		waw.base = path.join(waw.base, waw.fileName);
-
-		if (fs.existsSync(waw.base + ".component.css")) {
-			fs.unlink(waw.base + ".component.css", (err) => { });
-		}
-
-		if (fs.existsSync(waw.base + ".component.spec.ts")) {
-			fs.unlink(waw.base + ".component.spec.ts", (err) => { });
-		}
 
 		let html = fs.readFileSync(waw.template + "/component.html", "utf8");
 		html = html.split("CNAME").join(waw.Name);
@@ -61,12 +58,6 @@ module.exports = async (waw) => {
 		ts = ts.split("CNAME").join(waw.Name);
 		ts = ts.split("NAME").join(waw.name);
 		fs.writeFileSync(waw.base + ".component.ts", ts, "utf8");
-
-		waw.add_code({
-			file: process.cwd() + "/src/app/core/core.module.ts",
-			search: "/* exports */",
-			replace: "/* exports */\n\t\t" + waw.Name + "Component,",
-		});
 	}
 
 	console.log("Icon has been created");
