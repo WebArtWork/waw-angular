@@ -3,7 +3,6 @@ const fetch = require("node-fetch");
 const path = require("path");
 
 module.exports = async (waw) => {
-
 	fs.mkdirSync(waw.base, { recursive: true });
 
 	const response = await fetch(
@@ -50,14 +49,20 @@ module.exports = async (waw) => {
 
 	waw.add_code({
 		file: fcModuleTs,
-		search: '/* formcomponents */',
-		replace: "/* formcomponents */\n\t" + waw.Name + "Component,"
+		search: '/* componnets */',
+		replace: `/* componnets */\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`
 	});
 
 	waw.add_code({
 		file: fcModuleTs,
-		search: `import { NgModule, Type } from '@angular/core';`,
-		replace: `import { NgModule, Type } from '@angular/core';\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`
+		search: '/* declarations */',
+		replace: `/* declarations */\n\t\t${waw.Name}Component,`
+	});
+
+	waw.add_code({
+		file: fcModuleTs,
+		search: '/* addComponents */',
+		replace: `/* addComponents */\n\t\tthis._form.addComponentTemp({\n\t\t\tcomponent: ${waw.Name}Component,\n\t\t\tname: '${waw.Name}'\n\t\t});`
 	});
 
 	console.log("Form component has been created");
