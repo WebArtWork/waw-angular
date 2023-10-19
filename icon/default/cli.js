@@ -1,19 +1,27 @@
-const fs = require("fs");
 const fetch = require("node-fetch");
 const path = require("path");
+const fs = require("fs");
 
 module.exports = async (waw) => {
 	fs.mkdirSync(waw.base, { recursive: true });
 
 	const response = await fetch(
-		"https://webart.work/api/registry/icon/" + waw.name
+		"https://webart.work/api/registry/ngx/icon/" + waw.name
 	);
 
 	if (response.ok) {
-		const files = await response.json();
+		const resp = await response.json();
 
-		for (const file in files) {
-			fs.writeFileSync(path.join(waw.base, file), files[file], 'utf8');
+		if (resp.repo) {
+			waw.fetch(waw.base, resp.repo, (err) => {}, resp.branch || 'master');
+		} else {
+			for (const file in resp.files) {
+				fs.writeFileSync(
+					path.join(waw.base, file),
+					resp.files[file],
+					'utf8'
+				);
+			}
 		}
 	} else {
 		const base = path.join(waw.base, waw.fileName);

@@ -136,7 +136,7 @@ const template = (waw, next) => {
 
 const install = (waw, location, callback) => {
 	const json = waw.readJson(path.join(location, 'module.json'));
-	if (json.dependencies) {
+	if (json && json.dependencies) {
 		waw.each(json.dependencies, (name, version, next) => {
 			waw.npmi({
 				path: process.cwd(),
