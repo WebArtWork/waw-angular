@@ -1,5 +1,5 @@
-const root = exe('npm root -g').toString().trim();
 const exe = require('child_process').execSync;
+const root = exe('npm root -g').toString().trim();
 const fetch = require("node-fetch");
 const path = require('path');
 const fs = require('fs');
