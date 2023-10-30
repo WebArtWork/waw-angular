@@ -12,12 +12,15 @@ module.exports = async waw => {
 	const response = await fetch(
 		"https://webart.work/api/registry/ngx/module/" + waw.name
 	);
+		let resp;
 	if (response.ok) {
+		resp = await response.json();
+	}
+	
+	if (response.ok && resp) {
 		fs.mkdirSync(waw.base, {
 			recursive: true
 		});
-
-		const resp = await response.json();
 
 		if (resp.repo) {
 			waw.fetch(waw.base, resp.repo, (err) => {}, resp.branch || 'master');
