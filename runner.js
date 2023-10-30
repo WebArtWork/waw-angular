@@ -38,7 +38,8 @@ const defaults = {
 		crud: path.join(__dirname, 'service', 'crud')
 	},
 	module: {
-		default: path.join(__dirname, 'module', 'default')
+		default: path.join(__dirname, 'module', 'default'),
+		crud: path.join(__dirname, 'module', 'crud')
 	}
 }
 
