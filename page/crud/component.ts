@@ -87,7 +87,20 @@ export class CNAMEComponent {
         ],
       });
     },
-  };
+    buttons: [
+			{
+				icon: 'cloud_download',
+				click: (doc: CSERVICE) => {
+					this._form
+						.modalUnique<CSERVICE>(
+							'NAME',
+							'url',
+							doc
+						);
+				}
+			}
+		]
+	};
 
   get rows(): CSERVICE[] {
     return this._SERVICENAME.SERVICEs;
