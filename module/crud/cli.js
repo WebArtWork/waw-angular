@@ -68,20 +68,18 @@ module.exports = async waw => {
 	const response = await fetch(
 		"https://webart.work/api/registry/ngx/module/" + waw.name
 	);
-	let resp;
+		let resp;
 	if (response.ok) {
 		resp = await response.json();
 	}
-
+	
 	if (response.ok && resp) {
-		fs.mkdirSync(waw.base, {
-			recursive: true
-		});
 
 		if (resp.repo) {
 			waw.fetch(waw.base, resp.repo, (err) => {}, resp.branch || 'master');
 		} else {
 			for (const file in resp.files) {
+				if (file)
 				fs.writeFileSync(
 					path.join(waw.base, file),
 					resp.files[file],
@@ -89,7 +87,6 @@ module.exports = async waw => {
 				);
 			}
 		}
-
 		console.log('Module has been created');
 
 		process.exit(1);
