@@ -8,9 +8,10 @@ const finish = (waw)=>{
 		waw.readline.question('Provide page name: ', pageName => {
 			if (pageName) {
 				waw.pageName = pageName.toLowerCase();
+				waw.PageName = waw.pageName[0].toUpperCase() + waw.pageName.slice(1, waw.pageName.length);
 			}
 
-			finish(waw)
+			finish(waw);
 		});
 
 		return;
@@ -22,39 +23,41 @@ const finish = (waw)=>{
 
 	const serviceName = 's' + waw.name.charAt(0).toLowerCase();
 
+	const base = path.join(waw.base, 'pages', waw.pageName, waw.pageName);
+
 	let html = fs.readFileSync(waw.template + '/component.html', 'utf8');
 	html = html.split('SERVICENAME').join(serviceName);
 	html = html.split('CSERVICE').join(waw.Name);
 	html = html.split('SERVICE').join(waw.name);
-	html = html.split('CNAME').join(waw.pageName);
-	html = html.split('NAME').join(waw.name);
-	fs.writeFileSync(waw.base + '.component.html', html, 'utf8');
+	html = html.split('CNAME').join(waw.PageName);
+	html = html.split('NAME').join(waw.pageName);
+	fs.writeFileSync(base + '.component.html', html, 'utf8');
 
 	let scss = fs.readFileSync(waw.template + '/component.scss', 'utf8');
 	scss = scss.split('SERVICENAME').join(serviceName);
 	scss = scss.split('CSERVICE').join(waw.Name);
 	scss = scss.split('SERVICE').join(waw.name);
-	scss = scss.split('CNAME').join(waw.pageName);
-	scss = scss.split('NAME').join(waw.name);
-	fs.writeFileSync(waw.base + '.component.scss', scss, 'utf8');
+	scss = scss.split('CNAME').join(waw.PageName);
+	scss = scss.split('NAME').join(waw.pageName);
+	fs.writeFileSync(base + '.component.scss', scss, 'utf8');
 
 	let ts = fs.readFileSync(waw.template + '/component.ts', 'utf8');
 	ts = ts.split('FILENAME').join(waw.fileName);
 	ts = ts.split('SERVICENAME').join(serviceName);
 	ts = ts.split('CSERVICE').join(waw.Name);
 	ts = ts.split('SERVICE').join(waw.name);
-	ts = ts.split('CNAME').join(waw.pageName);
-	ts = ts.split('NAME').join(waw.name);
-	fs.writeFileSync(waw.base + '.component.ts', ts, 'utf8');
+	ts = ts.split('CNAME').join(waw.PageName);
+	ts = ts.split('NAME').join(waw.pageName);
+	fs.writeFileSync(base + '.component.ts', ts, 'utf8');
 
 	let mod = fs.readFileSync(waw.template + '/module.ts', 'utf8');
 	mod = mod.split('FILENAME').join(waw.fileName);
 	mod = mod.split('SERVICENAME').join(serviceName);
 	mod = mod.split('CSERVICE').join(waw.Name);
 	mod = mod.split('SERVICE').join(waw.name);
-	mod = mod.split('CNAME').join(waw.pageName);
-	mod = mod.split('NAME').join(waw.name);
-	fs.writeFileSync(waw.base + '.module.ts', mod, 'utf8');
+	mod = mod.split('CNAME').join(waw.PageName);
+	mod = mod.split('NAME').join(waw.pageName);
+	fs.writeFileSync(base + '.module.ts', mod, 'utf8');
 
 	console.log('Module has been created');
 
@@ -69,7 +72,7 @@ module.exports = async waw => {
 	if (response.ok) {
 		resp = await response.json();
 	}
-	
+
 	if (response.ok && resp) {
 		fs.mkdirSync(waw.base, {
 			recursive: true
@@ -96,9 +99,9 @@ module.exports = async waw => {
 		});
 
 		let ts = fs.readFileSync(waw.template + '/service.ts', 'utf8');
-		ts = ts.split('CNAME').join(waw.pageName);
+		ts = ts.split('CNAME').join(waw.Name);
 		ts = ts.split('NAME').join(waw.name);
-		fs.writeFileSync(waw.base + '.service.ts', ts, 'utf8');
+		fs.writeFileSync(path.join(waw.base, 'services', waw.name + '.service.ts'), ts, 'utf8');
 
 		finish(waw);
 	}
