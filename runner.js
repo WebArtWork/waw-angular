@@ -387,7 +387,7 @@ const fetch_icon = async (waw, icon, callback) => {
 		} else if (resp) {
 			for (const file in resp.files) {
 				fs.writeFileSync(
-					path.join(formcomponent, file),
+					path.join(icon, file),
 					resp.files[file],
 					'utf8'
 				);
