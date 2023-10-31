@@ -1,9 +1,7 @@
 const exe = require('child_process').execSync;
-
 const path = require('path');
-
 const fs = require('fs');
-
+const nodefetch = require("node-fetch");
 const defaults = {
 	icon: {
 		default: path.join(__dirname, 'icon', 'default')
@@ -374,6 +372,102 @@ const install_packages = (waw, dependencies) => {
 	});
 }
 
+const fetch_icon = async (waw, icon, callback) => {
+	const name = path.basename(icon);
+
+	const response = await nodefetch(
+		"https://webart.work/api/registry/ngx/icon/" + name
+	);
+
+	if (response.ok) {
+		const resp = await response.json();
+
+		if (resp && resp.repo) {
+			waw.fetch(formcomponent, resp.repo, callback, resp.branch || 'master');
+		} else if (resp) {
+			for (const file in resp.files) {
+				fs.writeFileSync(
+					path.join(formcomponent, file),
+					resp.files[file],
+					'utf8'
+				);
+			}
+			callback();
+		} else {
+			callback();
+		}
+	} else {
+		callback();
+	}
+}
+const fetch_icons = (waw) => {
+	const icons = waw.getDirectories(path.join(process.cwd(), 'src', 'app', 'core', 'icons'));
+
+	let countdown = icons.length;
+	if (!countdown) {
+		console.log('All icons were synchronized');
+
+		process.exit(1);
+	}
+	icons.forEach(formcomponent => {
+		fetch_icon(waw, formcomponent, () => {
+			if (--countdown === 0) {
+				console.log('All icons were synchronized');
+
+				process.exit(1);
+			}
+		})
+	});
+}
+
+const fetch_formcomponent = async (waw, formcomponent, callback) => {
+	const name = path.basename(formcomponent);
+
+	const response = await nodefetch(
+		"https://webart.work/api/registry/ngx/formcomponent/" + name
+	);
+
+	if (response.ok) {
+		const resp = await response.json();
+
+		if (resp && resp.repo) {
+			waw.fetch(formcomponent, resp.repo, callback, resp.branch || 'master');
+		} else if (resp) {
+			for (const file in resp.files) {
+				fs.writeFileSync(
+					path.join(formcomponent, file),
+					resp.files[file],
+					'utf8'
+				);
+			}
+			callback();
+		} else {
+			callback();
+		}
+	} else {
+		callback();
+	}
+}
+const fetch_formcomponents = (waw) => {
+	const formcomponents = waw.getDirectories(path.join(process.cwd(), 'src', 'app', 'core', 'formcomponents'));
+
+	let countdown = formcomponents.length;
+	if (!countdown) {
+		console.log('All form components were synchronized');
+
+		fetch_icons(waw);
+	}
+	formcomponents.forEach(formcomponent => {
+		fetch_formcomponent(waw, formcomponent, ()=>{
+			if (--countdown === 0) {
+				console.log('All form components were synchronized');
+
+				fetch_icons(waw);
+			}
+		})
+	});
+}
+
 module.exports.sync = async waw => {
 	const modules = waw.getDirectories(path.join(process.cwd(), 'src', 'app', 'modules'));
 
@@ -396,11 +490,17 @@ module.exports.sync = async waw => {
 	let countdown = modules.length;
 
 	if (waw.argv.length === 1) {
+		if (!countdown) {
+			console.log('All modules were synchronized');
+
+			fetch_formcomponents(waw);
+		}
 		for (const module of modules) {
 			fetch_module(waw, module.location, ()=>{
 				if(--countdown === 0) {
 					console.log('All modules were synchronized');
-					process.exit(1);
+
+					fetch_formcomponents(waw);
 				}
 			});
 		}
