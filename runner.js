@@ -495,8 +495,9 @@ module.exports.sync = async waw => {
 
 			fetch_formcomponents(waw);
 		}
-		for (const module of modules) {
+		const update = _module => {
 			fetch_module(waw, module.location, ()=>{
+				console.log(`Module ${_module.name} has been updated`);
 				if(--countdown === 0) {
 					console.log('All modules were synchronized');
 
@@ -504,14 +505,24 @@ module.exports.sync = async waw => {
 				}
 			});
 		}
+
+		for (const _module of modules) {
+			update(_module);
+		}
 	} else if (waw.argv.length > 1) {
-		for (const module of modules) {
-			update_module(waw, module, () => {
+		const update = _module => {
+			update_module(waw, _module, () => {
+				if (_module.config.repo) {
+					console.log(`Module ${_module.name} has been updated`);
+				}
 				if (--countdown === 0) {
 					console.log('All modules were updated and synchronized');
 					process.exit(1);
 				}
 			});
+		}
+		for (const _module of modules) {
+			update(_module);
 		}
 	}
 };
