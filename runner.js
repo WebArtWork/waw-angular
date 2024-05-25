@@ -232,7 +232,7 @@ const fetch_module = (waw, location, callback) => {
 		return callback(false);
 	}
 	waw.fetch(location, json.repo, (err) => {
-		callback();
+		callback(true);
 		// waw.install(waw, location, callback);
 	});
 };
