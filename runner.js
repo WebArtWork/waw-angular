@@ -544,7 +544,7 @@ module.exports.sync = async (waw) => {
 			fetch_formcomponents(waw);
 		}
 		const update = (_module) => {
-			fetch_module(waw, module.location, () => {
+			fetch_module(waw, _module.location, () => {
 				if (_module.config.repo) {
 					console.log(`Module ${_module.name} has been synchronized`);
 				}
