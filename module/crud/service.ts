@@ -16,11 +16,7 @@ export class CNAMEService {
 	_NAMEs: any = {};
 
 	new(): CNAME {
-		return {
-			_id: '',
-			name: '',
-			description: ''
-		}
+		return {} as CNAME;
 	}
 
 	constructor(

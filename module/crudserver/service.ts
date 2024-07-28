@@ -4,14 +4,9 @@ import {
 	CoreService,
 	HttpService,
 	StoreService,
-	CrudService,
-	CrudDocument
+	CrudService
 } from 'wacom';
-
-export interface CNAME extends CrudDocument {
-	name: string;
-	description: string;
-}
+import { CNAME } from "../interfaces/NAME.interface";
 
 @Injectable({
 	providedIn: 'root'
