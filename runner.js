@@ -24,6 +24,7 @@ const defaults = {
 	page: {
 		default: path.join(__dirname, "page", "default"),
 		crud: path.join(__dirname, "page", "crud"),
+		'crud server': path.join(__dirname, "page", "crudserver")
 	},
 	pipe: {
 		default: path.join(__dirname, "pipe", "default"),
