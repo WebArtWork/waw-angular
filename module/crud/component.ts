@@ -3,7 +3,7 @@ import { FormService } from "src/app/modules/form/form.service";
 import {
 	CSERVICEService,
 	CSERVICE,
-} from "../../services/SERVICE.service";
+} from "src/app/core/services/SERVICE.service";
 import { AlertService, CoreService } from "wacom";
 import { TranslateService } from "src/app/modules/translate/translate.service";
 import { FormInterface } from "src/app/modules/form/interfaces/form.interface";
@@ -66,7 +66,7 @@ export class CNAMEComponent {
 				.modal<CSERVICE>(this.form, [], doc)
 				.then((updated: CSERVICE) => {
 					this._core.copy(updated, doc);
-					this._SERVICENAME.save(doc);
+					this._SERVICENAME.update(doc);
 				});
 		},
 		delete: (doc: CSERVICE) => {
@@ -87,6 +87,14 @@ export class CNAMEComponent {
 				],
 			});
 		},
+		buttons: [
+			{
+				icon: "cloud_download",
+				click: (doc: CSERVICE) => {
+					this._form.modalUnique<CSERVICE>("NAME", "url", doc);
+				},
+			},
+		],
 	};
 
 	get rows(): CSERVICE[] {
@@ -94,9 +102,9 @@ export class CNAMEComponent {
 	}
 
 	constructor(
-		private _SERVICENAME: CSERVICEService,
 		private _translate: TranslateService,
 		private _alert: AlertService,
+		private _SERVICENAME: CSERVICEService,
 		private _form: FormService,
 		private _core: CoreService
 	) { }

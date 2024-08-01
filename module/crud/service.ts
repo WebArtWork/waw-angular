@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
-import { MongoService, AlertService } from 'wacom';
+import {
+	AlertService,
+	CoreService,
+	HttpService,
+	StoreService,
+	CrudService,
+	CrudDocument
+} from 'wacom';
 
-export interface CNAME {
-	_id: string;
+export interface CNAME extends CrudDocument {
 	name: string;
 	description: string;
 }
@@ -10,77 +16,34 @@ export interface CNAME {
 @Injectable({
 	providedIn: 'root'
 })
-export class CNAMEService {
+export class CNAMEService extends CrudService<CNAME> {
 	NAMEs: CNAME[] = [];
-
-	_NAMEs: any = {};
-
-	new(): CNAME {
-		return {} as CNAME;
-	}
-
 	constructor(
-		private mongo: MongoService,
-		private alert: AlertService
+		_http: HttpService,
+		_store: StoreService,
+		_alert: AlertService,
+		_core: CoreService
 	) {
-		this.NAMEs = mongo.get('NAME', {}, (arr: any, obj: any) => {
-			this._NAMEs = obj;
+		super(
+			{
+				name: 'NAME'
+			},
+			_http,
+			_store,
+			_alert,
+			_core
+		);
+		this.get().subscribe((NAMEs: CNAME[]) =>
+			this.NAMEs.push(...NAMEs)
+		);
+		_core.on('NAME_create', (NAME: CNAME) => {
+			this.NAMEs.push(NAME);
 		});
-	}
-
-	create(
-		NAME: CNAME = this.new(),
-		callback = (created: CNAME) => {},
-		text = 'NAME has been created.'
-	) {
-		if (NAME._id) {
-			this.save(NAME);
-		} else {
-			this.mongo.create('NAME', NAME, (created: CNAME) => {
-				callback(created);
-				this.alert.show({ text });
-			});
-		}
-	}
-
-	doc(NAMEId: string): CNAME {
-		if(!this._NAMEs[NAMEId]){
-			this._NAMEs[NAMEId] = this.mongo.fetch('NAME', {
-				query: {
-					_id: NAMEId
-				}
-			});
-		}
-		return this._NAMEs[NAMEId];
-	}
-
-	update(
-		NAME: CNAME,
-		callback = (created: CNAME) => {},
-		text = 'NAME has been updated.'
-	): void {
-		this.mongo.afterWhile(NAME, ()=> {
-			this.save(NAME, callback, text);
-		});
-	}
-
-	save(
-		NAME: CNAME,
-		callback = (created: CNAME) => {},
-		text = 'NAME has been updated.'
-	): void {
-		this.mongo.update('NAME', NAME, () => {
-			if(text) this.alert.show({ text, unique: NAME });
-		});
-	}
-
-	delete(
-		NAME: CNAME,
-		callback = (created: CNAME) => {},
-		text = 'NAME has been deleted.'
-	): void {
-		this.mongo.delete('NAME', NAME, () => {
-			if(text) this.alert.show({ text });
+		_core.on('NAME_delete', (NAME: CNAME) => {
+			this.NAMEs.splice(
+				this.NAMEs.findIndex((o) => o._id === NAME._id),
+				1
+			);
 		});
 	}
 }

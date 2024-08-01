@@ -4,9 +4,14 @@ import {
 	CoreService,
 	HttpService,
 	StoreService,
-	CrudService
+	CrudService,
+	CrudDocument
 } from 'wacom';
-import { CNAME } from "../interfaces/NAME.interface";
+
+export interface CNAME extends CrudDocument {
+	name: string;
+	description: string;
+}
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +26,7 @@ export class CNAMEService extends CrudService<CNAME> {
 	) {
 		super(
 			{
-				name: 'budgettransaction'
+				name: 'NAME'
 			},
 			_http,
 			_store,
@@ -31,5 +36,14 @@ export class CNAMEService extends CrudService<CNAME> {
 		this.get().subscribe((NAMEs: CNAME[]) =>
 			this.NAMEs.push(...NAMEs)
 		);
+		_core.on('NAME_create', (NAME: CNAME) => {
+			this.NAMEs.push(NAME);
+		});
+		_core.on('NAME_delete', (NAME: CNAME) => {
+			this.NAMEs.splice(
+				this.NAMEs.findIndex((o) => o._id === NAME._id),
+				1
+			);
+		});
 	}
 }

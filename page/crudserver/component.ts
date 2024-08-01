@@ -111,7 +111,6 @@ export class CNAMEComponent {
 						text: this._translate.translate("Common.Yes"),
 						callback: () => {
 							this._SERVICENAME.delete(doc, {
-								name: 'admin',
 								alert: this._translate.translate(
 									'CSERVICE.CSERVICE has been deleted'
 								),
@@ -132,5 +131,7 @@ export class CNAMEComponent {
 		private _SERVICENAME: CSERVICEService,
 		private _form: FormService,
 		private _core: CoreService
-	) { }
+	) {
+		this.setRows();
+	}
 }
