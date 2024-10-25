@@ -1,7 +1,9 @@
 const exe = require("child_process").execSync;
+const nodefetch = require("node-fetch");
 const path = require("path");
 const fs = require("fs");
-const nodefetch = require("node-fetch");
+
+/* Angular Generate process */
 const defaults = {
 	icon: {
 		default: path.join(__dirname, "icon", "default"),
@@ -24,7 +26,7 @@ const defaults = {
 	page: {
 		default: path.join(__dirname, "page", "default"),
 		crud: path.join(__dirname, "page", "crud"),
-		'crud server': path.join(__dirname, "page", "crudserver")
+		"crud server": path.join(__dirname, "page", "crudserver"),
 	},
 	pipe: {
 		default: path.join(__dirname, "pipe", "default"),
@@ -39,10 +41,9 @@ const defaults = {
 	module: {
 		default: path.join(__dirname, "module", "default"),
 		crud: path.join(__dirname, "module", "crud"),
-		'crud server': path.join(__dirname, "module", "crudserver")
+		"crud server": path.join(__dirname, "module", "crudserver"),
 	},
 };
-
 const initialize = (waw) => {
 	waw.argv.shift();
 
@@ -100,7 +101,6 @@ const initialize = (waw) => {
 
 	waw.base = path.join(base.join(path.sep), waw.fileName);
 };
-
 const template = (waw, next) => {
 	const base = path.join(process.cwd(), "template");
 	const customizations = waw.getDirectories(base);
@@ -138,7 +138,6 @@ const template = (waw, next) => {
 		next();
 	}
 };
-
 const install = (waw, location, callback) => {
 	const json = waw.readJson(path.join(location, "module.json"));
 	if (json && json.dependencies) {
@@ -163,7 +162,6 @@ const install = (waw, location, callback) => {
 		callback();
 	}
 };
-
 const fetch = (waw) => {
 	fs.mkdirSync(waw.base, {
 		recursive: true,
@@ -177,7 +175,6 @@ const fetch = (waw) => {
 		});
 	});
 };
-
 const run = (module, folder) => {
 	return (waw) => {
 		waw.module = module;
@@ -192,7 +189,6 @@ const run = (module, folder) => {
 		}
 	};
 };
-
 module.exports.alert = run("alert", "alerts");
 
 module.exports.icon = run("icon", "core/icons");
@@ -224,6 +220,7 @@ module.exports.module = run("module", "modules");
 module.exports.add = run("module", "modules");
 module.exports.a = run("module", "modules");
 
+/* Fetch Angular Modules */
 const fetch_module = (waw, location, callback) => {
 	location = path.normalize(location);
 	if (!fs.existsSync(location + "/module.json")) {
@@ -238,7 +235,6 @@ const fetch_module = (waw, location, callback) => {
 		// waw.install(waw, location, callback);
 	});
 };
-
 const fetch_modules = async (waw) => {
 	if (waw.argv.length > 1) {
 		fetch_module(
@@ -275,6 +271,7 @@ const fetch_modules = async (waw) => {
 module.exports.fetch = fetch_modules;
 module.exports.f = fetch_modules;
 
+/* waw CLI for Angular Components Customization */
 const generate = async (waw) => {
 	waw.argv.shift();
 
@@ -337,6 +334,7 @@ const generate = async (waw) => {
 module.exports.generate = generate;
 module.exports.g = generate;
 
+/* waw SYNC for modules, formcomponents and icons with install npm */
 const update_module = async (waw, module, callback) => {
 	const branch = waw.argv.length > 2 ? waw.argv[2] : "master";
 
@@ -384,7 +382,6 @@ const update_module = async (waw, module, callback) => {
 		false
 	);
 };
-
 const install_packages = (waw, dependencies) => {
 	waw.each(dependencies, (name, version, next) => {
 		if (
@@ -405,7 +402,6 @@ const install_packages = (waw, dependencies) => {
 		}
 	});
 };
-
 const fetch_icon = async (waw, icon, callback) => {
 	const name = path.basename(icon);
 
@@ -460,7 +456,6 @@ const fetch_icons = (waw) => {
 		});
 	});
 };
-
 const fetch_formcomponent = async (waw, formcomponent, callback) => {
 	const name = path.basename(formcomponent);
 
@@ -515,12 +510,8 @@ const fetch_formcomponents = (waw) => {
 		});
 	});
 };
-
-module.exports.sync = async (waw) => {
-	const modules = waw.getDirectories(
-		path.join(process.cwd(), "src", "app", "modules")
-	);
-
+let countdown;
+const sync = async (waw, modules) => {
 	for (let i = modules.length - 1; i >= 0; i--) {
 		modules[i] = {
 			config: waw.readJson(path.join(modules[i], "module.json")),
@@ -536,8 +527,6 @@ module.exports.sync = async (waw) => {
 			modules.splice(i, 1);
 		}
 	}
-
-	let countdown = modules.length;
 
 	if (waw.argv.length === 1) {
 		if (!countdown) {
@@ -578,121 +567,20 @@ module.exports.sync = async (waw) => {
 		}
 	}
 };
-
-// TODO make below work :)
-
-const add_token = (waw) => {
-	if (fs.existsSync(waw.waw_root + "/config.json")) {
-		let waw_conf = JSON.parse(
-			fs.readFileSync(waw.waw_root + "/config.json")
-		);
-		if (waw_conf.token) {
-			waw.ngx_config.token = waw_conf.token;
-			fs.writeFileSync(
-				process.cwd() + "/angular.json",
-				JSON.stringify(waw.ngx_config, null, 2)
-			);
-			return upload_files(waw);
-		}
-	}
-	const req = https.request(
-		{
-			hostname: "webart.work",
-			port: 443,
-			path: "/api/user/token",
-			method: "GET",
-		},
-		(resp) => {
-			resp.on("data", (data) => {
-				const json = JSON.parse(data.toString());
-				waw.ngx_config.token = json.token;
-				fs.writeFileSync(
-					process.cwd() + "/angular.json",
-					JSON.stringify(waw.ngx_config, null, 2)
-				);
-				if (fs.existsSync(waw.waw_root + "/config.json")) {
-					let waw_conf = JSON.parse(
-						fs.readFileSync(waw.waw_root + "/config.json")
-					);
-					waw_conf.token = json.token;
-					fs.writeFileSync(
-						waw.waw_root + "/config.json",
-						JSON.stringify(waw_conf, null, 2)
-					);
-				}
-			});
-		}
-	);
-	req.on("error", (error) => {
-		console.error(error);
-	});
-	req.end();
-};
-const upload_file = (waw, file, done) => {
-	/*
-		waw.ngx_config.name
-		waw.ngx_config.token
-		file
-	*/
-};
-const upload_files = (waw) => {
-	const req = https.request(
-		{
-			hostname: "webart.work",
-			port: 443,
-			path: "/api/user/prepare",
-			method: "GET",
-		},
-		(resp) => {
-			resp.on("data", (data) => {
-				const json = JSON.parse(data.toString());
-				if (!json.ready) {
-					console.log("Something went wrong");
-					process.exit(1);
-				}
-				const files = waw.getFilesRecursively(
-					path.join(
-						process.cwd(),
-						waw.ngx_config.name || path.join("dist", "app")
-					)
-				);
-				let counter = files.length;
-				for (var i = files.length - 1; i >= 0; i--) {
-					files[i];
-					this.upload_file(waw, files[i], () => {
-						if (--counter === 0) {
-							console.log("Uploaded properly");
-							process.exit(1);
-						}
-					});
-				}
-			});
-		}
-	);
-	req.on("error", (error) => {
-		console.error(error);
-	});
-	req.end();
-};
-const upload = (waw) => {
-	if (!fs.existsSync(process.cwd() + "/angular.json")) {
-		console.log("This is not angular project");
-		process.exit(1);
-	}
-
-	waw.ngx_config = JSON.parse(
-		fs.readFileSync(process.cwd() + "/angular.json")
+const _sync = (waw) => {
+	const coreModules = waw.getDirectories(
+		path.join(process.cwd(), "src", "app", "core", "modules")
 	);
 
-	if (waw.ngx_config.name && waw.ngx_config.token) {
-		upload_files(waw);
-	} else if (!waw.ngx_config.name) {
-		console.log("You have to add name into angular config json");
-		process.exit(1);
-	} else {
-		console.log("You have to add token into angular config json");
-		process.exit(1);
-	}
-};
-module.exports.upload = upload;
-module.exports.u = upload;
+	const rootModules = waw.getDirectories(
+		path.join(process.cwd(), "src", "app", "modules")
+	);
+
+	countdown = coreModules.length + rootModules.length;
+
+	sync(waw, coreModules);
+
+	sync(waw, rootModules);
+}
+module.exports.s = _sync;
+module.exports.sync = _sync;
