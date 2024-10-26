@@ -1,25 +1,30 @@
-const fs = require('fs');
-const path = require('path');
-const exe = require('child_process').execSync;
-const root = exe('npm root -g').toString().trim();
-if (!fs.existsSync(root + '/@angular/cli')) {
-	console.log("You should install '@angular/cli' global. 'npm i -g @angular/cli'");
-	process.exit(0);
-}
+const path = require("path");
+const fs = require("fs");
 
-module.exports = async waw => {
-	let ts = fs.readFileSync(waw.template + '/pipe.ts', 'utf8');
-	ts = ts.split('CNAME').join(waw.Name);
-	ts = ts.split('NAME').join(waw.name);
-	fs.writeFileSync(waw.base + '.pipe.ts', ts, 'utf8');
+module.exports = async (waw) => {
+	const folder = path.join(process.cwd(), "src", "app", waw.folder);
+	if (!fs.existsSync(folder)) {
+		fs.mkdirSync(folder, { recursive: true });
+	}
+
+	let ts = fs.readFileSync(waw.template + "/pipe.ts", "utf8");
+	ts = ts.split("CNAME").join(waw.Name);
+	ts = ts.split("NAME").join(waw.name);
+	fs.writeFileSync(waw.base + ".pipe.ts", ts, "utf8");
 
 	waw.add_code({
-		file: process.cwd() + '/src/app/core/core.module.ts',
-		search: '/* exports */',
-		replace: "/* exports */\n\t\t" + waw.Name + "Pipe,"
+		file: process.cwd() + "/src/app/core/core.module.ts",
+		search: "/* pipes */",
+		replace: "/* pipes */\n\t" + waw.Name + "Pipe,",
 	});
 
-	console.log('Pipe has been created');
+	waw.add_code({
+		file: process.cwd() + "/src/app/core/core.module.ts",
+		search: "/* imports */",
+		replace: `/* imports */\nimport { ${waw.Name}Pipe } from './pipes/${waw.name}.pipe';`,
+	});
+
+	console.log("Pipe has been created");
 
 	process.exit(1);
-}
+};

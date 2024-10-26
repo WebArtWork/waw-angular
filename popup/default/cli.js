@@ -16,10 +16,6 @@ module.exports = async waw => {
 		process.exit(0);
 	}
 
-	fs.mkdirSync(waw.base, {
-		recursive: true
-	});
-
 	waw.base = path.join(waw.base, waw.fileName);
 
 	if (fs.existsSync(waw.base + '.component.css')) {

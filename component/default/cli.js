@@ -1,34 +1,9 @@
 const fs = require("fs");
 const path = require("path");
-const exe = require("child_process").execSync;
-const root = exe("npm root -g").toString().trim();
-if (!fs.existsSync(root + "/@angular/cli")) {
-	console.log(
-		"You should install '@angular/cli' global. 'npm i -g @angular/cli'"
-	);
-	process.exit(0);
-}
 
 module.exports = async (waw) => {
-	try {
-		exe("ng g c " + waw.component);
-	} catch (error) {
-		console.log(
-			"\x1b[33m%s\x1b[0m",
-			"You probably should install or re-install node modules, try:"
-		);
-		console.log("\x1b[36m%s\x1b[0m", "npm install");
-		process.exit(0);
-	}
-
-	waw.base = path.join(waw.base, waw.fileName);
-
-	if (fs.existsSync(waw.base + ".component.css")) {
-		fs.unlink(waw.base + ".component.css", (err) => {});
-	}
-
-	if (fs.existsSync(waw.base + ".component.spec.ts")) {
-		fs.unlink(waw.base + ".component.spec.ts", (err) => {});
+	if (!fs.existsSync(waw.base)) {
+		fs.mkdirSync(waw.base, { recursive: true });
 	}
 
 	let html = fs.readFileSync(waw.template + "/component.html", "utf8");
@@ -49,8 +24,14 @@ module.exports = async (waw) => {
 
 	waw.add_code({
 		file: process.cwd() + "/src/app/core/core.module.ts",
-		search: "/* exports */",
-		replace: "/* exports */\n\t\t" + waw.Name + "Component,",
+		search: "/* components */",
+		replace: "/* components */\n\t" + waw.Name + "Component,",
+	});
+
+	waw.add_code({
+		file: process.cwd() + "/src/app/core/core.module.ts",
+		search: "/* imports */",
+		replace: `/* imports */\nimport { ${waw.Name}Component } from './components/${waw.name}.component';`,
 	});
 
 	console.log("Component has been created");

@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-	name: 'NAME'
+	name: 'NAME',
 })
 export class CNAMEPipe implements PipeTransform {
-	transform(input: any, refresh?): any {
+	transform(input: string, refresh = 0): any {
 		return input;
 	}
 }

@@ -1,5 +1,4 @@
 const exe = require("child_process").execSync;
-const nodefetch = require("node-fetch");
 const path = require("path");
 const fs = require("fs");
 
@@ -200,25 +199,25 @@ module.exports.fc = run("formcomponent", "core/formcomponents");
 module.exports.icon = run("icon", "core/icons");
 module.exports.i = run("icon", "core/icons");
 
-module.exports.page = run("page", "pages");
-module.exports.p = run("page", "pages");
-
 module.exports.loader = run("loader", "loaders");
 module.exports.l = run("loader", "loaders");
 
 module.exports.modal = run("modal", "modals");
 module.exports.m = run("modal", "modals");
 
-module.exports.popup = run("popup", "popups");
-
-module.exports.pipe = run("pipe", "core/pipes");
-
-module.exports.service = run("service", "core/services");
-module.exports.s = run("service", "core/services");
-
 module.exports.module = run("module", "modules");
 module.exports.add = run("module", "modules");
 module.exports.a = run("module", "modules");
+
+module.exports.page = run("page", "pages");
+module.exports.p = run("page", "pages");
+
+module.exports.pipe = run("pipe", "core/pipes");
+
+module.exports.popup = run("popup", "popups");
+
+module.exports.service = run("service", "core/services");
+module.exports.s = run("service", "core/services");
 
 /* Fetch Angular Modules */
 const fetch_module = (waw, location, callback) => {
@@ -405,7 +404,7 @@ const install_packages = (waw, dependencies) => {
 const fetch_icon = async (waw, icon, callback) => {
 	const name = path.basename(icon);
 
-	const response = await nodefetch(
+	const response = await fetch(
 		"https://webart.work/api/registry/ngx/icon/" + name
 	);
 
