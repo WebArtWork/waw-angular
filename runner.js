@@ -30,6 +30,9 @@ const defaults = {
 	pipe: {
 		default: path.join(__dirname, "pipe", "default"),
 	},
+	interface: {
+		default: path.join(__dirname, "interface", "default"),
+	},
 	popup: {
 		default: path.join(__dirname, "popup", "default"),
 	},
@@ -198,6 +201,8 @@ module.exports.fc = run("formcomponent", "core/formcomponents");
 
 module.exports.icon = run("icon", "core/icons");
 module.exports.i = run("icon", "core/icons");
+
+module.exports.interface = run("interface", "core/interfaces");
 
 module.exports.loader = run("loader", "loaders");
 module.exports.l = run("loader", "loaders");
