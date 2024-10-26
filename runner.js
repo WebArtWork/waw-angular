@@ -581,5 +581,4 @@ const _sync = (waw) => {
 
 	sync(waw, rootModules);
 }
-module.exports.s = _sync;
 module.exports.sync = _sync;

@@ -31,8 +31,8 @@ export class CNAMEComponent {
 					{
 						name: 'Label',
 						value: 'Title',
-					},
-				],
+					}
+				]
 			},
 			{
 				name: 'Text',
@@ -45,56 +45,58 @@ export class CNAMEComponent {
 					{
 						name: 'Label',
 						value: 'Description',
-					},
-				],
+					}
+				]
 			},
 		],
 	});
 
 	config = {
-		create: () => {
+		create: (): void => {
 			this._form.modal<CSERVICE>(this.form, {
 				label: 'Create',
-				click: (created: unknown, close: () => void) => {
+				click: (created: unknown, close: () => void): void => {
 					this._SERVICENAME.create(created as CSERVICE);
+
 					close();
-				},
-			});
+				}
+			})
 		},
-		update: (doc: CSERVICE) => {
+		update: (doc: CSERVICE): void => {
 			this._form
 				.modal<CSERVICE>(this.form, [], doc)
-				.then((updated: CSERVICE) => {
+				.then((updated: CSERVICE): void => {
 					this._core.copy(updated, doc);
+
 					this._SERVICENAME.update(doc);
 				});
 		},
-		delete: (doc: CSERVICE) => {
+		delete: (doc: CSERVICE): void => {
 			this._alert.question({
 				text: this._translate.translate(
 					'Common.Are you sure you want to delete this CSERVICE?'
 				),
 				buttons: [
 					{
-						text: this._translate.translate('Common.No'),
+						text: this._translate.translate('Common.No')
 					},
 					{
 						text: this._translate.translate('Common.Yes'),
-						callback: () => {
+						callback: (): void => {
 							this._SERVICENAME.delete(doc);
-						},
-					},
-				],
+						}
+					}
+				]
 			});
 		},
 		buttons: [
 			{
 				icon: 'cloud_download',
-				click: (doc: CSERVICE) => {
+				click: (doc: CSERVICE): void => {
 					this._form.modalUnique<CSERVICE>('NAME', 'url', doc);
-				},
-			},
-		],
+				}
+			}
+		]
 	};
 
 	get rows(): CSERVICE[] {
