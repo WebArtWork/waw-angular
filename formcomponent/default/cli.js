@@ -8,23 +8,24 @@ module.exports = async (waw) => {
 	const response = await fetch(
 		"https://webart.work/api/registry/ngx/formcomponent/" + waw.name
 	);
-	let resp;
-	if (response.ok) {
-		resp = await response.json();
-	}
-	
-	if (response.ok && resp) {
+	const resp = response.ok ? await response.json() : null;
 
+	if (response.ok && resp) {
 		if (resp.repo) {
-			waw.fetch(waw.base, resp.repo, (err) => {}, resp.branch || 'master');
+			waw.fetch(
+				waw.base,
+				resp.repo,
+				(err) => {},
+				resp.branch || "master"
+			);
 		} else {
 			for (const file in resp.files) {
 				if (file)
-				fs.writeFileSync(
-					path.join(waw.base, file),
-					resp.files[file],
-					'utf8'
-				);
+					fs.writeFileSync(
+						path.join(waw.base, file),
+						resp.files[file],
+						"utf8"
+					);
 			}
 		}
 	} else {
@@ -50,32 +51,32 @@ module.exports = async (waw) => {
 	let fcModuleTs = path.normalize(waw.base).split(path.sep);
 	fcModuleTs.pop();
 	fcModuleTs = fcModuleTs.join(path.sep);
-	fcModuleTs = path.join(fcModuleTs, 'formcomponents.module.ts');
+	fcModuleTs = path.join(fcModuleTs, "formcomponents.module.ts");
 
 	if (!fs.existsSync(fcModuleTs)) {
 		fs.writeFileSync(
 			fcModuleTs,
-			fs.readFileSync(waw.template + "/formcomponents.module.ts",
+			fs.readFileSync(waw.template + "/formcomponents.module.ts", "utf8"),
 			"utf8"
-		), 'utf8');
+		);
 	}
 
 	waw.add_code({
 		file: fcModuleTs,
-		search: '/* componnets */',
-		replace: `/* componnets */\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`
+		search: "/* componnets */",
+		replace: `/* componnets */\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`,
 	});
 
 	waw.add_code({
 		file: fcModuleTs,
-		search: '/* declarations */',
-		replace: `/* declarations */\n\t\t${waw.Name}Component,`
+		search: "/* declarations */",
+		replace: `/* declarations */\n\t\t${waw.Name}Component,`,
 	});
 
 	waw.add_code({
 		file: fcModuleTs,
-		search: '/* addComponents */',
-		replace: `/* addComponents */\n\t\tthis._form.addComponentTemp({\n\t\t\tcomponent: ${waw.Name}Component,\n\t\t\tname: '${waw.Name}'\n\t\t});`
+		search: "/* addComponents */",
+		replace: `/* addComponents */\n\t\tthis._form.injectComponent<${waw.Name}Component>('${waw.Name}', ${waw.Name}Component);\n`,
 	});
 
 	console.log("Form component has been created");

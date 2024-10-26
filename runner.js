@@ -191,14 +191,14 @@ const run = (module, folder) => {
 };
 module.exports.alert = run("alert", "alerts");
 
-module.exports.icon = run("icon", "core/icons");
-module.exports.i = run("icon", "core/icons");
+module.exports.component = run("component", "core/components");
+module.exports.c = run("component", "core/components");
 
 module.exports.formcomponent = run("formcomponent", "core/formcomponents");
 module.exports.fc = run("formcomponent", "core/formcomponents");
 
-module.exports.component = run("component", "core/components");
-module.exports.c = run("component", "core/components");
+module.exports.icon = run("icon", "core/icons");
+module.exports.i = run("icon", "core/icons");
 
 module.exports.page = run("page", "pages");
 module.exports.p = run("page", "pages");

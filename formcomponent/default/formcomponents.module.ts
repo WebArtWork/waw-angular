@@ -1,15 +1,18 @@
-import { FormService } from 'src/app/modules/form/form.service';
-import { NgModule, Type } from '@angular/core';
-
-const formcomponents: Type<unknown>[] = [
-	/* formcomponents */
-]
+import { FormService } from '../../modules/form/form.service';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+/* componnets */
 
 @NgModule({
-	declarations: formcomponents
+	imports: [
+		CommonModule
+	],
+	declarations: [
+		/* declarations */
+	],
 })
 export class FormcomponentsModule {
 	constructor(private _form: FormService) {
-		formcomponents.forEach(formcomponent => { });
+		/* addComponents */
 	}
 }
