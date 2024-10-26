@@ -9,23 +9,25 @@ module.exports = async (waw) => {
 		"https://webart.work/api/registry/ngx/icon/" + waw.name
 	);
 
-	let resp;
-	if (response.ok) {
-		resp = await response.json();
-	}
-	
-	if (response.ok && resp) {
+	const resp = response.ok ? await response.json() : null;
 
+	if (response.ok && resp) {
 		if (resp.repo) {
-			waw.fetch(waw.base, resp.repo, (err) => {}, resp.branch || 'master');
+			waw.fetch(
+				waw.base,
+				resp.repo,
+				(err) => {},
+				resp.branch || "master"
+			);
 		} else {
 			for (const file in resp.files) {
-				if (file)
-				fs.writeFileSync(
-					path.join(waw.base, file),
-					resp.files[file],
-					'utf8'
-				);
+				if (file) {
+					fs.writeFileSync(
+						path.join(waw.base, file),
+						resp.files[file],
+						"utf8"
+					);
+				}
 			}
 		}
 	} else {
@@ -51,26 +53,26 @@ module.exports = async (waw) => {
 	let iconsModuleTs = path.normalize(waw.base).split(path.sep);
 	iconsModuleTs.pop();
 	iconsModuleTs = iconsModuleTs.join(path.sep);
-	iconsModuleTs = path.join(iconsModuleTs, 'icons.module.ts');
+	iconsModuleTs = path.join(iconsModuleTs, "icons.module.ts");
 
 	if (!fs.existsSync(iconsModuleTs)) {
 		fs.writeFileSync(
 			iconsModuleTs,
-			fs.readFileSync(waw.template + "/icons.module.ts",
+			fs.readFileSync(waw.template + "/icons.module.ts", "utf8"),
 			"utf8"
-		), 'utf8');
+		);
 	}
 
 	waw.add_code({
 		file: iconsModuleTs,
-		search: '/* icons */',
-		replace: "/* icons */\n\t" + waw.Name + "Component,"
+		search: "/* icons */",
+		replace: "/* icons */\n\t" + waw.Name + "Component,",
 	});
 
 	waw.add_code({
 		file: iconsModuleTs,
-		search: `import { NgModule } from '@angular/core';`,
-		replace: `import { NgModule } from '@angular/core';\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`
+		search: `/* components */`,
+		replace: `/* components */\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`,
 	});
 
 	console.log("Icon has been created");

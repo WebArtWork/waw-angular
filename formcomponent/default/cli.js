@@ -20,12 +20,13 @@ module.exports = async (waw) => {
 			);
 		} else {
 			for (const file in resp.files) {
-				if (file)
+				if (file) {
 					fs.writeFileSync(
 						path.join(waw.base, file),
 						resp.files[file],
 						"utf8"
 					);
+				}
 			}
 		}
 	} else {
