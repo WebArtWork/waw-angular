@@ -4,23 +4,31 @@ const fs = require("fs");
 
 /* Angular Generate process */
 const defaults = {
-	icon: {
-		default: path.join(__dirname, "icon", "default"),
-	},
-	formcomponent: {
-		default: path.join(__dirname, "formcomponent", "default"),
-	},
 	alert: {
 		default: path.join(__dirname, "alert", "default"),
 	},
 	component: {
 		default: path.join(__dirname, "component", "default"),
 	},
+	formcomponent: {
+		default: path.join(__dirname, "formcomponent", "default"),
+	},
+	icon: {
+		default: path.join(__dirname, "icon", "default"),
+	},
+	interface: {
+		default: path.join(__dirname, "interface", "default"),
+	},
 	loader: {
 		default: path.join(__dirname, "loader", "default"),
 	},
 	modal: {
 		default: path.join(__dirname, "modal", "default"),
+	},
+	module: {
+		default: path.join(__dirname, "module", "default"),
+		crud: path.join(__dirname, "module", "crud"),
+		"crud server": path.join(__dirname, "module", "crudserver"),
 	},
 	page: {
 		default: path.join(__dirname, "page", "default"),
@@ -30,21 +38,17 @@ const defaults = {
 	pipe: {
 		default: path.join(__dirname, "pipe", "default"),
 	},
-	interface: {
-		default: path.join(__dirname, "interface", "default"),
-	},
 	popup: {
 		default: path.join(__dirname, "popup", "default"),
+	},
+	selector: {
+		default: path.join(__dirname, "selector", "default"),
+		crud: path.join(__dirname, "selector", "crud"),
 	},
 	service: {
 		default: path.join(__dirname, "service", "default"),
 		crud: path.join(__dirname, "service", "crud"),
-	},
-	module: {
-		default: path.join(__dirname, "module", "default"),
-		crud: path.join(__dirname, "module", "crud"),
-		"crud server": path.join(__dirname, "module", "crudserver"),
-	},
+	}
 };
 const initialize = (waw) => {
 	waw.argv.shift();
@@ -220,6 +224,8 @@ module.exports.p = run("page", "pages");
 module.exports.pipe = run("pipe", "core/pipes");
 
 module.exports.popup = run("popup", "popups");
+
+module.exports.selector = run("selector", "core/selectors");
 
 module.exports.service = run("service", "core/services");
 module.exports.s = run("service", "core/services");
