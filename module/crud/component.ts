@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { AlertService, CoreService } from 'wacom';
-import { CSERVICEService, CSERVICE } from '../../services/SERVICE.service';
+import { CNAMEService } from '../../services/NAME.service';
+import { CNAME } from '../../interfaces/NAME.interface';
 import { FormService } from 'src/app/core/modules/form/form.service';
 import { TranslateService } from 'src/app/core/modules/translate/translate.service';
 import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
+import { NAMEFormComponent } from '../../formcomponents/NAME.formcomponent';
 
 @Component({
 	templateUrl: './NAME.component.html',
@@ -12,64 +14,30 @@ import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interfa
 export class CNAMEComponent {
 	columns = ['name', 'description'];
 
-	form: FormInterface = this._form.getForm('NAME', {
-		formId: 'NAME',
-		title: 'CNAME',
-		components: [
-			{
-				name: 'Text',
-				key: 'name',
-				focused: true,
-				fields: [
-					{
-						name: 'Placeholder',
-						value: 'fill NAME title',
-					},
-					{
-						name: 'Label',
-						value: 'Title',
-					},
-				],
-			},
-			{
-				name: 'Text',
-				key: 'description',
-				fields: [
-					{
-						name: 'Placeholder',
-						value: 'fill NAME description',
-					},
-					{
-						name: 'Label',
-						value: 'Description',
-					},
-				],
-			},
-		],
-	});
+	form: FormInterface = this._form.getForm('NAME', NAMEFormComponent);
 
 	config = {
 		create: () => {
-			this._form.modal<CSERVICE>(this.form, {
+			this._form.modal<CNAME>(this.form, {
 				label: 'Create',
 				click: (created: unknown, close: () => void) => {
-					this._SERVICENAME.create(created as CSERVICE);
+					this._NAMEService.create(created as CNAME);
 					close();
 				},
 			});
 		},
-		update: (doc: CSERVICE) => {
+		update: (doc: CNAME) => {
 			this._form
-				.modal<CSERVICE>(this.form, [], doc)
-				.then((updated: CSERVICE) => {
+				.modal<CNAME>(this.form, [], doc)
+				.then((updated: CNAME) => {
 					this._core.copy(updated, doc);
-					this._SERVICENAME.update(doc);
+					this._NAMEService.update(doc);
 				});
 		},
-		delete: (doc: CSERVICE) => {
+		delete: (doc: CNAME) => {
 			this._alert.question({
 				text: this._translate.translate(
-					'Common.Are you sure you want to delete this CSERVICE?'
+					'Common.Are you sure you want to delete this CNAME?'
 				),
 				buttons: [
 					{
@@ -78,7 +46,7 @@ export class CNAMEComponent {
 					{
 						text: this._translate.translate('Common.Yes'),
 						callback: () => {
-							this._SERVICENAME.delete(doc);
+							this._NAMEService.delete(doc);
 						},
 					},
 				],
@@ -87,19 +55,19 @@ export class CNAMEComponent {
 		buttons: [
 			{
 				icon: 'cloud_download',
-				click: (doc: CSERVICE) => {
-					this._form.modalUnique<CSERVICE>('NAME', 'url', doc);
+				click: (doc: CNAME) => {
+					this._form.modalUnique<CNAME>('NAME', 'url', doc);
 				},
 			},
 		],
 	};
 
-	get rows(): CSERVICE[] {
-		return this._SERVICENAME.SERVICEs;
+	get rows(): CNAME[] {
+		return this._NAMEService.SERVICEs;
 	}
 
 	constructor(
-		private _SERVICENAME: CSERVICEService,
+		private _NAMEService: CNAMEService,
 		private _translate: TranslateService,
 		private _alert: AlertService,
 		private _form: FormService,

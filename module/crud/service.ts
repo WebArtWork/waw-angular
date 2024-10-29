@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CNAME } from '../../interfaces/NAME.service';
 import {
 	AlertService,
 	CoreService,
@@ -8,16 +9,14 @@ import {
 	CrudDocument,
 } from 'wacom';
 
-export interface CNAME extends CrudDocument {
-	name: string;
-	description: string;
-}
-
 @Injectable({
 	providedIn: 'root',
 })
 export class CNAMEService extends CrudService<CNAME> {
-	NAMEs: CNAME[] = [];
+	NAMEs: CNAME[] = this.getDocs();
+
+	NAMEsByAuthor: Record<string, CNAME[]> = {};
+
 	constructor(
 		_http: HttpService,
 		_store: StoreService,
@@ -34,17 +33,6 @@ export class CNAMEService extends CrudService<CNAME> {
 			_core
 		);
 
-		this.get().subscribe((NAMEs: CNAME[]) => this.NAMEs.push(...NAMEs));
-
-		_core.on('NAME_create').subscribe((NAME: CNAME) => {
-			this.NAMEs.push(NAME);
-		});
-
-		_core.on('NAME_delete').subscribe((NAME: CNAME) => {
-			this.NAMEs.splice(
-				this.NAMEs.findIndex((o) => o._id === NAME._id),
-				1
-			);
-		});
+		this.get();
 	}
 }
