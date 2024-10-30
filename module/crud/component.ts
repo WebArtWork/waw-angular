@@ -8,67 +8,67 @@ import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interfa
 import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
 
 @Component({
-	templateUrl: './PNAME.component.html',
-	styleUrls: ['./PNAME.component.scss'],
+	templateUrl: './NAMEs.component.html',
+	styleUrls: ['./NAMEs.component.scss']
 })
-export class PCNAMEComponent {
+export class CNAMEsComponent {
 	columns = ['name', 'description'];
 
 	form: FormInterface = this._form.getForm('NAME', NAMEFormComponents);
 
 	config = {
-		create: () => {
+		create: (): void => {
 			this._form.modal<CNAME>(this.form, {
 				label: 'Create',
 				click: (created: unknown, close: () => void) => {
 					this._NAMEService.create(created as CNAME);
+
 					close();
-				},
+				}
 			});
 		},
-		update: (doc: CNAME) => {
-			this._form
-				.modal<CNAME>(this.form, [], doc)
-				.then((updated: CNAME) => {
-					this._core.copy(updated, doc);
-					this._NAMEService.update(doc);
-				});
+		update: (doc: CNAME): void => {
+			this._form.modal<CNAME>(this.form, [], doc).then((updated: CNAME) => {
+				this._core.copy(updated, doc);
+
+				this._NAMEService.update(doc);
+			});
 		},
-		delete: (doc: CNAME) => {
+		delete: (doc: CNAME): void => {
 			this._alert.question({
 				text: this._translate.translate(
-					'Common.Are you sure you want to delete this CNAME?'
+					'Common.Are you sure you want to delete this NAME?'
 				),
 				buttons: [
 					{
-						text: this._translate.translate('Common.No'),
+						text: this._translate.translate('Common.No')
 					},
 					{
 						text: this._translate.translate('Common.Yes'),
-						callback: () => {
+						callback: (): void => {
 							this._NAMEService.delete(doc);
-						},
-					},
-				],
+						}
+					}
+				]
 			});
 		},
 		buttons: [
 			{
 				icon: 'cloud_download',
-				click: (doc: CNAME) => {
+				click: (doc: CNAME): void => {
 					this._form.modalUnique<CNAME>('NAME', 'url', doc);
-				},
-			},
-		],
+				}
+			}
+		]
 	};
 
 	get rows(): CNAME[] {
-		return this._NAMEService.SERVICEs;
+		return this._NAMEService.NAMEs;
 	}
 
 	constructor(
-		private _NAMEService: CNAMEService,
 		private _translate: TranslateService,
+		private _NAMEService: CNAMEService,
 		private _alert: AlertService,
 		private _form: FormService,
 		private _core: CoreService

@@ -1,4 +1,4 @@
-import { CrudDocument } from "wacom";
+import { CrudDocument } from 'wacom';
 
 export interface CNAME extends CrudDocument {
 	name: string;

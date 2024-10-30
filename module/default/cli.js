@@ -6,24 +6,24 @@ if (!fs.existsSync(root + "/@angular/cli")) {
 	console.log(
 		"You should install '@angular/cli' global. 'npm i -g @angular/cli'"
 	);
-	process.exit(0);
+	process.exit(1);
 }
 
 module.exports = async (waw) => {
+	waw.base = waw.base.replace('modules', path.join('core', 'modules'));
+
 	const response = await fetch(
 		"https://webart.work/api/registry/ngx/module/" + waw.name
 	);
-	let resp;
-	if (response.ok) {
-		resp = await response.json();
-	}
+
+	const resp = response.ok ? await response.json() : null;
 
 	if (response.ok && resp) {
 		if (resp.repo) {
 			waw.fetch(
 				waw.base,
 				resp.repo,
-				(err) => {},
+				(err) => { },
 				resp.branch || "master"
 			);
 		} else {
@@ -37,16 +37,6 @@ module.exports = async (waw) => {
 			}
 		}
 	} else {
-		try {
-			exe("ng g m " + waw.component);
-		} catch (error) {
-			// console.log('\x1b[33m%s\x1b[0m', "You probably should install or re-install node modules, try:");
-			// console.log('\x1b[36m%s\x1b[0m', 'npm install');
-			process.exit(0);
-		}
-
-		exe("ng g c " + waw.component);
-
 		fs.mkdirSync(waw.base, {
 			recursive: true,
 		});
@@ -54,11 +44,11 @@ module.exports = async (waw) => {
 		waw.base = path.join(waw.base, waw.fileName);
 
 		if (fs.existsSync(waw.base + ".component.css")) {
-			fs.unlink(waw.base + ".component.css", (err) => {});
+			fs.unlink(waw.base + ".component.css", (err) => { });
 		}
 
 		if (fs.existsSync(waw.base + ".component.spec.ts")) {
-			fs.unlink(waw.base + ".component.spec.ts", (err) => {});
+			fs.unlink(waw.base + ".component.spec.ts", (err) => { });
 		}
 
 		let html = fs.readFileSync(waw.template + "/component.html", "utf8");

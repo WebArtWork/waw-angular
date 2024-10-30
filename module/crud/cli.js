@@ -68,7 +68,7 @@ module.exports = async (waw) => {
 			waw.fetch(
 				waw.base,
 				resp.repo,
-				(err) => {},
+				(err) => { },
 				resp.branch || "master"
 			);
 		} else {
@@ -86,10 +86,6 @@ module.exports = async (waw) => {
 
 		process.exit();
 	} else {
-		console.log(waw.base);
-
-		process.exit();
-
 		fs.mkdirSync(path.join(waw.base, "services"), {
 			recursive: true
 		});
@@ -116,7 +112,20 @@ module.exports = async (waw) => {
 			"utf8"
 		);
 
-		fs.mkdirSync(path.join(waw.base, "selectors"), {
+		fs.mkdirSync(path.join(waw.base, "formcomponents"), {
+			recursive: true
+		});
+
+		ts = fs.readFileSync(waw.template + "/formcomponents.ts", "utf8");
+		ts = ts.split("CNAME").join(waw.Name);
+		ts = ts.split("NAME").join(waw.name);
+		fs.writeFileSync(
+			path.join(waw.base, "formcomponents", waw.name + ".formcomponents.ts"),
+			ts,
+			"utf8"
+		);
+
+		fs.mkdirSync(path.join(waw.base, "selectors", waw.name), {
 			recursive: true
 		});
 
@@ -124,25 +133,25 @@ module.exports = async (waw) => {
 		html = html.split("CNAME").join(waw.Name);
 		html = html.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(waw.base, "selectors", waw.name + ".selector.html"),
+			path.join(waw.base, "selectors", waw.name, waw.name + "-selector.component.html"),
 			html,
 			"utf8"
 		);
 
-		let scss = fs.readFileSync(waw.template + "/selector.", "utf8");
+		let scss = fs.readFileSync(waw.template + "/selector.scss", "utf8");
 		scss = scss.split("CNAME").join(waw.Name);
 		scss = scss.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(waw.base, "selectors", waw.name + ".selector.scss"),
+			path.join(waw.base, "selectors", waw.name, waw.name + "-selector.component.scss"),
 			scss,
 			"utf8"
 		);
 
-		ts = fs.readFileSync(waw.template + "/selector.", "utf8");
+		ts = fs.readFileSync(waw.template + "/selector.ts", "utf8");
 		ts = ts.split("CNAME").join(waw.Name);
 		ts = ts.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(waw.base, "selectors", waw.name + ".selector.ts"),
+			path.join(waw.base, "selectors", waw.name, waw.name + "-selector.component.ts"),
 			ts,
 			"utf8"
 		);

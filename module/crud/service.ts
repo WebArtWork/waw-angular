@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CNAME } from '../../interfaces/NAME.service';
+import { CNAME } from '../interfaces/NAME.interface';
 import {
 	AlertService,
 	CoreService,
 	HttpService,
 	StoreService,
-	CrudService,
-	CrudDocument,
+	CrudService
 } from 'wacom';
 
 @Injectable({
