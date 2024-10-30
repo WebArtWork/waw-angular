@@ -5,16 +5,16 @@ import { CNAME } from '../../interfaces/NAME.interface';
 import { FormService } from 'src/app/core/modules/form/form.service';
 import { TranslateService } from 'src/app/core/modules/translate/translate.service';
 import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
-import { NAMEFormComponent } from '../../formcomponents/NAME.formcomponent';
+import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
 
 @Component({
-	templateUrl: './NAME.component.html',
-	styleUrls: ['./NAME.component.scss'],
+	templateUrl: './PNAME.component.html',
+	styleUrls: ['./PNAME.component.scss'],
 })
-export class CNAMEComponent {
+export class PCNAMEComponent {
 	columns = ['name', 'description'];
 
-	form: FormInterface = this._form.getForm('NAME', NAMEFormComponent);
+	form: FormInterface = this._form.getForm('NAME', NAMEFormComponents);
 
 	config = {
 		create: () => {

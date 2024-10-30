@@ -34,5 +34,7 @@ export class CNAMEService extends CrudService<CNAME> {
 		);
 
 		this.get();
+
+		this.filteredDocuments(this.NAMEsByAuthor);
 	}
 }
