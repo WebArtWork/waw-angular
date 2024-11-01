@@ -348,43 +348,47 @@ module.exports.g = generate;
 const update_module = async (waw, module, callback) => {
 	const branch = waw.argv.length > 2 ? waw.argv[2] : "master";
 
-	const location = module.location;
+	const moduleGit = path.join(module.location, '.git');
 
-	const temp = path.join(location, "temp");
+	const local = path.join(process.cwd(), '.git', module.name);
+
+	const localGit = path.join(process.cwd(), '.git', module.name, '.git');
+
+	if (fs.existsSync(local)) {
+		fs.rmSync(local, { recursive: true });
+	}
+
+	if (fs.existsSync(moduleGit)) {
+		fs.rmSync(moduleGit, { recursive: true });
+	}
+
+	fs.mkdirSync(local, { recursive: true });
 
 	waw.fetch(
-		temp,
+		local,
 		module.config.repo,
 		(err) => {
-			if (fs.existsSync(path.join(location, ".git"))) {
-				fs.rmSync(path.join(location, ".git"), { recursive: true });
+			fs.renameSync(localGit, moduleGit);
+
+			if (fs.existsSync(local)) {
+				fs.rmSync(local, { recursive: true });
 			}
 
-			if (!path.join(temp, ".git")) {
-				if (fs.existsSync(temp)) {
-					fs.rmSync(temp, { recursive: true });
-				}
+			exe("git add --all .", {
+				cwd: module.location
+			});
 
-				return callback();
-			}
+			try {
+				exe('git commit -m "' + waw.argv[1] + '"', {
+					cwd: module.location
+				});
 
-			fs.renameSync(path.join(temp, ".git"), path.join(location, ".git"));
+				exe('git push origin "' + branch + '"', {
+					cwd: module.location
+				});
+			} catch (error) { }
 
-			fs.rmSync(temp, { recursive: true });
-
-			if (fs.existsSync(path.join(location, ".git"))) {
-				const command = "cd ./src/app/modules/" + module.name + " && ";
-
-				exe(command + "git add --all .");
-
-				try {
-					exe(command + 'git commit -m "' + waw.argv[1] + '"');
-
-					exe(command + 'git push origin "' + branch + '"');
-				} catch (error) {}
-
-				fs.rmSync(path.join(location, ".git"), { recursive: true });
-			}
+			fs.rmSync(moduleGit, { recursive: true });
 
 			callback();
 		},
