@@ -8,10 +8,10 @@ import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interfa
 import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
 
 @Component({
-	templateUrl: './NAMEs.component.html',
-	styleUrls: ['./NAMEs.component.scss']
+	templateUrl: './PNAME.component.html',
+	styleUrls: ['./PNAME.component.scss']
 })
-export class CNAMEsComponent {
+export class PCNAMEComponent {
 	columns = ['name', 'description'];
 
 	form: FormInterface = this._form.getForm('NAME', NAMEFormComponents);
