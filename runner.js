@@ -56,7 +56,7 @@ const initialize = (waw) => {
 	if (!waw.argv.length) {
 		console.log("Please provide name");
 
-		process.exit(1);
+		process.exit();
 	}
 
 	waw.name = waw.argv[waw.argv.length - 1];
@@ -168,7 +168,7 @@ const install = (waw, location, callback) => {
 		callback();
 	}
 };
-const fetch = (waw) => {
+const fetchrepo = (waw) => {
 	fs.mkdirSync(waw.base, {
 		recursive: true,
 	});
@@ -177,7 +177,7 @@ const fetch = (waw) => {
 		if (err) console.log("Repository was not found");
 		else console.log("Code is successfully installed");
 		install(waw, waw.base, () => {
-			process.exit(1);
+			process.exit();
 		});
 	});
 };
@@ -187,7 +187,7 @@ const run = (module, folder) => {
 		waw.folder = folder;
 		initialize(waw);
 		if (waw.repo) {
-			fetch(waw);
+			fetchrepo(waw);
 		} else {
 			template(waw, () => {
 				require(path.join(waw.template, "cli.js"))(waw);
@@ -260,7 +260,7 @@ const fetch_modules = async (waw) => {
 						"Module " + waw.argv[1] + " don't have an repo"
 					);
 				}
-				process.exit(1);
+				process.exit();
 			}
 		);
 	} else {
@@ -272,7 +272,7 @@ const fetch_modules = async (waw) => {
 					console.log(
 						"All possible modules were fetched from their repositories"
 					);
-					process.exit(1);
+					process.exit();
 				}
 			});
 		}
@@ -339,7 +339,7 @@ const generate = async (waw) => {
 
 	console.log("Customization " + waw.element + " " + waw.name + " created");
 
-	process.exit(1);
+	process.exit();
 };
 module.exports.generate = generate;
 module.exports.g = generate;
@@ -416,11 +416,11 @@ const install_packages = (waw, dependencies) => {
 		}
 	});
 };
-const fetch_icon = async (waw, icon, callback) => {
-	const name = path.basename(icon);
+const fetch_component = async (waw, componentPath, type, callback) => {
+	const name = path.basename(componentPath);
 
 	const response = await fetch(
-		"https://webart.work/api/registry/ngx/icon/" + name
+		`https://webart.work/api/registry/ngx/${type}/${name}`
 	);
 
 	if (response.ok) {
@@ -428,7 +428,7 @@ const fetch_icon = async (waw, icon, callback) => {
 
 		if (resp && resp.repo) {
 			waw.fetch(
-				formcomponent,
+				componentPath,
 				resp.repo,
 				callback,
 				resp.branch || "master"
@@ -436,7 +436,7 @@ const fetch_icon = async (waw, icon, callback) => {
 		} else if (resp) {
 			for (const file in resp.files) {
 				fs.writeFileSync(
-					path.join(icon, file),
+					path.join(componentPath, file),
 					resp.files[file],
 					"utf8"
 				);
@@ -448,6 +448,31 @@ const fetch_icon = async (waw, icon, callback) => {
 	} else {
 		callback();
 	}
+};
+const update_component = async (waw, componentPath, type, callback) => {
+	const name = path.basename(componentPath);
+
+	const body = {};
+
+	const files = waw.getFilesRecursively(componentPath);
+
+
+	for (const file of files) {
+		const filePath = path.normalize(file).replace(componentPath, '');
+
+		body[filePath.slice(1)] = fs.readFileSync(file, 'utf-8');
+	}
+
+	// await fetch(`https://webart.work/api/registry/ngx/${type}/${name}`, {
+	await fetch(`http://localhost:8080/api/registry/ngx/${type}/${name}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	})
+
+	callback();
 };
 const fetch_icons = (waw) => {
 	const icons = waw.getDirectories(
@@ -458,50 +483,38 @@ const fetch_icons = (waw) => {
 	if (!countdown) {
 		console.log("All icons were synchronized");
 
-		process.exit(1);
+		process.exit();
 	}
-	icons.forEach((formcomponent) => {
-		fetch_icon(waw, formcomponent, () => {
+	icons.forEach((iconPath) => {
+		fetch_component(waw, iconPath, 'icon', () => {
 			if (--countdown === 0) {
 				console.log("All icons were synchronized");
 
-				process.exit(1);
+				process.exit();
 			}
 		});
 	});
 };
-const fetch_formcomponent = async (waw, formcomponent, callback) => {
-	const name = path.basename(formcomponent);
-
-	const response = await nodefetch(
-		"https://webart.work/api/registry/ngx/formcomponent/" + name
+const update_icons = (waw) => {
+	const icons = waw.getDirectories(
+		path.join(process.cwd(), "src", "app", "core", "icons")
 	);
 
-	if (response.ok) {
-		const resp = await response.json();
+	let countdown = icons.length;
+	if (!countdown) {
+		console.log("All icons were updated and synchronized");
 
-		if (resp && resp.repo) {
-			waw.fetch(
-				formcomponent,
-				resp.repo,
-				callback,
-				resp.branch || "master"
-			);
-		} else if (resp) {
-			for (const file in resp.files) {
-				fs.writeFileSync(
-					path.join(formcomponent, file),
-					resp.files[file],
-					"utf8"
-				);
-			}
-			callback();
-		} else {
-			callback();
-		}
-	} else {
-		callback();
+		process.exit();
 	}
+	icons.forEach((iconPath) => {
+		update_component(waw, iconPath, 'icon', () => {
+			if (--countdown === 0) {
+				console.log("All icons were updated and synchronized");
+
+				process.exit();
+			}
+		});
+	});
 };
 const fetch_formcomponents = (waw) => {
 	const formcomponents = waw.getDirectories(
@@ -514,8 +527,8 @@ const fetch_formcomponents = (waw) => {
 
 		fetch_icons(waw);
 	}
-	formcomponents.forEach((formcomponent) => {
-		fetch_formcomponent(waw, formcomponent, () => {
+	formcomponents.forEach((formcomponentPath) => {
+		fetch_component(waw, formcomponentPath, 'formcomponent', () => {
 			if (--countdown === 0) {
 				console.log("All form components were synchronized");
 
@@ -524,8 +537,29 @@ const fetch_formcomponents = (waw) => {
 		});
 	});
 };
+const update_formcomponents = (waw) => {
+	const formcomponents = waw.getDirectories(
+		path.join(process.cwd(), "src", "app", "core", "formcomponents")
+	);
+
+	let countdown = formcomponents.length;
+	if (!countdown) {
+		console.log("All form components were updated and synchronized");
+
+		update_icons(waw);
+	}
+	formcomponents.forEach((formcomponentPath) => {
+		update_component(waw, formcomponentPath, 'formcomponent', () => {
+			if (--countdown === 0) {
+				console.log("All form components were updated and synchronized");
+
+				update_icons(waw);
+			}
+		});
+	});
+};
 let countdown;
-const sync = async (waw, modules) => {
+const sync = async (waw, modules, syncComponents) => {
 	for (let i = modules.length - 1; i >= 0; i--) {
 		modules[i] = {
 			config: waw.readJson(path.join(modules[i], "module.json")),
@@ -546,7 +580,10 @@ const sync = async (waw, modules) => {
 		if (!countdown) {
 			console.log("All modules were synchronized");
 
-			fetch_formcomponents(waw);
+			if (syncComponents) {
+				fetch_formcomponents(waw);
+			}
+
 		}
 		const update = (_module) => {
 			fetch_module(waw, _module.location, () => {
@@ -556,7 +593,10 @@ const sync = async (waw, modules) => {
 				if (--countdown === 0) {
 					console.log("All modules were synchronized");
 
-					fetch_formcomponents(waw);
+					if (syncComponents) {
+						fetch_formcomponents(waw);
+					}
+
 				}
 			});
 		};
@@ -572,7 +612,10 @@ const sync = async (waw, modules) => {
 				}
 				if (--countdown === 0) {
 					console.log("All modules were updated and synchronized");
-					process.exit(1);
+
+					if (syncComponents) {
+						update_formcomponents(waw);
+					}
 				}
 			});
 		};
@@ -582,6 +625,10 @@ const sync = async (waw, modules) => {
 	}
 };
 const _sync = (waw) => {
+	if (waw.argv.length > 1) {
+		waw.rootconfig = waw.readJson(path.join(waw.waw_root, 'server.json'));
+	}
+
 	const coreModules = waw.getDirectories(
 		path.join(process.cwd(), "src", "app", "core", "modules")
 	);
@@ -592,7 +639,7 @@ const _sync = (waw) => {
 
 	countdown = coreModules.length + rootModules.length;
 
-	sync(waw, coreModules);
+	sync(waw, coreModules, true);
 
 	sync(waw, rootModules);
 }
