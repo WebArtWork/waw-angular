@@ -463,8 +463,7 @@ const update_component = async (waw, componentPath, type, callback) => {
 		body[filePath.slice(1)] = fs.readFileSync(file, 'utf-8');
 	}
 
-	// await fetch(`https://webart.work/api/registry/ngx/${type}/${name}`, {
-	await fetch(`http://localhost:8080/api/registry/ngx/${type}/${name}`, {
+	await fetch(`https://webart.work/api/registry/ngx/${type}/${name}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
