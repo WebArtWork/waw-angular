@@ -367,7 +367,7 @@ const update_module = async (waw, module, callback) => {
 	waw.fetch(
 		local,
 		module.config.repo,
-		(err) => {
+		() => {
 			fs.renameSync(localGit, moduleGit);
 
 			if (fs.existsSync(local)) {
@@ -469,7 +469,9 @@ const update_component = async (waw, componentPath, type, callback) => {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(body)
-	})
+	});
+
+	console.log(`Component ${name} has been updated`);
 
 	callback();
 };
@@ -516,6 +518,11 @@ const update_icons = (waw) => {
 	});
 };
 const fetch_formcomponents = (waw) => {
+	if (waw.isDone) {
+		return;
+	}
+	waw.isDone = true;
+
 	const formcomponents = waw.getDirectories(
 		path.join(process.cwd(), "src", "app", "core", "formcomponents")
 	);
@@ -537,6 +544,11 @@ const fetch_formcomponents = (waw) => {
 	});
 };
 const update_formcomponents = (waw) => {
+	if (waw.isDone) {
+		return;
+	}
+	waw.isDone = true;
+
 	const formcomponents = waw.getDirectories(
 		path.join(process.cwd(), "src", "app", "core", "formcomponents")
 	);
@@ -558,7 +570,7 @@ const update_formcomponents = (waw) => {
 	});
 };
 let countdown;
-const sync = async (waw, modules, syncComponents) => {
+const sync = async (waw, modules) => {
 	for (let i = modules.length - 1; i >= 0; i--) {
 		modules[i] = {
 			config: waw.readJson(path.join(modules[i], "module.json")),
@@ -571,6 +583,8 @@ const sync = async (waw, modules, syncComponents) => {
 		}
 
 		if (!modules[i].config.repo) {
+			--countdown;
+
 			modules.splice(i, 1);
 		}
 	}
@@ -579,10 +593,7 @@ const sync = async (waw, modules, syncComponents) => {
 		if (!countdown) {
 			console.log("All modules were synchronized");
 
-			if (syncComponents) {
-				fetch_formcomponents(waw);
-			}
-
+			fetch_formcomponents(waw);
 		}
 		const update = (_module) => {
 			fetch_module(waw, _module.location, () => {
@@ -592,10 +603,7 @@ const sync = async (waw, modules, syncComponents) => {
 				if (--countdown === 0) {
 					console.log("All modules were synchronized");
 
-					if (syncComponents) {
-						fetch_formcomponents(waw);
-					}
-
+					fetch_formcomponents(waw);
 				}
 			});
 		};
@@ -609,12 +617,11 @@ const sync = async (waw, modules, syncComponents) => {
 				if (_module.config.repo) {
 					console.log(`Module ${_module.name} has been updated`);
 				}
+
 				if (--countdown === 0) {
 					console.log("All modules were updated and synchronized");
 
-					if (syncComponents) {
-						update_formcomponents(waw);
-					}
+					update_formcomponents(waw);
 				}
 			});
 		};
@@ -638,7 +645,7 @@ const _sync = (waw) => {
 
 	countdown = coreModules.length + rootModules.length;
 
-	sync(waw, coreModules, true);
+	sync(waw, coreModules);
 
 	sync(waw, rootModules);
 }
