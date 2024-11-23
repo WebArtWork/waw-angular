@@ -11,6 +11,7 @@ import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interfa
 @Component({
 	templateUrl: './NAME.component.html',
 	styleUrls: ['./NAME.component.scss'],
+	standalone: false
 })
 export class CNAMEComponent {
 	columns = ['name', 'description'];

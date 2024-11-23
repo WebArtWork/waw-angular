@@ -9,7 +9,8 @@ import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
 
 @Component({
 	templateUrl: './PNAME.component.html',
-	styleUrls: ['./PNAME.component.scss']
+	styleUrls: ['./PNAME.component.scss'],
+	standalone: false
 })
 export class PCNAMEComponent {
 	columns = ['name', 'description'];

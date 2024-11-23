@@ -14,7 +14,6 @@ import { CNAME } from '../../interfaces/NAME.interface';
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
 	styleUrls: ['./NAME-selector.component.scss'],
-	standalone: true,
 	imports: [SelectModule]
 })
 export class SelectUserComponent implements OnChanges {
