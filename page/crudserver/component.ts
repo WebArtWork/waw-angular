@@ -7,6 +7,7 @@ import {
 import { AlertService, CoreService } from 'wacom';
 import { TranslateService } from 'src/app/core/modules/translate/translate.service';
 import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
 	templateUrl: './NAME.component.html',
@@ -76,7 +77,7 @@ export class CNAMEComponent {
 				}
 			});
 		},
-		update: (doc: CSERVICE) => {
+		update: (doc: CSERVICE): void => {
 			this._form
 				.modal<CSERVICE>(this.form, [], doc)
 				.then((updated: CSERVICE): void => {
@@ -89,7 +90,7 @@ export class CNAMEComponent {
 					});
 				});
 		},
-		delete: (doc: CSERVICE) => {
+		delete: (doc: CSERVICE): void => {
 			this._alert.question({
 				text: this._translate.translate(
 					'Common.Are you sure you want to delete this cservice?'
@@ -113,7 +114,19 @@ export class CNAMEComponent {
 					}
 				]
 			});
-		}
+		},
+		headerButtons: [
+			{
+				icon: 'playlist_add',
+				click: this._bulkManagement(),
+				class: 'playlist'
+			},
+			{
+				icon: 'edit_note',
+				click: this._bulkManagement(false),
+				class: 'edit'
+			}
+		]
 	};
 
 	constructor(
@@ -126,7 +139,7 @@ export class CNAMEComponent {
 		this.setRows();
 	}
 
-	setRows(page = this._page) {
+	setRows(page = this._page): void {
 		this._page = page;
 
 		this._core.afterWhile(
@@ -143,4 +156,40 @@ export class CNAMEComponent {
 	}
 
 	private _page = 1;
+
+	private _bulkManagement(create = true): () => void {
+		return (): void => {
+			this._form
+				.modalDocs<CSERVICE>(create ? [] : this.rows)
+				.then(async (SERVICEs: CSERVICE[]) => {
+					if (create) {
+						for (const SERVICE of SERVICEs) {
+							await firstValueFrom(
+								this._SERVICENAME.create(SERVICE)
+							);
+						}
+					} else {
+						for (const SERVICE of SERVICEs) {
+							const localCSERVICE = this.rows.find(
+								localCSERVICE => localCSERVICE._id === SERVICE._id
+							);
+
+							if (localCSERVICE) {
+								this._core.copy(SERVICE, localCSERVICE);
+
+								await firstValueFrom(
+									this._SERVICENAME.update(localCSERVICE)
+								);
+							} else {
+								await firstValueFrom(
+									this._SERVICENAME.delete(SERVICE)
+								);
+							}
+						}
+					}
+
+					this.setRows();
+				});
+		};
+	}
 }

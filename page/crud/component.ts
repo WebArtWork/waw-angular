@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-	CSERVICEService,
-	CSERVICE,
-} from 'src/app/core/services/SERVICE.service';
+import { CSERVICEService, CSERVICE } from 'src/app/core/services/SERVICE.service';
 import { AlertService, CoreService } from 'wacom';
 import { FormService } from 'src/app/core/modules/form/form.service';
 import { TranslateService } from 'src/app/core/modules/translate/translate.service';
@@ -127,14 +124,25 @@ export class CNAMEComponent {
 	private _bulkManagement(create = true): () => void {
 		return (): void => {
 			this._form
-				.modalDocs<CSERVICE>(create ? [] : this.SERVICEs)
+				.modalDocs<CSERVICE>(create ? [] : this.rows)
 				.then((SERVICEs: CSERVICE[]) => {
-					// in case of update, delete SERVICEs
-					for (const SERVICE of SERVICEs) {
-						if (create) {
+					if (create) {
+						for (const SERVICE of SERVICEs) {
 							this._SERVICENAME.create(SERVICE);
-						} else {
-							this._SERVICENAME.update(SERVICE);
+						}
+					} else {
+						for (const SERVICE of SERVICEs) {
+							const localCSERVICE = this.rows.find(
+								localCSERVICE => localCSERVICE._id === SERVICE._id
+							);
+
+							if (localCSERVICE) {
+								this._core.copy(SERVICE, localCSERVICE);
+
+								this._SERVICENAME.update(localCSERVICE);
+							} else {
+								this._SERVICENAME.delete(SERVICE);
+							}
 						}
 					}
 				});

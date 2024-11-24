@@ -128,8 +128,8 @@ export class PCNAMEComponent {
 							);
 						}
 					} else {
-						for (const NAME of this.rows) {
-							const localCNAME = NAMEs.find(
+						for (const NAME of NAMEs) {
+							const localCNAME = this.rows.find(
 								localCNAME => localCNAME._id === NAME._id
 							);
 
