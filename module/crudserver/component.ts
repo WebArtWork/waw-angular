@@ -6,6 +6,7 @@ import { FormService } from 'src/app/core/modules/form/form.service';
 import { TranslateService } from 'src/app/core/modules/translate/translate.service';
 import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
 import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
 	templateUrl: './PNAME.component.html',
@@ -25,10 +26,14 @@ export class PCNAMEComponent {
 		create: (): void => {
 			this._form.modal<CNAME>(this.form, {
 				label: 'Create',
-				click: (created: unknown, close: () => void) => {
-					this._NAMEService.create(created as CNAME);
-
+				click: async (created: unknown, close: () => void) => {
 					close();
+
+					await firstValueFrom(
+						this._NAMEService.create(created as CNAME)
+					);
+
+					this.setRows();
 				}
 			});
 		},
@@ -50,8 +55,10 @@ export class PCNAMEComponent {
 					},
 					{
 						text: this._translate.translate('Common.Yes'),
-						callback: (): void => {
-							this._NAMEService.delete(doc);
+						callback: async (): Promise<void> => {
+							await firstValueFrom(this._NAMEService.delete(doc));
+
+							this.setRows();
 						}
 					}
 				]
@@ -64,6 +71,18 @@ export class PCNAMEComponent {
 					this._form.modalUnique<CNAME>('NAME', 'url', doc);
 				}
 			}
+		],
+		headerButtons: [
+			{
+				icon: 'playlist_add',
+				click: this._bulkManagement(),
+				class: 'playlist',
+			},
+			{
+				icon: 'edit_note',
+				click: this._bulkManagement(false),
+				class: 'edit',
+			},
 		]
 	};
 
@@ -96,4 +115,40 @@ export class PCNAMEComponent {
 	}
 
 	private _page = 1;
+
+	private _bulkManagement(create = true): () => void {
+		return (): void => {
+			this._form
+				.modalDocs<CNAME>(create ? [] : this.rows)
+				.then(async (NAMEs: CNAME[]) => {
+					if (create) {
+						for (const NAME of NAMEs) {
+							await firstValueFrom(
+								this._NAMEService.create(NAME)
+							);
+						}
+					} else {
+						for (const NAME of this.rows) {
+							const localCNAME = NAMEs.find(
+								localCNAME => localCNAME._id === NAME._id
+							);
+
+							if (localCNAME) {
+								this._core.copy(NAME, localCNAME);
+
+								await firstValueFrom(
+									this._NAMEService.update(localCNAME)
+								);
+							} else {
+								await firstValueFrom(
+									this._NAMEService.delete(NAME)
+								);
+							}
+						}
+					}
+
+					this.setRows();
+				});
+		};
+	}
 }

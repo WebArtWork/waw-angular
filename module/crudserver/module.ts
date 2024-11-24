@@ -15,4 +15,4 @@ const routes: Routes = [
 	declarations: [PCNAMEComponent],
 	providers: []
 })
-export class CNAMEModule {}
+export class PCNAMEModule {}

@@ -60,6 +60,18 @@ export class PCNAMEComponent {
 					this._form.modalUnique<CNAME>('NAME', 'url', doc);
 				}
 			}
+		],
+		headerButtons: [
+			{
+				icon: 'playlist_add',
+				click: this._bulkManagement(),
+				class: 'playlist',
+			},
+			{
+				icon: 'edit_note',
+				click: this._bulkManagement(false),
+				class: 'edit',
+			},
 		]
 	};
 
@@ -74,4 +86,32 @@ export class PCNAMEComponent {
 		private _form: FormService,
 		private _core: CoreService
 	) {}
+
+	private _bulkManagement(create = true): () => void {
+		return (): void => {
+			this._form
+				.modalDocs<CNAME>(create ? [] : this.rows)
+				.then((NAMEs: CNAME[]) => {
+					if (create) {
+						for (const NAME of NAMEs) {
+							this._NAMEService.create(NAME);
+						}
+					} else {
+						for (const NAME of this.rows) {
+							const localCNAME = NAMEs.find(
+								localCNAME => localCNAME._id === NAME._id
+							);
+
+							if (localCNAME) {
+								this._core.copy(NAME, localCNAME);
+
+								this._NAMEService.update(localCNAME);
+							} else {
+								this._NAMEService.delete(NAME);
+							}
+						}
+					}
+				});
+		};
+	}
 }

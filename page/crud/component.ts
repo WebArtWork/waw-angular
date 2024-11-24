@@ -97,6 +97,18 @@ export class CNAMEComponent {
 					this._form.modalUnique<CSERVICE>('NAME', 'url', doc);
 				}
 			}
+		],
+		headerButtons: [
+			{
+				icon: 'playlist_add',
+				click: this._bulkManagement(),
+				class: 'playlist'
+			},
+			{
+				icon: 'edit_note',
+				click: this._bulkManagement(false),
+				class: 'edit'
+			}
 		]
 	};
 
@@ -111,4 +123,21 @@ export class CNAMEComponent {
 		private _form: FormService,
 		private _core: CoreService
 	) {}
+
+	private _bulkManagement(create = true): () => void {
+		return (): void => {
+			this._form
+				.modalDocs<CSERVICE>(create ? [] : this.SERVICEs)
+				.then((SERVICEs: CSERVICE[]) => {
+					// in case of update, delete SERVICEs
+					for (const SERVICE of SERVICEs) {
+						if (create) {
+							this._SERVICENAME.create(SERVICE);
+						} else {
+							this._SERVICENAME.update(SERVICE);
+						}
+					}
+				});
+		};
+	}
 }

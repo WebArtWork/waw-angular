@@ -51,6 +51,25 @@ const finish = (waw) => {
 	ts = ts.split("NAME").join(waw.name);
 	fs.writeFileSync(base + ".module.ts", ts, "utf8");
 
+	waw.add_code({
+		file: process.cwd() + "/src/app/app.module.ts",
+		search: "/* user */",
+		replace:
+			"/* user */\n\t\t\t{\n\t\t\t\tpath: '" +
+			waw.pageName +
+			"',\n\t\t\t\tcanActivate: [MetaGuard],\n\t\t\t\tdata: {\n\t\t\t\t\tmeta: {\n\t\t\t\t\t\ttitle: '" +
+			waw.PageName +
+			"'\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tloadChildren: () => import('./modules/" +
+			waw.name +
+			'/pages/' +
+			waw.pageName +
+			'/' +
+			waw.pageName +
+			".module').then(m => m." +
+			waw.PageName +
+			"Module)\n\t\t\t}, ",
+	});
+
 	console.log("Module has been created");
 
 	process.exit(1);

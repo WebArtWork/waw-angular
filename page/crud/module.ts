@@ -14,4 +14,4 @@ const routes: Routes = [
 	imports: [RouterModule.forChild(routes), CoreModule],
 	declarations: [CNAMEComponent]
 })
-export class CNAMEModule {}
+export class PCNAMEModule {}
