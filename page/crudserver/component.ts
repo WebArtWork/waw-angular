@@ -169,6 +169,16 @@ export class CNAMEComponent {
 							);
 						}
 					} else {
+						for (const SERVICE of this.rows) {
+							if (!SERVICEs.find(
+								localCSERVICE => localCSERVICE._id === SERVICE._id
+							)) {
+								await firstValueFrom(
+									this._SERVICENAME.delete(SERVICE)
+								);
+							}
+						}
+
 						for (const SERVICE of SERVICEs) {
 							const localCSERVICE = this.rows.find(
 								localCSERVICE => localCSERVICE._id === SERVICE._id
@@ -181,8 +191,10 @@ export class CNAMEComponent {
 									this._SERVICENAME.update(localCSERVICE)
 								);
 							} else {
+								delete SERVICE.__created;
+
 								await firstValueFrom(
-									this._SERVICENAME.delete(SERVICE)
+									this._SERVICENAME.create(SERVICE)
 								);
 							}
 						}

@@ -131,6 +131,14 @@ export class CNAMEComponent {
 							this._SERVICENAME.create(SERVICE);
 						}
 					} else {
+						for (const SERVICE of this.rows) {
+							if (!SERVICEs.find(
+								localCSERVICE => localCSERVICE._id === SERVICE._id
+							)) {
+								this._SERVICENAME.delete(SERVICE);
+							}
+						}
+
 						for (const SERVICE of SERVICEs) {
 							const localCSERVICE = this.rows.find(
 								localCSERVICE => localCSERVICE._id === SERVICE._id
@@ -141,7 +149,9 @@ export class CNAMEComponent {
 
 								this._SERVICENAME.update(localCSERVICE);
 							} else {
-								this._SERVICENAME.delete(SERVICE);
+								delete SERVICE.__created;
+
+								this._SERVICENAME.create(SERVICE);
 							}
 						}
 					}

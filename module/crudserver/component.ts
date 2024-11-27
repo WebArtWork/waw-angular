@@ -128,6 +128,16 @@ export class PCNAMEComponent {
 							);
 						}
 					} else {
+						for (const NAME of this.rows) {
+							if (!NAMEs.find(
+								localCNAME => localCNAME._id === NAME._id
+							)) {
+								await firstValueFrom(
+									this._NAMEService.delete(NAME)
+								);
+							}
+						}
+
 						for (const NAME of NAMEs) {
 							const localCNAME = this.rows.find(
 								localCNAME => localCNAME._id === NAME._id
@@ -140,8 +150,10 @@ export class PCNAMEComponent {
 									this._NAMEService.update(localCNAME)
 								);
 							} else {
+								delete NAME.__created;
+
 								await firstValueFrom(
-									this._NAMEService.delete(NAME)
+									this._NAMEService.create(NAME)
 								);
 							}
 						}

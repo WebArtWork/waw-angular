@@ -97,6 +97,14 @@ export class PCNAMEComponent {
 							this._NAMEService.create(NAME);
 						}
 					} else {
+						for (const NAME of this.rows) {
+							if (!NAMEs.find(
+								localCNAME => localCNAME._id === NAME._id
+							)) {
+								this._NAMEService.delete(NAME);
+							}
+						}
+
 						for (const NAME of NAMEs) {
 							const localCNAME = this.rows.find(
 								localCNAME => localCNAME._id === NAME._id
@@ -107,7 +115,9 @@ export class PCNAMEComponent {
 
 								this._NAMEService.update(localCNAME);
 							} else {
-								this._NAMEService.delete(NAME);
+								delete NAME.__created;
+
+								this._NAMEService.create(NAME);
 							}
 						}
 					}
