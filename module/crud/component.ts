@@ -22,6 +22,8 @@ export class PCNAMEComponent {
 			this._form.modal<CNAME>(this.form, {
 				label: 'Create',
 				click: (created: unknown, close: () => void) => {
+					this._preCreate(created as CNAME);
+
 					this._NAMEService.create(created as CNAME);
 
 					close();
@@ -94,6 +96,8 @@ export class PCNAMEComponent {
 				.then((NAMEs: CNAME[]) => {
 					if (create) {
 						for (const NAME of NAMEs) {
+							this._preCreate(NAME);
+
 							this._NAMEService.create(NAME);
 						}
 					} else {
@@ -115,7 +119,7 @@ export class PCNAMEComponent {
 
 								this._NAMEService.update(localCNAME);
 							} else {
-								delete NAME.__created;
+								this._preCreate(NAME);
 
 								this._NAMEService.create(NAME);
 							}
@@ -123,5 +127,9 @@ export class PCNAMEComponent {
 					}
 				});
 		};
+	}
+
+	private _preCreate(SERVICE: CNAME): void {
+		SERVICE.__created;
 	}
 }

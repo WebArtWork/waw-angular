@@ -29,6 +29,8 @@ export class PCNAMEComponent {
 				click: async (created: unknown, close: () => void) => {
 					close();
 
+					this._preCreate(created as CNAME);
+
 					await firstValueFrom(
 						this._NAMEService.create(created as CNAME)
 					);
@@ -123,6 +125,8 @@ export class PCNAMEComponent {
 				.then(async (NAMEs: CNAME[]) => {
 					if (create) {
 						for (const NAME of NAMEs) {
+							this._preCreate(NAME);
+
 							await firstValueFrom(
 								this._NAMEService.create(NAME)
 							);
@@ -150,7 +154,7 @@ export class PCNAMEComponent {
 									this._NAMEService.update(localCNAME)
 								);
 							} else {
-								delete NAME.__created;
+								this._preCreate(NAME);
 
 								await firstValueFrom(
 									this._NAMEService.create(NAME)
@@ -162,5 +166,9 @@ export class PCNAMEComponent {
 					this.setRows();
 				});
 		};
+	}
+
+	private _preCreate(SERVICE: CNAME): void {
+		SERVICE.__created;
 	}
 }

@@ -64,6 +64,8 @@ export class CNAMEComponent {
 			this._form.modal<CSERVICE>(this.form, {
 				label: 'Create',
 				click: (created: unknown, close: () => void): void => {
+					this._preCreate(created as CSERVICE);
+
 					this._SERVICENAME.create(created as CSERVICE, {
 						alert: this._translate.translate(
 							'CSERVICE.CSERVICE has been created'
@@ -164,6 +166,8 @@ export class CNAMEComponent {
 				.then(async (SERVICEs: CSERVICE[]) => {
 					if (create) {
 						for (const SERVICE of SERVICEs) {
+							this._preCreate(SERVICE);
+
 							await firstValueFrom(
 								this._SERVICENAME.create(SERVICE)
 							);
@@ -191,7 +195,7 @@ export class CNAMEComponent {
 									this._SERVICENAME.update(localCSERVICE)
 								);
 							} else {
-								delete SERVICE.__created;
+								this._preCreate(SERVICE);
 
 								await firstValueFrom(
 									this._SERVICENAME.create(SERVICE)
@@ -203,5 +207,9 @@ export class CNAMEComponent {
 					this.setRows();
 				});
 		};
+	}
+
+	private _preCreate(SERVICE: CSERVICE): void {
+		SERVICE.__created;
 	}
 }
