@@ -129,7 +129,7 @@ export class PCNAMEComponent {
 		};
 	}
 
-	private _preCreate(SERVICE: CNAME): void {
-		SERVICE.__created;
+	private _preCreate(NAME: CNAME): void {
+		NAME.__created;
 	}
 }
