@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { CSERVICEService, CSERVICE } from 'src/app/core/services/SERVICE.service';
+import {
+	CSERVICEService,
+	CSERVICE,
+} from 'src/app/core/services/SERVICE.service';
 import { AlertService, CoreService } from 'wacom';
 import { FormService } from 'src/app/core/modules/form/form.service';
 import { TranslateService } from 'src/app/core/modules/translate/translate.service';
@@ -8,7 +11,7 @@ import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interfa
 @Component({
 	templateUrl: './NAME.component.html',
 	styleUrls: ['./NAME.component.scss'],
-	standalone: false
+	standalone: false,
 })
 export class CNAMEComponent {
 	columns = ['name', 'description'];
@@ -29,8 +32,8 @@ export class CNAMEComponent {
 					{
 						name: 'Label',
 						value: 'Title',
-					}
-				]
+					},
+				],
 			},
 			{
 				name: 'Text',
@@ -43,8 +46,8 @@ export class CNAMEComponent {
 					{
 						name: 'Label',
 						value: 'Description',
-					}
-				]
+					},
+				],
 			},
 		],
 	});
@@ -59,8 +62,8 @@ export class CNAMEComponent {
 					this._SERVICENAME.create(created as CSERVICE);
 
 					close();
-				}
-			})
+				},
+			});
 		},
 		update: (doc: CSERVICE): void => {
 			this._form
@@ -78,15 +81,15 @@ export class CNAMEComponent {
 				),
 				buttons: [
 					{
-						text: this._translate.translate('Common.No')
+						text: this._translate.translate('Common.No'),
 					},
 					{
 						text: this._translate.translate('Common.Yes'),
 						callback: (): void => {
 							this._SERVICENAME.delete(doc);
-						}
-					}
-				]
+						},
+					},
+				],
 			});
 		},
 		buttons: [
@@ -94,21 +97,21 @@ export class CNAMEComponent {
 				icon: 'cloud_download',
 				click: (doc: CSERVICE): void => {
 					this._form.modalUnique<CSERVICE>('NAME', 'url', doc);
-				}
-			}
+				},
+			},
 		],
 		headerButtons: [
 			{
 				icon: 'playlist_add',
 				click: this._bulkManagement(),
-				class: 'playlist'
+				class: 'playlist',
 			},
 			{
 				icon: 'edit_note',
 				click: this._bulkManagement(false),
-				class: 'edit'
-			}
-		]
+				class: 'edit',
+			},
+		],
 	};
 
 	get rows(): CSERVICE[] {
@@ -136,16 +139,20 @@ export class CNAMEComponent {
 						}
 					} else {
 						for (const SERVICE of this.rows) {
-							if (!SERVICEs.find(
-								localCSERVICE => localCSERVICE._id === SERVICE._id
-							)) {
+							if (
+								!SERVICEs.find(
+									(localCSERVICE) =>
+										localCSERVICE._id === SERVICE._id
+								)
+							) {
 								this._SERVICENAME.delete(SERVICE);
 							}
 						}
 
 						for (const SERVICE of SERVICEs) {
 							const localCSERVICE = this.rows.find(
-								localCSERVICE => localCSERVICE._id === SERVICE._id
+								(localCSERVICE) =>
+									localCSERVICE._id === SERVICE._id
 							);
 
 							if (localCSERVICE) {
@@ -164,6 +171,6 @@ export class CNAMEComponent {
 	}
 
 	private _preCreate(SERVICE: CSERVICE): void {
-		SERVICE.__created;
+		delete SERVICE.__created;
 	}
 }

@@ -11,7 +11,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
 	templateUrl: './PNAME.component.html',
 	styleUrls: ['./PNAME.component.scss'],
-	standalone: false
+	standalone: false,
 })
 export class PCNAMEComponent {
 	columns = ['name', 'description'];
@@ -36,15 +36,17 @@ export class PCNAMEComponent {
 					);
 
 					this.setRows();
-				}
+				},
 			});
 		},
 		update: (doc: CNAME): void => {
-			this._form.modal<CNAME>(this.form, [], doc).then((updated: CNAME) => {
-				this._core.copy(updated, doc);
+			this._form
+				.modal<CNAME>(this.form, [], doc)
+				.then((updated: CNAME) => {
+					this._core.copy(updated, doc);
 
-				this._NAMEService.update(doc);
-			});
+					this._NAMEService.update(doc);
+				});
 		},
 		delete: (doc: CNAME): void => {
 			this._alert.question({
@@ -53,7 +55,7 @@ export class PCNAMEComponent {
 				),
 				buttons: [
 					{
-						text: this._translate.translate('Common.No')
+						text: this._translate.translate('Common.No'),
 					},
 					{
 						text: this._translate.translate('Common.Yes'),
@@ -61,9 +63,9 @@ export class PCNAMEComponent {
 							await firstValueFrom(this._NAMEService.delete(doc));
 
 							this.setRows();
-						}
-					}
-				]
+						},
+					},
+				],
 			});
 		},
 		buttons: [
@@ -71,8 +73,8 @@ export class PCNAMEComponent {
 				icon: 'cloud_download',
 				click: (doc: CNAME): void => {
 					this._form.modalUnique<CNAME>('NAME', 'url', doc);
-				}
-			}
+				},
+			},
 		],
 		headerButtons: [
 			{
@@ -85,7 +87,7 @@ export class PCNAMEComponent {
 				click: this._bulkManagement(false),
 				class: 'edit',
 			},
-		]
+		],
 	};
 
 	rows: CNAME[] = [];
@@ -133,9 +135,11 @@ export class PCNAMEComponent {
 						}
 					} else {
 						for (const NAME of this.rows) {
-							if (!NAMEs.find(
-								localCNAME => localCNAME._id === NAME._id
-							)) {
+							if (
+								!NAMEs.find(
+									(localCNAME) => localCNAME._id === NAME._id
+								)
+							) {
 								await firstValueFrom(
 									this._NAMEService.delete(NAME)
 								);
@@ -144,7 +148,7 @@ export class PCNAMEComponent {
 
 						for (const NAME of NAMEs) {
 							const localCNAME = this.rows.find(
-								localCNAME => localCNAME._id === NAME._id
+								(localCNAME) => localCNAME._id === NAME._id
 							);
 
 							if (localCNAME) {
@@ -169,6 +173,6 @@ export class PCNAMEComponent {
 	}
 
 	private _preCreate(NAME: CNAME): void {
-		NAME.__created;
+		delete NAME.__created;
 	}
 }

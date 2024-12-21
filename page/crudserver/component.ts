@@ -12,7 +12,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
 	templateUrl: './NAME.component.html',
 	styleUrls: ['./NAME.component.scss'],
-	standalone: false
+	standalone: false,
 })
 export class CNAMEComponent {
 	columns = ['name', 'description'];
@@ -35,8 +35,8 @@ export class CNAMEComponent {
 					{
 						name: 'Label',
 						value: 'Title',
-					}
-				]
+					},
+				],
 			},
 			{
 				name: 'Text',
@@ -49,10 +49,10 @@ export class CNAMEComponent {
 					{
 						name: 'Label',
 						value: 'Description',
-					}
-				]
-			}
-		]
+					},
+				],
+			},
+		],
 	});
 
 	config = {
@@ -74,9 +74,9 @@ export class CNAMEComponent {
 							this.setRows();
 
 							close();
-						}
+						},
 					});
-				}
+				},
 			});
 		},
 		update: (doc: CSERVICE): void => {
@@ -88,7 +88,7 @@ export class CNAMEComponent {
 					this._SERVICENAME.update(doc, {
 						alert: this._translate.translate(
 							'CSERVICE.CSERVICE has been updated'
-						)
+						),
 					});
 				});
 		},
@@ -110,25 +110,25 @@ export class CNAMEComponent {
 								),
 								callback: (): void => {
 									this.setRows();
-								}
+								},
 							});
-						}
-					}
-				]
+						},
+					},
+				],
 			});
 		},
 		headerButtons: [
 			{
 				icon: 'playlist_add',
 				click: this._bulkManagement(),
-				class: 'playlist'
+				class: 'playlist',
 			},
 			{
 				icon: 'edit_note',
 				click: this._bulkManagement(false),
-				class: 'edit'
-			}
-		]
+				class: 'edit',
+			},
+		],
 	};
 
 	constructor(
@@ -174,9 +174,12 @@ export class CNAMEComponent {
 						}
 					} else {
 						for (const SERVICE of this.rows) {
-							if (!SERVICEs.find(
-								localCSERVICE => localCSERVICE._id === SERVICE._id
-							)) {
+							if (
+								!SERVICEs.find(
+									(localCSERVICE) =>
+										localCSERVICE._id === SERVICE._id
+								)
+							) {
 								await firstValueFrom(
 									this._SERVICENAME.delete(SERVICE)
 								);
@@ -185,7 +188,8 @@ export class CNAMEComponent {
 
 						for (const SERVICE of SERVICEs) {
 							const localCSERVICE = this.rows.find(
-								localCSERVICE => localCSERVICE._id === SERVICE._id
+								(localCSERVICE) =>
+									localCSERVICE._id === SERVICE._id
 							);
 
 							if (localCSERVICE) {
@@ -210,6 +214,6 @@ export class CNAMEComponent {
 	}
 
 	private _preCreate(SERVICE: CSERVICE): void {
-		SERVICE.__created;
+		delete SERVICE.__created;
 	}
 }
