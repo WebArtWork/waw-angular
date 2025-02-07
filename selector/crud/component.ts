@@ -4,19 +4,19 @@ import {
 	Input,
 	OnChanges,
 	Output,
-	SimpleChanges
+	SimpleChanges,
 } from '@angular/core';
 import { CNAMEService, CNAME } from 'src/app/core/services/NAME.service';
 
 @Component({
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
-	styleUrls: ['./NAME-selector.component.scss']
+	styleUrls: ['./NAME-selector.component.scss'],
 })
 export class CNAMESelectorComponent implements OnChanges {
 	@Input() value: string;
 
-	@Output() onChange = new EventEmitter();
+	@Output() wChange = new EventEmitter();
 
 	get items(): CNAME[] {
 		return this._NAMEService.NAMEs;

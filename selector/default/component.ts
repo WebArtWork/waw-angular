@@ -4,20 +4,20 @@ import {
 	Input,
 	OnChanges,
 	Output,
-	SimpleChanges
+	SimpleChanges,
 } from '@angular/core';
 
 @Component({
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
-	styleUrls: ['./NAME-selector.component.scss']
+	styleUrls: ['./NAME-selector.component.scss'],
 })
 export class CNAMESelectorComponent implements OnChanges {
 	@Input() items = ['Yes', 'No']; // put proper items here
 
 	@Input() value: string;
 
-	@Output() onChange = new EventEmitter();
+	@Output() wChange = new EventEmitter();
 
 	ngOnChanges(changes: SimpleChanges): void {
 		if (changes['value'] && !changes['value'].firstChange) {
