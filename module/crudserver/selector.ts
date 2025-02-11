@@ -4,7 +4,7 @@ import {
 	Component,
 	OnChanges,
 	Output,
-	Input
+	Input,
 } from '@angular/core';
 import { SelectModule } from 'src/app/core/modules/select/select.module';
 import { CNAMEService } from '../../services/NAME.service';
@@ -14,9 +14,9 @@ import { CNAME } from '../../interfaces/NAME.interface';
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
 	styleUrls: ['./NAME-selector.component.scss'],
-	imports: [SelectModule]
+	imports: [SelectModule],
 })
-export class SelectUserComponent implements OnChanges {
+export class CNAMESelectorComponent implements OnChanges {
 	@Input() value: string;
 
 	@Output() wChange = new EventEmitter();
