@@ -8,7 +8,7 @@ import { FormService } from 'src/app/core/modules/form/form.service';
 	styleUrls: ['./FILENAME.component.scss'],
 	standalone: false,
 })
-export class DocumentComponent {
+export class CNAMEComponent {
 	formDoc: FormInterface = this._form.getForm('docForm', {
 		formId: 'docForm',
 		title: 'Doc form',
