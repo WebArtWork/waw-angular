@@ -66,7 +66,7 @@ const finish = (waw) => {
 			"/" +
 			waw.pageName +
 			".routes').then(r => r." +
-			waw.PageName +
+			waw.pageName +
 			"Routes)\n\t\t\t}, ",
 	});
 
