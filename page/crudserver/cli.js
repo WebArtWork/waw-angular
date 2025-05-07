@@ -84,7 +84,7 @@ const crud = async (waw) => {
 			"/" +
 			waw.fileName +
 			".routes').then(r => r." +
-			waw.Name +
+			waw.name +
 			"Routes)\n\t\t\t}, ",
 	});
 
