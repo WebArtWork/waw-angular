@@ -21,9 +21,7 @@ export class PCNAMEComponent extends CrudComponent<
 > {
 	columns = ['name', 'description'];
 
-	config = {
-		...this.getConfig(),
-	};
+	config = this.getConfig();
 
 	constructor(
 		_NAMEService: CNAMEService,

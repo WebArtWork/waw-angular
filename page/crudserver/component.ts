@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+	SERVICEFormComponents,
 	CSERVICEService,
 	CSERVICE,
 } from 'src/app/core/services/SERVICE.service';
@@ -22,55 +23,14 @@ export class CNAMEComponent extends CrudComponent<
 > {
 	columns = ['name', 'description'];
 
-	config = {
-		...this.getConfig(),
-	};
+	config = this.getConfig();
 
 	constructor(
-		_birdService: CSERVICEService,
+		_SERVICEService: CSERVICEService,
 		_translate: TranslateService,
 		_form: FormService
 	) {
-		super(
-			{
-				formId: 'NAME',
-				title: 'CNAME',
-				components: [
-					{
-						name: 'Text',
-						key: 'name',
-						focused: true,
-						fields: [
-							{
-								name: 'Placeholder',
-								value: 'fill NAME title',
-							},
-							{
-								name: 'Label',
-								value: 'Title',
-							},
-						],
-					},
-					{
-						name: 'Text',
-						key: 'description',
-						fields: [
-							{
-								name: 'Placeholder',
-								value: 'fill NAME description',
-							},
-							{
-								name: 'Label',
-								value: 'Description',
-							},
-						],
-					},
-				],
-			},
-			_form,
-			_translate,
-			_birdService
-		);
+		super(SERVICEFormComponents, _form, _translate, _birdService);
 
 		this.setDocuments();
 	}

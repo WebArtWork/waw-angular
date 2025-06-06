@@ -27,13 +27,13 @@ const defaults = {
 	},
 	module: {
 		default: path.join(__dirname, "module", "default"),
-		crud: path.join(__dirname, "module", "crud"),
-		"crud server": path.join(__dirname, "module", "crudserver"),
+		"crud local pagination": path.join(__dirname, "module", "crud"),
+		"crud server pagination": path.join(__dirname, "module", "crudserver"),
 	},
 	page: {
 		default: path.join(__dirname, "page", "default"),
-		crud: path.join(__dirname, "page", "crud"),
-		"crud server": path.join(__dirname, "page", "crudserver"),
+		"crud local pagination": path.join(__dirname, "page", "crud"),
+		"crud server pagination": path.join(__dirname, "page", "crudserver"),
 	},
 	pipe: {
 		default: path.join(__dirname, "pipe", "default"),
@@ -43,12 +43,18 @@ const defaults = {
 	},
 	selector: {
 		default: path.join(__dirname, "selector", "default"),
-		crud: path.join(__dirname, "selector", "crud"),
+		"crud local pagination": path.join(__dirname, "selector", "crud"),
+		"crud server pagination": path.join(
+			__dirname,
+			"selector",
+			"crudserver"
+		),
 	},
 	service: {
 		default: path.join(__dirname, "service", "default"),
-		crud: path.join(__dirname, "service", "crud"),
-	}
+		"crud local pagination": path.join(__dirname, "service", "crud"),
+		"crud server pagination": path.join(__dirname, "service", "crudserver"),
+	},
 };
 const initialize = (waw) => {
 	waw.argv.shift();
@@ -348,11 +354,11 @@ module.exports.g = generate;
 const update_module = async (waw, module, callback) => {
 	const branch = waw.argv.length > 2 ? waw.argv[2] : "master";
 
-	const moduleGit = path.join(module.location, '.git');
+	const moduleGit = path.join(module.location, ".git");
 
-	const local = path.join(process.cwd(), '.git', module.name);
+	const local = path.join(process.cwd(), ".git", module.name);
 
-	const localGit = path.join(process.cwd(), '.git', module.name, '.git');
+	const localGit = path.join(process.cwd(), ".git", module.name, ".git");
 
 	if (fs.existsSync(local)) {
 		fs.rmSync(local, { recursive: true });
@@ -375,18 +381,18 @@ const update_module = async (waw, module, callback) => {
 			}
 
 			exe("git add --all .", {
-				cwd: module.location
+				cwd: module.location,
 			});
 
 			try {
 				exe('git commit -m "' + waw.argv[1] + '"', {
-					cwd: module.location
+					cwd: module.location,
 				});
 
 				exe('git push origin "' + branch + '"', {
-					cwd: module.location
+					cwd: module.location,
 				});
-			} catch (error) { }
+			} catch (error) {}
 
 			fs.rmSync(moduleGit, { recursive: true });
 
@@ -456,19 +462,18 @@ const update_component = async (waw, componentPath, type, callback) => {
 
 	const files = waw.getFilesRecursively(componentPath);
 
-
 	for (const file of files) {
-		const filePath = path.normalize(file).replace(componentPath, '');
+		const filePath = path.normalize(file).replace(componentPath, "");
 
-		body[filePath.slice(1)] = fs.readFileSync(file, 'utf-8');
+		body[filePath.slice(1)] = fs.readFileSync(file, "utf-8");
 	}
 
 	await fetch(`https://webart.work/api/registry/ngx/${type}/${name}`, {
-		method: 'POST',
+		method: "POST",
 		headers: {
-			'Content-Type': 'application/json'
+			"Content-Type": "application/json",
 		},
-		body: JSON.stringify(body)
+		body: JSON.stringify(body),
 	});
 
 	console.log(`Component ${name} has been updated`);
@@ -487,7 +492,7 @@ const fetch_icons = (waw) => {
 		process.exit();
 	}
 	icons.forEach((iconPath) => {
-		fetch_component(waw, iconPath, 'icon', () => {
+		fetch_component(waw, iconPath, "icon", () => {
 			if (--countdown === 0) {
 				console.log("All icons were synchronized");
 
@@ -508,7 +513,7 @@ const update_icons = (waw) => {
 		process.exit();
 	}
 	icons.forEach((iconPath) => {
-		update_component(waw, iconPath, 'icon', () => {
+		update_component(waw, iconPath, "icon", () => {
 			if (--countdown === 0) {
 				console.log("All icons were updated and synchronized");
 
@@ -534,7 +539,7 @@ const fetch_formcomponents = (waw) => {
 		fetch_icons(waw);
 	}
 	formcomponents.forEach((formcomponentPath) => {
-		fetch_component(waw, formcomponentPath, 'formcomponent', () => {
+		fetch_component(waw, formcomponentPath, "formcomponent", () => {
 			if (--countdown === 0) {
 				console.log("All form components were synchronized");
 
@@ -560,9 +565,11 @@ const update_formcomponents = (waw) => {
 		update_icons(waw);
 	}
 	formcomponents.forEach((formcomponentPath) => {
-		update_component(waw, formcomponentPath, 'formcomponent', () => {
+		update_component(waw, formcomponentPath, "formcomponent", () => {
 			if (--countdown === 0) {
-				console.log("All form components were updated and synchronized");
+				console.log(
+					"All form components were updated and synchronized"
+				);
 
 				update_icons(waw);
 			}
@@ -632,7 +639,7 @@ const sync = async (waw, modules) => {
 };
 const _sync = (waw) => {
 	if (waw.argv.length > 1) {
-		waw.rootconfig = waw.readJson(path.join(waw.waw_root, 'server.json'));
+		waw.rootconfig = waw.readJson(path.join(waw.waw_root, "server.json"));
 	}
 
 	const coreModules = waw.getDirectories(
@@ -648,5 +655,5 @@ const _sync = (waw) => {
 	sync(waw, coreModules);
 
 	sync(waw, rootModules);
-}
+};
 module.exports.sync = _sync;

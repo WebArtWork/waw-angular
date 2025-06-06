@@ -44,12 +44,12 @@ const finish = (waw) => {
 	ts = ts.split("NAME").join(waw.name);
 	fs.writeFileSync(base + ".component.ts", ts, "utf8");
 
-	ts = fs.readFileSync(waw.template + "/module.ts", "utf8");
+	ts = fs.readFileSync(waw.template + "/routes.ts", "utf8");
 	ts = ts.split("PCNAME").join(waw.PageName);
 	ts = ts.split("PNAME").join(waw.pageName);
 	ts = ts.split("CNAME").join(waw.Name);
 	ts = ts.split("NAME").join(waw.name);
-	fs.writeFileSync(base + ".module.ts", ts, "utf8");
+	fs.writeFileSync(base + ".routes.ts", ts, "utf8");
 
 	waw.add_code({
 		file: process.cwd() + "/src/app/app.module.ts",
@@ -61,13 +61,13 @@ const finish = (waw) => {
 			waw.PageName +
 			"'\n\t\t\t\t\t}\n\t\t\t\t},\n\t\t\t\tloadChildren: () => import('./modules/" +
 			waw.name +
-			'/pages/' +
+			"/pages/" +
 			waw.pageName +
-			'/' +
+			"/" +
 			waw.pageName +
-			".module').then(m => m." +
-			waw.PageName +
-			"Module)\n\t\t\t}, ",
+			".routes').then(r => r." +
+			waw.pageName +
+			"Routes)\n\t\t\t}, ",
 	});
 
 	console.log("Module has been created");
@@ -87,7 +87,7 @@ module.exports = async (waw) => {
 			waw.fetch(
 				waw.base,
 				resp.repo,
-				(err) => { },
+				(err) => {},
 				resp.branch || "master"
 			);
 		} else {
@@ -101,13 +101,12 @@ module.exports = async (waw) => {
 				}
 			}
 		}
-
 		console.log("Module has been created");
 
 		process.exit();
 	} else {
 		fs.mkdirSync(path.join(waw.base, "services"), {
-			recursive: true
+			recursive: true,
 		});
 
 		let ts = fs.readFileSync(waw.template + "/service.ts", "utf8");
@@ -120,7 +119,7 @@ module.exports = async (waw) => {
 		);
 
 		fs.mkdirSync(path.join(waw.base, "interfaces"), {
-			recursive: true
+			recursive: true,
 		});
 
 		ts = fs.readFileSync(waw.template + "/interface.ts", "utf8");
@@ -133,27 +132,36 @@ module.exports = async (waw) => {
 		);
 
 		fs.mkdirSync(path.join(waw.base, "formcomponents"), {
-			recursive: true
+			recursive: true,
 		});
 
 		ts = fs.readFileSync(waw.template + "/formcomponents.ts", "utf8");
 		ts = ts.split("CNAME").join(waw.Name);
 		ts = ts.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(waw.base, "formcomponents", waw.name + ".formcomponents.ts"),
+			path.join(
+				waw.base,
+				"formcomponents",
+				waw.name + ".formcomponents.ts"
+			),
 			ts,
 			"utf8"
 		);
 
 		fs.mkdirSync(path.join(waw.base, "selectors", waw.name), {
-			recursive: true
+			recursive: true,
 		});
 
 		let html = fs.readFileSync(waw.template + "/selector.html", "utf8");
 		html = html.split("CNAME").join(waw.Name);
 		html = html.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(waw.base, "selectors", waw.name, waw.name + "-selector.component.html"),
+			path.join(
+				waw.base,
+				"selectors",
+				waw.name,
+				waw.name + "-selector.component.html"
+			),
 			html,
 			"utf8"
 		);
@@ -162,7 +170,12 @@ module.exports = async (waw) => {
 		scss = scss.split("CNAME").join(waw.Name);
 		scss = scss.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(waw.base, "selectors", waw.name, waw.name + "-selector.component.scss"),
+			path.join(
+				waw.base,
+				"selectors",
+				waw.name,
+				waw.name + "-selector.component.scss"
+			),
 			scss,
 			"utf8"
 		);
@@ -171,7 +184,12 @@ module.exports = async (waw) => {
 		ts = ts.split("CNAME").join(waw.Name);
 		ts = ts.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(waw.base, "selectors", waw.name, waw.name + "-selector.component.ts"),
+			path.join(
+				waw.base,
+				"selectors",
+				waw.name,
+				waw.name + "-selector.component.ts"
+			),
 			ts,
 			"utf8"
 		);
