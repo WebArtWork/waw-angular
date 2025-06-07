@@ -19,6 +19,8 @@ export class PCNAMEComponent extends CrudComponent<
 	CNAME,
 	FormInterface
 > {
+	override configType: 'local' | 'server' = 'local';
+
 	columns = ['name', 'description'];
 
 	config = this.getConfig();
@@ -32,6 +34,4 @@ export class PCNAMEComponent extends CrudComponent<
 
 		this.setDocuments();
 	}
-
-	override configType: 'local' | 'server' = 'local';
 }
