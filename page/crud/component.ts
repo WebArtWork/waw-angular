@@ -19,8 +19,7 @@ import { CrudComponent } from 'wacom';
 export class CNAMEComponent extends CrudComponent<
 	CSERVICEService,
 	CSERVICE,
-	FormInterface,
-	'CSERVICE'
+	FormInterface
 > {
 	columns = ['name', 'description'];
 
@@ -31,7 +30,13 @@ export class CNAMEComponent extends CrudComponent<
 		_translate: TranslateService,
 		_form: FormService
 	) {
-		super(SERVICEFormComponents, _form, _translate, _SERVICEService);
+		super(
+			SERVICEFormComponents,
+			_form,
+			_translate,
+			_SERVICEService,
+			'CSERVICE'
+		);
 
 		this.setDocuments();
 	}

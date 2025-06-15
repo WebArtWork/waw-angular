@@ -17,8 +17,7 @@ import { CNAMEService } from '../../services/NAME.service';
 export class PCNAMEComponent extends CrudComponent<
 	CNAMEService,
 	CNAME,
-	FormInterface,
-	'CNAME'
+	FormInterface
 > {
 	override configType: 'local' | 'server' = 'local';
 
@@ -31,7 +30,7 @@ export class PCNAMEComponent extends CrudComponent<
 		_translate: TranslateService,
 		_form: FormService
 	) {
-		super(NAMEFormComponents, _form, _translate, _NAMEService);
+		super(NAMEFormComponents, _form, _translate, _NAMEService, 'CNAME');
 
 		this.setDocuments();
 	}
