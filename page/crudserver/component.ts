@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-	SERVICEFormComponents,
-	CSERVICEService,
-	CSERVICE,
-} from 'src/app/core/services/SERVICE.service';
+import { Component } from '@angular/core';
 import { FormService } from 'src/app/core/modules/form/form.service';
-import { TranslateService } from 'src/app/core/modules/translate/translate.service';
 import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
 import { TableModule } from 'src/app/core/modules/table/table.module';
+import { TranslateService } from 'src/app/core/modules/translate/translate.service';
+import {
+	CSERVICE,
+	CSERVICEService,
+	SERVICEFormComponents,
+} from 'src/app/core/services/SERVICE.service';
 import { CrudComponent } from 'wacom';
 
 @Component({
@@ -19,7 +19,8 @@ import { CrudComponent } from 'wacom';
 export class CNAMEComponent extends CrudComponent<
 	CSERVICEService,
 	CSERVICE,
-	FormInterface
+	FormInterface,
+	'CSERVICE'
 > {
 	columns = ['name', 'description'];
 
@@ -30,7 +31,7 @@ export class CNAMEComponent extends CrudComponent<
 		_translate: TranslateService,
 		_form: FormService
 	) {
-		super(SERVICEFormComponents, _form, _translate, _birdService);
+		super(SERVICEFormComponents, _form, _translate, _SERVICEService);
 
 		this.setDocuments();
 	}

@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CNAMEService } from '../../services/NAME.service';
-import { CNAME } from '../../interfaces/NAME.interface';
+import { Component } from '@angular/core';
 import { FormService } from 'src/app/core/modules/form/form.service';
-import { TranslateService } from 'src/app/core/modules/translate/translate.service';
-import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
 import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
 import { TableModule } from 'src/app/core/modules/table/table.module';
+import { TranslateService } from 'src/app/core/modules/translate/translate.service';
 import { CrudComponent } from 'wacom';
+import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
+import { CNAME } from '../../interfaces/NAME.interface';
+import { CNAMEService } from '../../services/NAME.service';
 
 @Component({
 	imports: [CommonModule, TableModule],
@@ -17,7 +17,8 @@ import { CrudComponent } from 'wacom';
 export class PCNAMEComponent extends CrudComponent<
 	CNAMEService,
 	CNAME,
-	FormInterface
+	FormInterface,
+	'CNAME'
 > {
 	columns = ['name', 'description'];
 
