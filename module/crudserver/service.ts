@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CNAME } from '../interfaces/NAME.interface';
 import { CrudService } from 'wacom';
+import { CNAME } from '../interfaces/NAME.interface';
 
 @Injectable({
 	providedIn: 'root',

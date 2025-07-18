@@ -1,35 +1,49 @@
+import { CommonModule } from '@angular/common';
 import {
-	SimpleChanges,
-	EventEmitter,
+	ChangeDetectionStrategy,
 	Component,
-	OnChanges,
-	Output,
-	Input,
+	input,
+	output,
 } from '@angular/core';
-import { SelectModule } from 'src/app/core/modules/select/select.module';
-import { CNAMEService } from '../../services/NAME.service';
+import { FormInterface } from 'src/app/libs/form/interfaces/form.interface';
+import { FormService } from 'src/app/libs/form/services/form.service';
+import { SelectComponent } from 'src/app/libs/select/select.component';
+import { SelectValue } from 'src/app/libs/select/select.type';
+import { TranslatePipe } from 'src/app/libs/translate/translate.pipe';
+import { TranslateService } from 'src/app/libs/translate/translate.service';
+import { CrudComponent } from 'wacom';
+import { NAMEForm } from '../../formcomponents/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
+import { CNAMEService } from '../../services/NAME.service';
 
 @Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [SelectComponent, TranslatePipe, CommonModule],
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
-	styleUrls: ['./NAME-selector.component.scss'],
-	imports: [SelectModule],
 })
-export class CNAMESelectorComponent implements OnChanges {
-	@Input() value: string;
+export class CNAMESelectorComponent extends CrudComponent<
+	CNAMEService,
+	CNAME,
+	FormInterface
+> {
+	readonly searchable = input<boolean>(true);
 
-	@Output() wChange = new EventEmitter();
+	readonly clearable = input<boolean>(true);
 
-	get items(): CNAME[] {
-		return this._NAMEService.NAMEs;
-	}
+	readonly disabled = input<boolean>(false);
 
-	constructor(private _NAMEService: CNAMEService) {}
+	readonly value = input<SelectValue>('');
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['value'] && !changes['value'].firstChange) {
-			this.value = changes['value'].currentValue;
-		}
+	readonly wChange = output<SelectValue>();
+
+	constructor(
+		_NAMEService: CNAMEService,
+		_translate: TranslateService,
+		_form: FormService
+	) {
+		super(NAMEForm, _form, _translate, _NAMEService, 'NAME');
+
+		this.setDocuments();
 	}
 }

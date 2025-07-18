@@ -1,18 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormService } from 'src/app/core/modules/form/form.service';
-import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
-import { TableModule } from 'src/app/core/modules/table/table.module';
-import { TranslateService } from 'src/app/core/modules/translate/translate.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormInterface } from 'src/app/libs/form/interfaces/form.interface';
+import { FormService } from 'src/app/libs/form/services/form.service';
+import { TableComponent } from 'src/app/libs/table/table.component';
+import { TranslateService } from 'src/app/libs/translate/translate.service';
 import { CrudComponent } from 'wacom';
-import { NAMEFormComponents } from '../../formcomponents/NAME.formcomponents';
+import { NAMEForm } from '../../formcomponents/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
+import { CNAMESelectorComponent } from '../../selectors/NAME/NAME-selector.component';
 import { CNAMEService } from '../../services/NAME.service';
 
 @Component({
-	imports: [CommonModule, TableModule],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [TableComponent, CNAMESelectorComponent],
 	templateUrl: './PNAME.component.html',
-	styleUrls: ['./PNAME.component.scss'],
 })
 export class PCNAMEComponent extends CrudComponent<
 	CNAMEService,
@@ -28,7 +28,7 @@ export class PCNAMEComponent extends CrudComponent<
 		_translate: TranslateService,
 		_form: FormService
 	) {
-		super(NAMEFormComponents, _form, _translate, _NAMEService, 'CNAME');
+		super(NAMEForm, _form, _translate, _NAMEService, 'NAME');
 
 		this.setDocuments();
 	}
