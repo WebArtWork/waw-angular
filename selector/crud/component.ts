@@ -6,7 +6,7 @@ import {
 	Output,
 	SimpleChanges,
 } from '@angular/core';
-import { CNAMEService, CNAME } from 'src/app/core/services/NAME.service';
+import { CNAME, CNAMEService } from 'src/app/core/services/NAME.service';
 
 @Component({
 	selector: 'NAME-selector',

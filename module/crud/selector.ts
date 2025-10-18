@@ -1,14 +1,14 @@
 import {
-	SimpleChanges,
-	EventEmitter,
 	Component,
+	EventEmitter,
+	Input,
 	OnChanges,
 	Output,
-	Input,
+	SimpleChanges,
 } from '@angular/core';
 import { SelectModule } from 'src/app/core/modules/select/select.module';
-import { CNAMEService } from '../../services/NAME.service';
 import { CNAME } from '../../interfaces/NAME.interface';
+import { CNAMEService } from '../../services/NAME.service';
 
 @Component({
 	selector: 'NAME-selector',

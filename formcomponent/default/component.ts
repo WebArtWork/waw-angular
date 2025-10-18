@@ -6,7 +6,7 @@ interface Interface {}
 @Component({
 	templateUrl: './FILENAME.component.html',
 	styleUrls: ['./FILENAME.component.scss'],
-	standalone: false
+	standalone: false,
 })
 export class CNAMEComponent implements OnInit {
 	@ViewChild('templateRef', { static: true })

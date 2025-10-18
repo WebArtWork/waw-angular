@@ -22,18 +22,6 @@ module.exports = async (waw) => {
 	ts = ts.split("NAME").join(waw.name);
 	fs.writeFileSync(waw.base + ".component.ts", ts, "utf8");
 
-	waw.add_code({
-		file: process.cwd() + "/src/app/core/core.module.ts",
-		search: "/* components */",
-		replace: "/* components */\n\t" + waw.Name + "Component,",
-	});
-
-	waw.add_code({
-		file: process.cwd() + "/src/app/core/core.module.ts",
-		search: "/* imports */",
-		replace: `/* imports */\nimport { ${waw.Name}Component } from './components/${waw.name}.component';`,
-	});
-
 	console.log("Component has been created");
 
 	process.exit(1);

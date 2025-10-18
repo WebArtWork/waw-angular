@@ -48,7 +48,7 @@ module.exports = async (waw) => {
 	fs.writeFileSync(waw.base + ".component.ts", ts, "utf8");
 
 	waw.add_code({
-		file: process.cwd() + "/src/app/app.module.ts",
+		file: process.cwd() + "/src/app/app.routes.ts",
 		search: "/* modals */",
 		replace:
 			"/* modals */\n\t\t\t\t\t" +

@@ -10,7 +10,7 @@ if (!fs.existsSync(root + "/@angular/cli")) {
 }
 
 module.exports = async (waw) => {
-	waw.base = waw.base.replace('modules', path.join('core', 'modules'));
+	waw.base = waw.base.replace("modules", path.join("core", "modules"));
 
 	const response = await fetch(
 		"https://webart.work/api/registry/ngx/module/" + waw.name
@@ -23,7 +23,7 @@ module.exports = async (waw) => {
 			waw.fetch(
 				waw.base,
 				resp.repo,
-				(err) => { },
+				(err) => {},
 				resp.branch || "master"
 			);
 		} else {
@@ -44,11 +44,11 @@ module.exports = async (waw) => {
 		waw.base = path.join(waw.base, waw.fileName);
 
 		if (fs.existsSync(waw.base + ".component.css")) {
-			fs.unlink(waw.base + ".component.css", (err) => { });
+			fs.unlink(waw.base + ".component.css", (err) => {});
 		}
 
 		if (fs.existsSync(waw.base + ".component.spec.ts")) {
-			fs.unlink(waw.base + ".component.spec.ts", (err) => { });
+			fs.unlink(waw.base + ".component.spec.ts", (err) => {});
 		}
 
 		let html = fs.readFileSync(waw.template + "/component.html", "utf8");

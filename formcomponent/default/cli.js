@@ -48,35 +48,26 @@ module.exports = async (waw) => {
 		fs.writeFileSync(base + ".component.ts", ts, "utf8");
 	}
 
-	let fcModuleTs = path.normalize(waw.base).split(path.sep);
-	fcModuleTs.pop();
-	fcModuleTs = fcModuleTs.join(path.sep);
-	fcModuleTs = path.join(fcModuleTs, "formcomponents.module.ts");
+	let fcConfig = path.join("src", "app", "app.formcomponents.ts");
 
-	if (!fs.existsSync(fcModuleTs)) {
+	if (!fs.existsSync(fcConfig)) {
 		fs.writeFileSync(
-			fcModuleTs,
-			fs.readFileSync(waw.template + "/formcomponents.module.ts", "utf8"),
+			fcConfig,
+			fs.readFileSync(waw.template + "/app.formcomponents.ts", "utf8"),
 			"utf8"
 		);
 	}
 
 	waw.add_code({
-		file: fcModuleTs,
+		file: fcConfig,
 		search: "/* componnets */",
-		replace: `/* componnets */\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`,
+		replace: `import { ${waw.Name}Component } from 'src/app/form-components/${waw.name}/${waw.name}.component';\n/* componnets */`,
 	});
 
 	waw.add_code({
-		file: fcModuleTs,
-		search: "/* declarations */",
-		replace: `/* declarations */\n\t\t${waw.Name}Component,`,
-	});
-
-	waw.add_code({
-		file: fcModuleTs,
+		file: fcConfig,
 		search: "/* addComponents */",
-		replace: `/* addComponents */\n\t\tthis._form.injectComponent<${waw.Name}Component>('${waw.Name}', ${waw.Name}Component);\n`,
+		replace: `${waw.Name}: ${waw.Name}Component,\n\t/* addComponents */`,
 	});
 
 	console.log("Form component has been created");

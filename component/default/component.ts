@@ -3,6 +3,6 @@ import { Component } from '@angular/core';
 	selector: 'core-NAME',
 	templateUrl: './FILENAME.component.html',
 	styleUrls: ['./FILENAME.component.scss'],
-	standalone: false
+	standalone: false,
 })
 export class CNAMEComponent {}

@@ -1,1 +1,1 @@
-module.exports = function (waw) { }
+module.exports = function (waw) {};

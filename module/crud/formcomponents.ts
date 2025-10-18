@@ -14,8 +14,8 @@ export const NAMEFormComponents = {
 				{
 					name: 'Label',
 					value: 'Title',
-				}
-			]
+				},
+			],
 		},
 		{
 			name: 'Text',
@@ -28,8 +28,8 @@ export const NAMEFormComponents = {
 				{
 					name: 'Label',
 					value: 'Description',
-				}
-			]
-		}
-	]
-}
+				},
+			],
+		},
+	],
+};

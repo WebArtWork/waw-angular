@@ -52,7 +52,7 @@ const finish = (waw) => {
 	fs.writeFileSync(base + ".routes.ts", code, "utf8");
 
 	waw.add_code({
-		file: process.cwd() + "/src/app/app.module.ts",
+		file: process.cwd() + "/src/app/app.routes.ts",
 		search: "/* user */",
 		replace:
 			"/* user */\n\t\t\t{\n\t\t\t\tpath: '" +

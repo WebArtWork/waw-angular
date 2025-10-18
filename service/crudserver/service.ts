@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CrudService, CrudDocument } from 'wacom';
+import { CrudDocument, CrudService } from 'wacom';
 
 export const NAMEFormComponents = {
 	formId: 'NAME',

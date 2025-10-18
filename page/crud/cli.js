@@ -70,7 +70,7 @@ const crud = async (waw) => {
 	fs.writeFileSync(waw.base + ".routes.ts", mod, "utf8");
 
 	waw.add_code({
-		file: process.cwd() + "/src/app/app.module.ts",
+		file: process.cwd() + "/src/app/app.routes.ts",
 		search: "/* " + waw.argv[0].split("/")[0] + " */",
 		replace:
 			"/* " +
