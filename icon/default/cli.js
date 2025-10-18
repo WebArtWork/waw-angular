@@ -49,31 +49,6 @@ module.exports = async (waw) => {
 		fs.writeFileSync(base + ".component.ts", ts, "utf8");
 	}
 
-	let iconsModuleTs = path.normalize(waw.base).split(path.sep);
-	iconsModuleTs.pop();
-	iconsModuleTs = iconsModuleTs.join(path.sep);
-	iconsModuleTs = path.join(iconsModuleTs, "icons.module.ts");
-
-	if (!fs.existsSync(iconsModuleTs)) {
-		fs.writeFileSync(
-			iconsModuleTs,
-			fs.readFileSync(waw.template + "/icons.module.ts", "utf8"),
-			"utf8"
-		);
-	}
-
-	waw.add_code({
-		file: iconsModuleTs,
-		search: "/* icons */",
-		replace: "/* icons */\n\t" + waw.Name + "Component,",
-	});
-
-	waw.add_code({
-		file: iconsModuleTs,
-		search: `/* components */`,
-		replace: `/* components */\nimport { ${waw.Name}Component } from './${waw.name}/${waw.name}.component';`,
-	});
-
 	console.log("Icon has been created");
 
 	process.exit(1);

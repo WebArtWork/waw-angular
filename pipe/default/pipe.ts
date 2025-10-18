@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 	name: 'NAME',
 })
 export class CNAMEPipe implements PipeTransform {
-	transform(input: string, refresh = 0): any {
+	transform(input: string): string {
 		return input;
 	}
 }

@@ -26,7 +26,6 @@ const defaults = {
 		default: path.join(__dirname, "modal", "default"),
 	},
 	module: {
-		default: path.join(__dirname, "module", "default"),
 		"crud local pagination": path.join(__dirname, "module", "crud"),
 		"crud server pagination": path.join(__dirname, "module", "crudserver"),
 	},
@@ -203,16 +202,16 @@ const run = (module, folder) => {
 };
 module.exports.alert = run("alert", "alerts");
 
-module.exports.component = run("component", "core/components");
-module.exports.c = run("component", "core/components");
+module.exports.component = run("component", "components");
+module.exports.c = run("component", "components");
 
 module.exports.formcomponent = run("formcomponent", "form-components");
 module.exports.fc = run("formcomponent", "form-components");
 
-module.exports.icon = run("icon", "core/icons");
-module.exports.i = run("icon", "core/icons");
+module.exports.icon = run("icon", "icons");
+module.exports.i = run("icon", "icons");
 
-module.exports.interface = run("interface", "core/interfaces");
+module.exports.interface = run("interface", "interfaces");
 
 module.exports.loader = run("loader", "loaders");
 module.exports.l = run("loader", "loaders");
@@ -227,14 +226,14 @@ module.exports.a = run("module", "modules");
 module.exports.page = run("page", "pages");
 module.exports.p = run("page", "pages");
 
-module.exports.pipe = run("pipe", "core/pipes");
+module.exports.pipe = run("pipe", "pipes");
 
 module.exports.popup = run("popup", "popups");
 
-module.exports.selector = run("selector", "core/selectors");
+module.exports.selector = run("selector", "selectors");
 
-module.exports.service = run("service", "core/services");
-module.exports.s = run("service", "core/services");
+module.exports.service = run("service", "services");
+module.exports.s = run("service", "services");
 
 /* Fetch Angular Modules */
 const fetch_module = (waw, location, callback) => {
