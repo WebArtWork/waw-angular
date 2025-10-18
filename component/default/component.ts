@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
-	selector: 'core-NAME',
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'page-NAME',
 	templateUrl: './FILENAME.component.html',
 	styleUrls: ['./FILENAME.component.scss'],
-	standalone: false,
 })
 export class CNAMEComponent {}

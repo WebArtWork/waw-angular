@@ -202,8 +202,8 @@ const run = (module, folder) => {
 };
 module.exports.alert = run("alert", "alerts");
 
-module.exports.component = run("component", "components");
-module.exports.c = run("component", "components");
+module.exports.component = run("component", "page-components");
+module.exports.c = run("component", "page-components");
 
 module.exports.formcomponent = run("formcomponent", "form-components");
 module.exports.fc = run("formcomponent", "form-components");

@@ -1,4 +1,4 @@
-export const NAMEFormComponents = {
+export const NAMEForm = {
 	formId: 'NAME',
 	title: 'CNAME',
 	components: [
@@ -8,12 +8,12 @@ export const NAMEFormComponents = {
 			focused: true,
 			fields: [
 				{
-					name: 'Placeholder',
-					value: 'fill NAME title',
-				},
-				{
 					name: 'Label',
 					value: 'Title',
+				},
+				{
+					name: 'Placeholder',
+					value: 'fill NAME title',
 				},
 			],
 		},
@@ -22,12 +22,16 @@ export const NAMEFormComponents = {
 			key: 'description',
 			fields: [
 				{
+					name: 'Label',
+					value: 'Description',
+				},
+				{
 					name: 'Placeholder',
 					value: 'fill NAME description',
 				},
 				{
-					name: 'Label',
-					value: 'Description',
+					name: 'Textarea',
+					value: true,
 				},
 			],
 		},

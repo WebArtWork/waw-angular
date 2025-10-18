@@ -24,18 +24,6 @@ module.exports = async (waw) => {
 	ts = ts.split("NAME").join(waw.name);
 	fs.writeFileSync(waw.base + ".component.ts", ts, "utf8");
 
-	waw.add_code({
-		file: process.cwd() + "/src/app/core/core.module.ts",
-		search: "/* selectors */",
-		replace: `/* selectors */\n\t${waw.Name}SelectorComponent,`,
-	});
-
-	waw.add_code({
-		file: process.cwd() + "/src/app/core/core.module.ts",
-		search: "/* imports */",
-		replace: `/* imports */\nimport { ${waw.Name}SelectorComponent } from './selectors/${waw.name}/${waw.name}-selector.component';`,
-	});
-
 	console.log("Selector has been created");
 
 	process.exit(1);

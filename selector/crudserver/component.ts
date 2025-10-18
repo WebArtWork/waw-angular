@@ -1,4 +1,5 @@
 import {
+	ChangeDetectionStrategy,
 	Component,
 	EventEmitter,
 	Input,
@@ -9,6 +10,7 @@ import {
 import { CNAME, CNAMEService } from 'src/app/core/services/NAME.service';
 
 @Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
 	styleUrls: ['./NAME-selector.component.scss'],

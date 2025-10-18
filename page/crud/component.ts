@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormService } from 'src/app/core/modules/form/form.service';
 import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
 import { TableModule } from 'src/app/core/modules/table/table.module';
@@ -12,6 +12,7 @@ import {
 import { CrudComponent } from 'wacom';
 
 @Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [CommonModule, TableModule],
 	templateUrl: './NAME.component.html',
 	styleUrls: ['./NAME.component.scss'],
@@ -21,6 +22,8 @@ export class CNAMEComponent extends CrudComponent<
 	CSERVICE,
 	FormInterface
 > {
+	override configType: 'local' | 'server' = 'local';
+
 	columns = ['name', 'description'];
 
 	config = this.getConfig();
@@ -40,6 +43,4 @@ export class CNAMEComponent extends CrudComponent<
 
 		this.setDocuments();
 	}
-
-	override configType: 'local' | 'server' = 'local';
 }

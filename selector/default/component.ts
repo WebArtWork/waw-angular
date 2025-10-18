@@ -1,4 +1,5 @@
 import {
+	ChangeDetectionStrategy,
 	Component,
 	EventEmitter,
 	Input,
@@ -8,6 +9,7 @@ import {
 } from '@angular/core';
 
 @Component({
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
 	styleUrls: ['./NAME-selector.component.scss'],

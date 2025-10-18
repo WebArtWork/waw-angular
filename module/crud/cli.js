@@ -105,56 +105,98 @@ module.exports = async (waw) => {
 
 		process.exit();
 	} else {
+		/* Service */
 		fs.mkdirSync(path.join(waw.base, "services"), {
 			recursive: true,
 		});
 
-		let ts = fs.readFileSync(waw.template + "/service.ts", "utf8");
-		ts = ts.split("CNAME").join(waw.Name);
-		ts = ts.split("NAME").join(waw.name);
+		let code = fs.readFileSync(waw.template + "/service.ts", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
 		fs.writeFileSync(
 			path.join(waw.base, "services", waw.name + ".service.ts"),
-			ts,
+			code,
 			"utf8"
 		);
 
+		/* Interface */
 		fs.mkdirSync(path.join(waw.base, "interfaces"), {
 			recursive: true,
 		});
 
-		ts = fs.readFileSync(waw.template + "/interface.ts", "utf8");
-		ts = ts.split("CNAME").join(waw.Name);
-		ts = ts.split("NAME").join(waw.name);
+		code = fs.readFileSync(waw.template + "/interface.ts", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
 		fs.writeFileSync(
 			path.join(waw.base, "interfaces", waw.name + ".interface.ts"),
-			ts,
+			code,
 			"utf8"
 		);
 
-		fs.mkdirSync(path.join(waw.base, "formcomponents"), {
+		/* Form */
+		fs.mkdirSync(path.join(waw.base, "form", waw.name), {
 			recursive: true,
 		});
 
-		ts = fs.readFileSync(waw.template + "/formcomponents.ts", "utf8");
-		ts = ts.split("CNAME").join(waw.Name);
-		ts = ts.split("NAME").join(waw.name);
+		code = fs.readFileSync(waw.template + "/form.ts", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
 		fs.writeFileSync(
-			path.join(
-				waw.base,
-				"formcomponents",
-				waw.name + ".formcomponents.ts"
-			),
-			ts,
+			path.join(waw.base, "form", waw.name + ".form.ts"),
+			code,
 			"utf8"
 		);
 
+		code = fs.readFileSync(waw.template + "/formcomponent.html", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
+		fs.writeFileSync(
+			path.join(
+				waw.base,
+				"form",
+				waw.name,
+				waw.name + ".formcomponent.html"
+			),
+			code,
+			"utf8"
+		);
+
+		code = fs.readFileSync(waw.template + "/formcomponent.scss", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
+		fs.writeFileSync(
+			path.join(
+				waw.base,
+				"form",
+				waw.name,
+				waw.name + ".formcomponent.scss"
+			),
+			code,
+			"utf8"
+		);
+
+		code = fs.readFileSync(waw.template + "/formcomponent.ts", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
+		fs.writeFileSync(
+			path.join(
+				waw.base,
+				"form",
+				waw.name,
+				waw.name + ".formcomponent.ts"
+			),
+			code,
+			"utf8"
+		);
+
+		/* Selector */
 		fs.mkdirSync(path.join(waw.base, "selectors", waw.name), {
 			recursive: true,
 		});
 
-		let html = fs.readFileSync(waw.template + "/selector.html", "utf8");
-		html = html.split("CNAME").join(waw.Name);
-		html = html.split("NAME").join(waw.name);
+		code = fs.readFileSync(waw.template + "/selector.html", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
 		fs.writeFileSync(
 			path.join(
 				waw.base,
@@ -162,13 +204,13 @@ module.exports = async (waw) => {
 				waw.name,
 				waw.name + "-selector.component.html"
 			),
-			html,
+			code,
 			"utf8"
 		);
 
-		let scss = fs.readFileSync(waw.template + "/selector.scss", "utf8");
-		scss = scss.split("CNAME").join(waw.Name);
-		scss = scss.split("NAME").join(waw.name);
+		code = fs.readFileSync(waw.template + "/selector.scss", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
 		fs.writeFileSync(
 			path.join(
 				waw.base,
@@ -176,13 +218,13 @@ module.exports = async (waw) => {
 				waw.name,
 				waw.name + "-selector.component.scss"
 			),
-			scss,
+			code,
 			"utf8"
 		);
 
-		ts = fs.readFileSync(waw.template + "/selector.ts", "utf8");
-		ts = ts.split("CNAME").join(waw.Name);
-		ts = ts.split("NAME").join(waw.name);
+		code = fs.readFileSync(waw.template + "/selector.ts", "utf8");
+		code = code.split("CNAME").join(waw.Name);
+		code = code.split("NAME").join(waw.name);
 		fs.writeFileSync(
 			path.join(
 				waw.base,
@@ -190,7 +232,7 @@ module.exports = async (waw) => {
 				waw.name,
 				waw.name + "-selector.component.ts"
 			),
-			ts,
+			code,
 			"utf8"
 		);
 
