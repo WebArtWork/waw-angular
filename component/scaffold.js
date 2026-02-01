@@ -1,28 +1,18 @@
-const fs = require("fs");
-const path = require("path");
-
+const path = require('node:path');
 module.exports = async (waw) => {
-	if (!fs.existsSync(waw.base)) {
-		fs.mkdirSync(waw.base, { recursive: true });
-	}
+	waw.ensureDir(waw.base);
 
-	let html = fs.readFileSync(waw.template + "/component.html", "utf8");
-	html = html.split("CNAME").join(waw.Name);
-	html = html.split("NAME").join(waw.name);
-	fs.writeFileSync(waw.base + ".component.html", html, "utf8");
+	waw.readWrite(path.join(__dirname, 'component.html'), path.join(waw.base, waw.name + '.component.html'), {
+		CNAME: waw.Name,
+		NAME: waw.name,
+	});
 
-	let scss = fs.readFileSync(waw.template + "/component.scss", "utf8");
-	scss = scss.split("CNAME").join(waw.Name);
-	scss = scss.split("NAME").join(waw.name);
-	fs.writeFileSync(waw.base + ".component.scss", scss, "utf8");
-
-	let ts = fs.readFileSync(waw.template + "/component.ts", "utf8");
-	ts = ts.split("FILENAME").join(waw.fileName);
-	ts = ts.split("CNAME").join(waw.Name);
-	ts = ts.split("NAME").join(waw.name);
-	fs.writeFileSync(waw.base + ".component.ts", ts, "utf8");
+	waw.readWrite(path.join(__dirname, 'component.ts'), path.join(waw.base, waw.name + '.component.ts'), {
+		CNAME: waw.Name,
+		NAME: waw.name,
+	});
 
 	console.log("Component has been created");
 
-	process.exit(1);
+	process.exit(0);
 };

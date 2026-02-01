@@ -9,10 +9,9 @@ import {
 } from '@angular/core';
 
 @Component({
+	selector: 'selector-NAME',
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
-	styleUrls: ['./NAME-selector.component.scss'],
 })
 export class CNAMESelectorComponent implements OnChanges {
 	@Input() items = ['Yes', 'No']; // put proper items here

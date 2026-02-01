@@ -1,76 +1,33 @@
-const path = require("path");
-const fs = require("fs");
-
+const path = require('node:path');
 module.exports = async (waw) => {
-	fs.mkdirSync(waw.base, { recursive: true });
+	waw.ensureDir(waw.base);
 
-	const response = await fetch(
-		"https://webart.work/api/registry/ngx/formcomponent/" + waw.name
-	);
-	const resp = response.ok ? await response.json() : null;
+	waw.readWrite(path.join(__dirname, 'component.html'), path.join(waw.base, waw.name + '.component.html'), {
+		CNAME: waw.Name,
+		NAME: waw.name,
+	});
 
-	if (response.ok && resp) {
-		if (resp.repo) {
-			waw.fetch(
-				waw.base,
-				resp.repo,
-				(err) => {},
-				resp.branch || "master"
-			);
-		} else {
-			for (const file in resp.files) {
-				if (file) {
-					fs.writeFileSync(
-						path.join(waw.base, file),
-						resp.files[file],
-						"utf8"
-					);
-				}
-			}
-		}
-	} else {
-		const base = path.join(waw.base, waw.fileName);
+	waw.readWrite(path.join(__dirname, 'component.ts'), path.join(waw.base, waw.name + '.component.ts'), {
+		CNAME: waw.Name,
+		NAME: waw.name,
+	});
 
-		let html = fs.readFileSync(waw.template + "/component.html", "utf8");
-		html = html.split("CNAME").join(waw.Name);
-		html = html.split("NAME").join(waw.name);
-		fs.writeFileSync(base + ".component.html", html, "utf8");
 
-		let scss = fs.readFileSync(waw.template + "/component.scss", "utf8");
-		scss = scss.split("CNAME").join(waw.Name);
-		scss = scss.split("NAME").join(waw.name);
-		fs.writeFileSync(base + ".component.scss", scss, "utf8");
+	const fcConfig = path.join(waw.projectPath, "src", "app", "app.formcomponents.ts");
 
-		let ts = fs.readFileSync(waw.template + "/component.ts", "utf8");
-		ts = ts.split("FILENAME").join(waw.fileName);
-		ts = ts.split("CNAME").join(waw.Name);
-		ts = ts.split("NAME").join(waw.name);
-		fs.writeFileSync(base + ".component.ts", ts, "utf8");
-	}
-
-	let fcConfig = path.join("src", "app", "app.formcomponents.ts");
-
-	if (!fs.existsSync(fcConfig)) {
-		fs.writeFileSync(
-			fcConfig,
-			fs.readFileSync(waw.template + "/app.formcomponents.ts", "utf8"),
-			"utf8"
+	if (!waw.exists(fcConfig)) {
+		waw.readWrite(
+			path.join(__dirname, 'app.formcompnents.html'),
+			fcConfig
 		);
 	}
 
-	waw.add_code({
-		file: fcConfig,
-		search: "/* componnets */",
-		replace: `import { ${waw.Name}Component } from 'src/app/form-components/${waw.name}/${waw.name}.component';\n/* componnets */`,
-	});
-
-	waw.add_code({
-		file: fcConfig,
-		search: "/* addComponents */",
-		replace: `${waw.Name}: ${waw.Name}Component,\n\t/* addComponents */`,
+	waw.readWrite(fcConfig, fcConfig, {
+		"/* componnets */": `import { ${waw.Name}Component } from 'src/app/form-components/${waw.name}/${waw.name}.component';\n/* componnets */`,
+		"/* addComponents */": `${waw.Name}: ${waw.Name}Component,\n\t/* addComponents */`,
 	});
 
 	console.log("Form component has been created");
 
-	process.exit(1);
+	process.exit(0);
 };

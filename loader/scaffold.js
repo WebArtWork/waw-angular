@@ -12,7 +12,7 @@ module.exports = async (waw) => {
 		NAME: waw.name,
 	});
 
-	console.log("Icon has been created");
+	console.log("Loader has been created");
 
-	process.exit();
+	process.exit(0);
 };

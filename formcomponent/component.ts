@@ -5,14 +5,13 @@ import {
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
-import { FormService } from '../../modules/form/form.service';
+import { FormService } from '@lib/form/form.service';
 
 interface Interface {}
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	templateUrl: './FILENAME.component.html',
-	styleUrls: ['./FILENAME.component.scss'],
 })
 export class CNAMEComponent implements OnInit {
 	@ViewChild('templateRef', { static: true })

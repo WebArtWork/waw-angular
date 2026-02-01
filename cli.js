@@ -27,13 +27,13 @@ const defaults = {
 		default: path.join(__dirname, "module"),
 	},
 	page: {
-		home: path.join(__dirname, "page", "home"),
-		list: path.join(__dirname, "page", "list"),
-		profile: path.join(__dirname, "page", "profile"),
-		gallery: path.join(__dirname, "page", "gallery"),
-		form: path.join(__dirname, "page", "form"),
-		table: path.join(__dirname, "page", "table"),
-		content: path.join(__dirname, "page", "content"),
+		home: path.join(__dirname, "page"),
+		list: path.join(__dirname, "page"),
+		profile: path.join(__dirname, "page"),
+		gallery: path.join(__dirname, "page"),
+		form: path.join(__dirname, "page"),
+		table: path.join(__dirname, "page"),
+		content: path.join(__dirname, "page"),
 	},
 	pipe: {
 		default: path.join(__dirname, "pipe"),
@@ -50,20 +50,35 @@ const run = (type) => {
 	return async (waw) => {
 		const options = Object.values(defaults[type]);
 
+		if (waw.argv.length > 1) {
+			waw.name = waw.argv[1].toLowerCase();
+		} else {
+			const t = waw.terminal();
+
+			const name = await t.ask(`Provide name for the ${type} you want to generate:`, {
+				required: true,
+			});
+
+			waw.name = name.toLowerCase();
+
+			t.close();
+		}
+
+		waw.Name = waw.name[0].toUpperCase() + waw.name.slice(1, waw.name.length);
+
+		waw.base = path.join(waw.projectPath, 'src/app', type + 's', waw.name);
+
 		if (options.length > 1) {
 			const t = waw.terminal();
 
-			let selected = await t.choose("Select to generate?", options, {
+			let selected = await t.choose("Select to generate?", Object.keys(defaults[type]), {
 				prompt: "Choose number:",
 			});
 
-			console.log(selected);
+			require(path.join(defaults[type][selected], 'scaffold.js'))(waw);
 		} else {
 			require(path.join(defaults[type][options[0]], 'scaffold.js'))(waw);
 		}
-
-		console.log(type, Object.keys(defaults[type]));
-		process.exit();
 	};
 }
 

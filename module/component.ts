@@ -13,7 +13,6 @@ import { CNAMEService } from '../../services/NAME.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [CommonModule, TableModule],
 	templateUrl: './PNAME.component.html',
-	styleUrls: ['./PNAME.component.scss'],
 })
 export class PCNAMEComponent extends CrudComponent<
 	CNAMEService,
