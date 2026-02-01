@@ -9,5 +9,5 @@ module.exports = async (waw) => {
 
 	console.log("Interface has been created");
 
-	process.exit(0);
+	process.exit();
 };

@@ -29,5 +29,5 @@ module.exports = async (waw) => {
 
 	console.log("Form component has been created");
 
-	process.exit(0);
+	process.exit();
 };

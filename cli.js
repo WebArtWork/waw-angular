@@ -27,13 +27,13 @@ const defaults = {
 		default: path.join(__dirname, "module"),
 	},
 	page: {
-		home: path.join(__dirname, "page"),
-		list: path.join(__dirname, "page"),
-		profile: path.join(__dirname, "page"),
-		gallery: path.join(__dirname, "page"),
-		form: path.join(__dirname, "page"),
-		table: path.join(__dirname, "page"),
-		content: path.join(__dirname, "page"),
+		home: path.join(__dirname, "page", "home"),
+		list: path.join(__dirname, "page", "list"),
+		profile: path.join(__dirname, "page", "profile"),
+		gallery: path.join(__dirname, "page", "gallery"),
+		form: path.join(__dirname, "page", "form"),
+		table: path.join(__dirname, "page", "table"),
+		content: path.join(__dirname, "page", "content"),
 	},
 	pipe: {
 		default: path.join(__dirname, "pipe"),
@@ -55,7 +55,7 @@ const run = (type) => {
 		} else {
 			const t = waw.terminal();
 
-			const name = await t.ask(`Provide name for the ${type} you want to generate:`, {
+			const name = await t.ask(`Provide name for the ${type === 'page' ? 'role' : type} you want to generate:`, {
 				required: true,
 			});
 

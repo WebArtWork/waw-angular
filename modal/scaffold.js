@@ -14,5 +14,5 @@ module.exports = async (waw) => {
 
 	console.log("Modal has been created");
 
-	process.exit(0);
+	process.exit();
 };
