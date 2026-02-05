@@ -1,6 +1,9 @@
 <wselect
-	(modelChange)="wChange.emit($event)"
-	placeholder="Select NAME"
-	[select]="value"
-	[items]="items"
+	placeholder="{{ ('Select NAME...' | translate)() }}"
+	[searchable]="searchable()"
+	[clearable]="clearable()"
+	[disabled]="disabled()"
+	[items]="documents()"
+	[wModel]="wModel()"
+	(wChange)="wChange.emit($event)"
 ></wselect>

@@ -1,16 +1,24 @@
 <ng-template #templateRef let-data>
 	<wselect
-		[value]="data.submition[data.key]"
-		(modelChange)="
-			data.submition[data.key] = $event;
-			data.wChange()
+		[formField]="data.formField"
+		[items]="documents()"
+		[bindLabel]="data.props.bindLabel ?? selectDefaults.bindLabel"
+		[bindValue]="data.props.bindValue ?? selectDefaults.bindValue"
+		[placeholder]="
+			data.props.placeholder ?? selectDefaults.placeholder
 		"
-		[multiple]="data.field.Multiple || false"
-		[placeholder]="data.field.Placeholder"
-		[bindValue]="data.field.Value || '_id'"
-		[bindLabel]="data.field.Name || 'name'"
-		[ngClass]="data.component.class"
-		[items]="data.field.Items"
-		[searchable]="true"
-	/>
+		[label]="data.props.label ?? selectDefaults.label"
+		[multiple]="data.props.multiple ?? selectDefaults.multiple"
+		[clearable]="data.props.clearable ?? selectDefaults.clearable"
+		[searchable]="data.props.searchable ?? selectDefaults.searchable"
+		[searchableBy]="
+			data.props.searchableBy ?? selectDefaults.searchableBy
+		"
+		[buttons]="data.props.buttons ?? selectDefaults.buttons"
+		[disabled]="
+			data.props.disabled === true ||
+			data.component.disabled === true
+		"
+		(wChange)="data.props.onChange?.($event)"
+	></wselect>
 </ng-template>

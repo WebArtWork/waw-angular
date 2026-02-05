@@ -6,12 +6,12 @@ module.exports = async (waw) => {
 	}
 
 	waw.ensureDir(waw.base, 'pages', waw.name + 's');
-	waw.readWrite(path.join(__dirname, 'component.html'), path.join(waw.base, 'pages', waw.name + 's', waw.name + 's.component.html'), replace);
-	waw.readWrite(path.join(__dirname, 'component.ts'), path.join(waw.base, 'pages', waw.name + 's', waw.name + 's.component.ts'), replace);
+	waw.readWrite(path.join(__dirname, 'page.html'), path.join(waw.base, 'pages', waw.name + 's', waw.name + 's.component.html'), replace);
+	waw.readWrite(path.join(__dirname, 'page.ts'), path.join(waw.base, 'pages', waw.name + 's', waw.name + 's.component.ts'), replace);
 	waw.readWrite(path.join(__dirname, 'routes.ts'), path.join(waw.base, 'pages', waw.name + 's', waw.name + 's.routes.ts'), replace);
 
 	waw.ensureDir(waw.base, 'forms');
-	waw.readWrite(path.join(__dirname, 'form.ts'), path.join(waw.base, waw.name + '.form.ts'), replace);
+	waw.readWrite(path.join(__dirname, 'form.ts'), path.join(waw.base, 'forms', waw.name + '.form.ts'), replace);
 
 	waw.ensureDir(waw.base, 'form-components', waw.name);
 	waw.readWrite(path.join(__dirname, 'formcomponent.html'), path.join(waw.base, 'form-components', waw.name, waw.name + '.component.html'), replace);
@@ -24,10 +24,10 @@ module.exports = async (waw) => {
 	waw.readWrite(path.join(__dirname, 'interface.ts'), path.join(waw.base, 'interfaces', waw.name, waw.name + '.interface.ts'), replace);
 
 	waw.ensureDir(waw.base, 'selectors', waw.name);
-	waw.readWrite(path.join(__dirname, 'component.ts'), path.join(waw.base, 'selectors', waw.name, waw.name + '.component.ts'), replace);
+	waw.readWrite(path.join(__dirname, 'component.html'), path.join(waw.base, 'selectors', waw.name, waw.name + '.component.html'), replace);
 	waw.readWrite(path.join(__dirname, 'component.ts'), path.join(waw.base, 'selectors', waw.name, waw.name + '.component.ts'), replace);
 
-	console.log("Module has been created");
+	console.log(`Module ${waw.name} has been created`);
 
 	process.exit();
 };

@@ -1,27 +1,60 @@
-import {
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	inject,
-	OnInit,
-	signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { HeroContent, HeroSectionComponent } from '@pageComponent/hero';
 import { BurgerComponent } from 'src/app/icons/burger/burger.component';
 import { UserPreviewComponent } from 'src/app/modules/user/components/user-preview/user-preview.component';
-import { HeroComponent } from 'src/app/page-components/hero/hero.component';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	templateUrl: './FILENAME.component.html',
-	styleUrls: ['./FILENAME.component.scss'],
-	imports: [UserPreviewComponent, BurgerComponent, HeroComponent],
+	templateUrl: './NAME.component.html',
+	imports: [UserPreviewComponent, BurgerComponent, HeroSectionComponent],
 })
-export class CNAMEComponent implements OnInit {
-	private _cdr = inject(ChangeDetectorRef);
-
-	isMenuOpen = signal(false);
-
-	ngOnInit() {
-		this._cdr.detectChanges();
-	}
+export class CNAMEComponent {
+	readonly heroContent: HeroContent = {
+		badge: {
+			icon: 'auto_awesome',
+			text: 'Build • Teach • Reuse • Scale',
+		},
+		title: 'A modular ecosystem to ship products and grow developers.',
+		description:
+			'Web Art Work combines a software studio, an education platform, and a reusable framework — all driven by production-grade patterns and a token-based UI system.',
+		ctas: [
+			{ label: 'Get started', targetId: 'pricing', variant: 'primary' },
+			{
+				label: 'Explore features',
+				targetId: 'features',
+				variant: 'ghost',
+			},
+		],
+		meta: {
+			icon: 'verified',
+			text: 'Token-driven UI • Modern Angular',
+		},
+		card: {
+			title: 'Starter template',
+			subtitle: 'Sections + patterns',
+			icon: 'grid_view',
+			miniCards: [
+				{
+					icon: 'rocket_launch',
+					title: 'Fast delivery',
+					desc: 'Reusable UI + architecture',
+				},
+				{
+					icon: 'school',
+					title: 'Hands-on learning',
+					desc: 'From real production code',
+				},
+				{
+					icon: 'extension',
+					title: 'Shared framework',
+					desc: 'Promote repeatables to libs',
+				},
+			],
+			note: {
+				title: 'Ready in minutes',
+				icon: 'bolt',
+				desc: 'Standalone components, signals, OnPush, and token-driven theming.',
+			},
+		},
+	};
 }

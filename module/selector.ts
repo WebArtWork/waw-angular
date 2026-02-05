@@ -1,37 +1,41 @@
 import {
 	ChangeDetectionStrategy,
 	Component,
-	EventEmitter,
-	Input,
-	OnChanges,
-	Output,
-	SimpleChanges,
+	input,
+	output,
 } from '@angular/core';
-import { SelectModule } from 'src/app/core/modules/select/select.module';
+import { FormInterface, FormService } from '@lib/form';
+import { SelectComponent, SelectValue } from '@lib/select';
+import { TranslatePipe } from '@lib/translate';
+import { CrudComponent } from 'wacom';
+import { NAMEForm } from '../../forms/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
 import { CNAMEService } from '../../services/NAME.service';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [SelectComponent, TranslatePipe],
 	selector: 'NAME-selector',
 	templateUrl: './NAME-selector.component.html',
-	styleUrls: ['./NAME-selector.component.scss'],
-	imports: [SelectModule],
 })
-export class CNAMESelectorComponent implements OnChanges {
-	@Input() value: string;
+export class CNAMESelectorComponent extends CrudComponent<
+	CNAMEService,
+	CNAME,
+	FormInterface
+> {
+	readonly searchable = input<boolean>(true);
 
-	@Output() wChange = new EventEmitter();
+	readonly clearable = input<boolean>(true);
 
-	get items(): CNAME[] {
-		return this._NAMEService.NAMEs;
-	}
+	readonly disabled = input<boolean>(false);
 
-	constructor(private _NAMEService: CNAMEService) {}
+	readonly wModel = input<SelectValue>('');
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['value'] && !changes['value'].firstChange) {
-			this.value = changes['value'].currentValue;
-		}
+	readonly wChange = output<SelectValue>();
+
+	constructor(_NAMEService: CNAMEService, _form: FormService) {
+		super(NAMEForm, _form, _NAMEService, 'NAME');
+
+		this.setDocuments();
 	}
 }

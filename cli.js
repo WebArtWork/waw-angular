@@ -71,13 +71,15 @@ const run = (type) => {
 		if (options.length > 1) {
 			const t = waw.terminal();
 
-			let selected = await t.choose("Select to generate?", Object.keys(defaults[type]), {
+			let selected = await t.choose("Select configuration to generate?", Object.keys(defaults[type]), {
 				prompt: "Choose number:",
 			});
 
+			t.close();
+
 			require(path.join(defaults[type][selected], 'scaffold.js'))(waw);
 		} else {
-			require(path.join(defaults[type][options[0]], 'scaffold.js'))(waw);
+			require(path.join(options[0], 'scaffold.js'))(waw);
 		}
 	};
 }
@@ -88,6 +90,8 @@ module.exports.ng = async (waw) => {
 	let selected = await t.choose("What do you want to generate?", Object.keys(defaults), {
 		prompt: "Choose number:",
 	});
+
+	t.close();
 
 	run(selected);
 }

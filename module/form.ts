@@ -3,37 +3,22 @@ export const NAMEForm = {
 	title: 'CNAME',
 	components: [
 		{
-			name: 'Text',
+			name: 'Input',
 			key: 'name',
-			focused: true,
-			fields: [
-				{
-					name: 'Label',
-					value: 'Title',
-				},
-				{
-					name: 'Placeholder',
-					value: 'fill NAME title',
-				},
-			],
+			props: {
+				label: 'Name',
+				placeholder: 'Enter NAME name...',
+				focused: true,
+			},
 		},
 		{
-			name: 'Text',
+			name: 'Input',
 			key: 'description',
-			fields: [
-				{
-					name: 'Label',
-					value: 'Description',
-				},
-				{
-					name: 'Placeholder',
-					value: 'fill NAME description',
-				},
-				{
-					name: 'Textarea',
-					value: true,
-				},
-			],
+			props: {
+				label: 'Description',
+				placeholder: 'Enter NAME description...',
+				type: 'textarea',
+			},
 		},
 	],
 };

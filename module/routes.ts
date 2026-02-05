@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { PCNAMEComponent } from './PNAME.component';
+import { CNAMEsComponent } from './NAMEs.component';
 
-export const PNAMERoutes: Routes = [
+export const routes: Routes = [
 	{
 		path: '',
-		component: PCNAMEComponent,
+		component: CNAMEsComponent,
 	},
 ];

@@ -1,34 +1,46 @@
-import { NgClass } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
 	Component,
 	OnInit,
 	TemplateRef,
-	ViewChild,
 	inject,
+	viewChild,
 } from '@angular/core';
-import { FormService } from 'src/app/libs/form/services/form.service';
-import { SelectComponent as LibSelectComponent } from 'src/app/libs/select/select.component';
+import { FormInterface, FormService } from '@lib/form';
+import { SelectComponent, selectDefaults } from '@lib/select';
+import { CrudComponent } from 'wacom';
+import { NAMEForm } from '../../forms/NAME.form';
+import { CNAME } from '../../interfaces/NAME.interface';
+import { CNAMEService } from '../../services/NAME.service';
 
-interface Interface {}
+interface SelectTemplateContext {}
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [SelectComponent],
 	templateUrl: './NAME.formcomponent.html',
-	styleUrl: './NAME.formcomponent.scss',
-	imports: [LibSelectComponent, NgClass],
 })
-export class CNAMEFormcomponent implements OnInit {
-	private _form = inject(FormService);
+export class CNAMEFormComponent
+	extends CrudComponent<CNAMEService, CNAME, FormInterface>
+	implements OnInit
+{
+	private readonly _formService = inject(FormService);
 
-	@ViewChild('templateRef', { static: true })
-	templateRef: TemplateRef<Interface>;
+	readonly templateRef =
+		viewChild.required<TemplateRef<SelectTemplateContext>>('templateRef');
 
-	ngOnInit(): void {
-		this._form.addTemplateComponent<Interface>('CNAME', this.templateRef);
+	readonly selectDefaults = selectDefaults;
+
+	constructor(_NAMEService: CNAMEService, _form: FormService) {
+		super(NAMEForm, _form, _NAMEService, 'NAME');
+
+		this.setDocuments();
 	}
 
-	select(data: any): string {
-		return data.value?.name || (data.value as unknown as string) || '';
+	ngOnInit(): void {
+		this._formService.addTemplateComponent<SelectTemplateContext>(
+			'CNAME',
+			this.templateRef(),
+		);
 	}
 }
