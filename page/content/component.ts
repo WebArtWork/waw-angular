@@ -1,27 +1,28 @@
+import { HttpClient } from '@angular/common/http';
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
 	inject,
-	OnInit,
 	signal,
 } from '@angular/core';
-import { BurgerComponent } from 'src/app/icons/burger/burger.component';
-import { UserPreviewComponent } from 'src/app/modules/user/components/user-preview/user-preview.component';
-import { HeroComponent } from 'src/app/page-components/hero/hero.component';
+import { FooterComponent } from '@layout/footer';
+import { MarkedSectionComponent } from '@pageComponent/marked';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	templateUrl: './FILENAME.component.html',
-	styleUrls: ['./FILENAME.component.scss'],
-	imports: [UserPreviewComponent, BurgerComponent, HeroComponent],
+	templateUrl: './NAME.component.html',
+	imports: [FooterComponent, MarkedSectionComponent],
 })
-export class CNAMEComponent implements OnInit {
-	private _cdr = inject(ChangeDetectorRef);
+export class CNAMEComponent {
+	private readonly _http = inject(HttpClient);
 
-	isMenuOpen = signal(false);
+	markdown = signal<string>('');
 
-	ngOnInit() {
-		this._cdr.detectChanges();
+	constructor() {
+		this._http
+			.get('/assets/README.md', { responseType: 'text' })
+			.subscribe({
+				next: (markdown) => this.markdown.set(markdown as string),
+			});
 	}
 }
