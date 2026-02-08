@@ -1,46 +1,34 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormService } from 'src/app/core/modules/form/form.service';
-import { FormInterface } from 'src/app/core/modules/form/interfaces/form.interface';
-import { TableModule } from 'src/app/core/modules/table/table.module';
-import { TranslateService } from 'src/app/core/modules/translate/translate.service';
-import {
-	CSERVICE,
-	CSERVICEService,
-	SERVICEFormComponents,
-} from 'src/app/core/services/SERVICE.service';
-import { CrudComponent } from 'wacom';
+import { FooterComponent } from '@layout/footer';
+import { TableComponent as LibTableComponent } from '@lib/table';
+import { rows } from './NAME.const';
+import { CNAMERow } from './NAME.interface';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [CommonModule, TableModule],
 	templateUrl: './NAME.component.html',
-	styleUrls: ['./NAME.component.scss'],
+	imports: [FooterComponent, LibTableComponent],
 })
-export class CNAMEComponent extends CrudComponent<
-	CSERVICEService,
-	CSERVICE,
-	FormInterface
-> {
-	override configType: 'local' | 'server' = 'local';
+export class CNAMEComponent {
+	// wtable expects { title, field } (or strings) — we keep it explicit.
+	readonly columns = [
+		{ title: 'GPU', field: 'model' },
+		{ title: 'Tier', field: 'tier' },
+		{ title: 'Best for', field: 'bestFor' },
+		{ title: 'Pros', field: 'pros' },
+		{ title: 'Cons', field: 'cons' },
+	];
 
-	columns = ['name', 'description'];
+	// "Almost empty" config — but valid for the lib defaults.
+	readonly config: any = {
+		searchable: true,
+		searchBy: 'model',
+		allDocs: true,
+		perPage: 10,
+		page: 1,
+		pageSizeOptions: [10, 20, 50],
+	};
 
-	config = this.getConfig();
-
-	constructor(
-		_SERVICEService: CSERVICEService,
-		_translate: TranslateService,
-		_form: FormService
-	) {
-		super(
-			SERVICEFormComponents,
-			_form,
-			_translate,
-			_SERVICEService,
-			'CSERVICE'
-		);
-
-		this.setDocuments();
-	}
+	// Static demo rows (id field aligned with default bindValue = "_id")
+	readonly rows: CNAMERow[] = rows;
 }

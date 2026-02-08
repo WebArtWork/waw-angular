@@ -1,6 +1,30 @@
-<wtable
-	title="CNAME"
-	[columns]="columns"
-	[config]="config"
-	[rows]="documents"
-/>
+<main class="bg-[var(--c-bg-primary)]">
+	<div class="mx-auto max-w-[var(--container)] px-[var(--gutter)] py-10">
+		<div class="mb-6">
+			<h1
+				class="text-2xl font-semibold tracking-[var(--letter-spacing)] text-[var(--c-text-secondary)]"
+			>
+				GPU comparison table
+			</h1>
+			<p class="mt-2 text-[var(--c-text-primary)]">
+				Static demo for <span class="font-medium">wtable</span>: compare
+				popular GPUs by value and trade-offs.
+			</p>
+		</div>
+
+		<wtable
+			class="block"
+			[title]="'Popular GPUs (demo)'"
+			[columns]="columns"
+			[rows]="rows"
+			[config]="config"
+		></wtable>
+
+		<div class="mt-4 text-sm text-[var(--c-text-muted)]">
+			Values are illustrative (static demo). Replace with real data for
+			accurate pricing/benchmarks.
+		</div>
+
+		<layout-footer class="mt-10 block"></layout-footer>
+	</div>
+</main>

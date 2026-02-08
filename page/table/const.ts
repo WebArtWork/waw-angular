@@ -1,0 +1,60 @@
+import { CNAMERow } from './NAME.interface';
+
+export const rows: CNAMERow[] = [
+	{
+		_id: 'rtx-4090',
+		model: 'NVIDIA GeForce RTX 4090',
+		tier: 'Enthusiast',
+		bestFor: 'Raw performance',
+		pros: 'Best gaming performance; strong creator workloads',
+		cons: 'Very expensive; high power draw; big card',
+	},
+	{
+		_id: 'rtx-4080-super',
+		model: 'NVIDIA GeForce RTX 4080 SUPER',
+		tier: 'High-end',
+		bestFor: 'Balanced high-end',
+		pros: 'Great 4K/1440p; efficient; strong RT',
+		cons: 'Still pricey; 4090 gap remains',
+	},
+	{
+		_id: 'rtx-4070-ti-super',
+		model: 'NVIDIA GeForce RTX 4070 Ti SUPER',
+		tier: 'Upper midrange',
+		bestFor: '1440p max',
+		pros: 'Excellent 1440p; good RT; solid efficiency',
+		cons: '4K can be limiting in heavy RT titles',
+	},
+	{
+		_id: 'rtx-4070-super',
+		model: 'NVIDIA GeForce RTX 4070 SUPER',
+		tier: 'Midrange',
+		bestFor: 'Value NVIDIA pick',
+		pros: 'Strong 1440p; good efficiency; solid RT',
+		cons: 'VRAM can limit some heavy/RT workloads',
+	},
+	{
+		_id: 'rx-7900-xtx',
+		model: 'AMD Radeon RX 7900 XTX',
+		tier: 'High-end',
+		bestFor: 'Raster value',
+		pros: 'Excellent raster; often strong $/fps',
+		cons: 'RT behind NVIDIA; productivity varies by app',
+	},
+	{
+		_id: 'rx-7900-xt',
+		model: 'AMD Radeon RX 7900 XT',
+		tier: 'Upper midrange',
+		bestFor: 'High fps per $',
+		pros: 'Great 1440p/4K raster; competitive pricing',
+		cons: 'RT behind; feature parity depends on workflow',
+	},
+	{
+		_id: 'rx-7800-xt',
+		model: 'AMD Radeon RX 7800 XT',
+		tier: 'Midrange',
+		bestFor: '1440p value',
+		pros: 'Strong value; good VRAM; great raster',
+		cons: 'RT behind NVIDIA in many titles',
+	},
+];

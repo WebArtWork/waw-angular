@@ -1,27 +1,36 @@
+import { NgClass } from '@angular/common';
 import {
 	ChangeDetectionStrategy,
-	ChangeDetectorRef,
 	Component,
-	inject,
-	OnInit,
+	computed,
 	signal,
 } from '@angular/core';
-import { BurgerComponent } from 'src/app/icons/burger/burger.component';
-import { UserPreviewComponent } from 'src/app/modules/user/components/user-preview/user-preview.component';
-import { HeroComponent } from 'src/app/page-components/hero/hero.component';
+import { ButtonComponent } from '@lib/button';
+import { images } from './NAME.const';
+import { CNAMEImage } from './NAME.interface';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	templateUrl: './FILENAME.component.html',
-	styleUrls: ['./FILENAME.component.scss'],
-	imports: [UserPreviewComponent, BurgerComponent, HeroComponent],
+	templateUrl: './NAME.component.html',
+	imports: [ButtonComponent, NgClass],
 })
-export class CNAMEComponent implements OnInit {
-	private _cdr = inject(ChangeDetectorRef);
+export class CNAMEComponent {
+	readonly images = signal<CNAMEImage[]>(images);
 
-	isMenuOpen = signal(false);
+	readonly activeId = signal<string>(this.images()[0]?.id ?? '');
 
-	ngOnInit() {
-		this._cdr.detectChanges();
+	readonly activeIndex = computed(() => {
+		const list = this.images();
+		const idx = list.findIndex((x) => x.id === this.activeId());
+		return idx >= 0 ? idx : 0;
+	});
+
+	readonly activeImage = computed(() => {
+		const list = this.images();
+		return list[this.activeIndex()] ?? list[0];
+	});
+
+	setActive(id: string): void {
+		this.activeId.set(id);
 	}
 }

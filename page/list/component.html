@@ -1,64 +1,28 @@
-<div class="space" [class.space--open]="isMenuOpen()">
-	<!-- Header (mobile only) -->
-	<header class="space__header" aria-label="Page header">
-		<div class="space__header-left">
-			<user-preview></user-preview>
-		</div>
-
-		<div class="space__header-title">Title header</div>
-
-		<div class="space__header-right">
-			<icon-burger
-				(updated)="isMenuOpen.set($event)"
-				#burger
-			></icon-burger>
-		</div>
-	</header>
-
-	<!-- Sidebar -->
-	<aside class="space__sidebar" aria-label="Sidebar">
-		<button
-			type="button"
-			class="space__sidebar-close"
-			(click)="burger.toggle()"
-			aria-label="Close sidebar"
-		>
-			<span class="material-icons">close</span>
-		</button>
-
-		<div class="space__sidebar-content">
-			<div class="space__sidebar-row space__sidebar-row--end">
-				<span class="material-icons edit">edit</span>
-				<span class="material-icons delete">delete</span>
+<main class="bg-[var(--c-bg-primary)]">
+	<div class="mx-auto max-w-[var(--container)] px-[var(--gutter)] py-10">
+		<div class="mb-6 flex items-end justify-between gap-4">
+			<div>
+				<h1
+					class="text-2xl font-semibold tracking-[var(--letter-spacing)] text-[var(--c-text-secondary)]"
+				>
+					Products
+				</h1>
+				<p class="mt-2 text-[var(--c-text-primary)]">
+					Explore ready-to-use building blocks.
+				</p>
 			</div>
 
-			<div class="space__sidebar-img">
-				<img src="assets/default.png" alt="" />
-			</div>
-
-			<div class="space__sidebar-title">Title of sidebar...</div>
-
-			<div class="space__sidebar-desc">
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-				molestiae consequatur quae. Modi corporis rem amet tempore
-				debitis assumenda minima repellat labore expedita quam. Itaque
-				accusamus culpa ullam necessitatibus nisi.
-			</div>
-
-			<div class="space__sidebar-row">
-				<span class="material-icons">delete</span>
-				<span>Hello world</span>
+			<div class="text-sm text-[var(--c-text-muted)]">
+				{{ items.length }} items
 			</div>
 		</div>
-	</aside>
 
-	<!-- Main -->
-	<main class="space__main">
-		<page-hero
-			title="Build anything faster"
-			description="One modular layout to cover product, content, and commerce pages."
-			[buttons]="[{ text: 'Get started' }]"
-			mediaUrl="assets/default.png"
-		></page-hero>
-	</main>
-</div>
+		<div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+			@for (i of items; track i.name) {
+			<app-NAME-item [item]="i"></app-NAME-item>
+			}
+		</div>
+
+		<layout-footer class="mt-10 block"></layout-footer>
+	</div>
+</main>

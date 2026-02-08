@@ -1,27 +1,13 @@
-import {
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	inject,
-	OnInit,
-	signal,
-} from '@angular/core';
-import { BurgerComponent } from 'src/app/icons/burger/burger.component';
-import { UserPreviewComponent } from 'src/app/modules/user/components/user-preview/user-preview.component';
-import { HeroComponent } from 'src/app/page-components/hero/hero.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FooterComponent } from '@layout/footer';
+import { ListItemComponent } from './NAME-item/NAME-item.component';
+import { items } from './NAME.const';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	templateUrl: './FILENAME.component.html',
-	styleUrls: ['./FILENAME.component.scss'],
-	imports: [UserPreviewComponent, BurgerComponent, HeroComponent],
+	templateUrl: './NAME.component.html',
+	imports: [FooterComponent, ListItemComponent],
 })
-export class CNAMEComponent implements OnInit {
-	private _cdr = inject(ChangeDetectorRef);
-
-	isMenuOpen = signal(false);
-
-	ngOnInit() {
-		this._cdr.detectChanges();
-	}
+export class ListComponent {
+	readonly items = items;
 }

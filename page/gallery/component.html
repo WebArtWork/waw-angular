@@ -1,64 +1,96 @@
-<div class="space" [class.space--open]="isMenuOpen()">
-	<!-- Header (mobile only) -->
-	<header class="space__header" aria-label="Page header">
-		<div class="space__header-left">
-			<user-preview></user-preview>
+<main class="mx-auto max-w-[var(--container)] px-[var(--gutter)] py-6">
+	<div
+		class="overflow-hidden rounded-[var(--radius-card)] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] shadow-[var(--shadow-sm)]"
+	>
+		<div class="grid gap-0 lg:grid-cols-[7fr_3fr]">
+			<!-- Big image -->
+			<section class="bg-[var(--c-bg-tertiary)]">
+				<div
+					class="relative h-[70vh] min-h-[360px] max-h-[680px] w-full overflow-hidden border-b border-[var(--c-border)] lg:h-[540px] lg:max-h-none lg:min-h-0 lg:border-b-0 lg:border-r"
+				>
+					<img
+						class="block h-full w-full object-cover"
+						[src]="activeImage().src"
+						[alt]="activeImage().alt"
+						loading="eager"
+					/>
+
+					<div
+						class="absolute bottom-[var(--sp-4)] left-[var(--sp-4)] right-[var(--sp-4)] flex items-end justify-between gap-[var(--sp-3)] rounded-[var(--radius-card)] border border-[var(--c-border)] p-[var(--sp-3)] px-[var(--sp-4)] backdrop-blur-md shadow-[var(--shadow-md)]"
+						style="
+							background: color-mix(
+								in srgb,
+								var(--c-bg-secondary) 78%,
+								transparent
+							);
+						"
+					>
+						<div class="font-bold text-[var(--c-text-secondary)]">
+							{{ activeImage().title }}
+						</div>
+						<div
+							class="whitespace-nowrap text-[0.9rem] text-[var(--c-text-primary)]"
+						>
+							{{ activeIndex() + 1 }} / {{ images().length }}
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Thumbnails -->
+			<aside class="bg-[var(--c-bg-secondary)]">
+				<div
+					class="flex items-baseline justify-between gap-[var(--sp-3)] border-b border-[var(--c-border)] p-[var(--sp-4)]"
+				>
+					<div class="font-bold text-[var(--c-text-secondary)]">
+						Gallery
+					</div>
+					<div class="text-[0.85rem] text-[var(--c-text-muted)]">
+						Scroll to browse
+					</div>
+				</div>
+
+				<div
+					class="flex h-[30vh] min-h-[180px] max-h-[280px] gap-[var(--sp-3)] overflow-x-auto overflow-y-hidden p-[var(--sp-4)] snap-x snap-mandatory lg:h-[540px] lg:max-h-none lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden lg:snap-y lg:snap-proximity"
+					style="scrollbar-color: var(--c-border) transparent"
+				>
+					@for (img of images(); track img.id) {
+					<wbutton
+						wbutton
+						type="link"
+						class="flex min-w-[260px] max-w-[320px] snap-start items-center gap-[var(--sp-3)] rounded-[var(--radius-card)] border p-[var(--sp-3)] text-left transition-[border-color,transform,background-color] duration-[var(--motion)] ease-[var(--easing)] hover:-translate-y-[1px] hover:border-[var(--c-primary)] lg:min-w-0 lg:max-w-none"
+						[ngClass]="img.id === activeImage().id ? 'border-[var(--c-primary)]' : 'border-[var(--c-border)]'"
+						[style.background]="
+							img.id === activeImage().id
+								? 'color-mix(in srgb, var(--c-bg-tertiary) 70%, var(--c-primary) 30%)'
+								: 'var(--c-bg-tertiary)'
+						"
+						(wClick)="setActive(img.id)"
+						[isMultipleClicksAllowed]="true"
+					>
+						<img
+							class="h-[54px] w-[54px] flex-none rounded-[var(--radius)] border border-[var(--c-border)] bg-[var(--c-bg-secondary)] object-cover"
+							[src]="img.src"
+							[alt]="img.alt"
+							loading="lazy"
+						/>
+
+						<div class="flex min-w-0 flex-col gap-[2px]">
+							<div
+								class="overflow-hidden text-ellipsis whitespace-nowrap font-bold text-[var(--c-text-secondary)]"
+							>
+								{{ img.title }}
+							</div>
+							<div
+								class="overflow-hidden text-ellipsis whitespace-nowrap text-[0.85rem] text-[var(--c-text-primary)]"
+							>
+								{{ img.alt }}
+							</div>
+						</div>
+					</wbutton>
+					}
+				</div>
+			</aside>
 		</div>
-
-		<div class="space__header-title">Title header</div>
-
-		<div class="space__header-right">
-			<icon-burger
-				(updated)="isMenuOpen.set($event)"
-				#burger
-			></icon-burger>
-		</div>
-	</header>
-
-	<!-- Sidebar -->
-	<aside class="space__sidebar" aria-label="Sidebar">
-		<button
-			type="button"
-			class="space__sidebar-close"
-			(click)="burger.toggle()"
-			aria-label="Close sidebar"
-		>
-			<span class="material-icons">close</span>
-		</button>
-
-		<div class="space__sidebar-content">
-			<div class="space__sidebar-row space__sidebar-row--end">
-				<span class="material-icons edit">edit</span>
-				<span class="material-icons delete">delete</span>
-			</div>
-
-			<div class="space__sidebar-img">
-				<img src="assets/default.png" alt="" />
-			</div>
-
-			<div class="space__sidebar-title">Title of sidebar...</div>
-
-			<div class="space__sidebar-desc">
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-				molestiae consequatur quae. Modi corporis rem amet tempore
-				debitis assumenda minima repellat labore expedita quam. Itaque
-				accusamus culpa ullam necessitatibus nisi.
-			</div>
-
-			<div class="space__sidebar-row">
-				<span class="material-icons">delete</span>
-				<span>Hello world</span>
-			</div>
-		</div>
-	</aside>
-
-	<!-- Main -->
-	<main class="space__main">
-		<page-hero
-			title="Build anything faster"
-			description="One modular layout to cover product, content, and commerce pages."
-			[buttons]="[{ text: 'Get started' }]"
-			mediaUrl="assets/default.png"
-		></page-hero>
-	</main>
-</div>
+	</div>
+</main>

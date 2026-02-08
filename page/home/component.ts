@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FooterComponent } from '@layout/footer';
 import { HeroContent, HeroSectionComponent } from '@pageComponent/hero';
-import { BurgerComponent } from 'src/app/icons/burger/burger.component';
-import { UserPreviewComponent } from 'src/app/modules/user/components/user-preview/user-preview.component';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	templateUrl: './NAME.component.html',
-	imports: [UserPreviewComponent, BurgerComponent, HeroSectionComponent],
+	imports: [HeroSectionComponent, FooterComponent],
 })
 export class CNAMEComponent {
 	readonly heroContent: HeroContent = {
