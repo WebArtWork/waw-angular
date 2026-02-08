@@ -5,12 +5,11 @@ import { TableComponent } from 'src/app/libs/table/table.component';
 import { CrudComponent } from 'wacom';
 import { NAMEForm } from '../../forms/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
-import { CNAMESelectorComponent } from '../../selectors/NAME/NAME.component';
 import { CNAMEService } from '../../services/NAME.service';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [TableComponent, CNAMESelectorComponent],
+	imports: [TableComponent],
 	templateUrl: './NAMEs.component.html',
 })
 export class CNAMEsComponent extends CrudComponent<
