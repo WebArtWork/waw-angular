@@ -18,7 +18,7 @@ interface SelectTemplateContext {}
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [SelectComponent],
-	templateUrl: './NAME.formcomponent.html',
+	templateUrl: './NAME.component.html',
 })
 export class CNAMEFormComponent
 	extends CrudComponent<CNAMEService, CNAME, FormInterface>

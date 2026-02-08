@@ -21,11 +21,11 @@ module.exports = async (waw) => {
 	waw.readWrite(path.join(__dirname, 'service.ts'), path.join(waw.base, 'services', waw.name + '.service.ts'), replace);
 
 	waw.ensureDir(waw.base, 'interfaces');
-	waw.readWrite(path.join(__dirname, 'interface.ts'), path.join(waw.base, 'interfaces', waw.name, waw.name + '.interface.ts'), replace);
+	waw.readWrite(path.join(__dirname, 'interface.ts'), path.join(waw.base, 'interfaces', waw.name + '.interface.ts'), replace);
 
 	waw.ensureDir(waw.base, 'selectors', waw.name);
-	waw.readWrite(path.join(__dirname, 'component.html'), path.join(waw.base, 'selectors', waw.name, waw.name + '.component.html'), replace);
-	waw.readWrite(path.join(__dirname, 'component.ts'), path.join(waw.base, 'selectors', waw.name, waw.name + '.component.ts'), replace);
+	waw.readWrite(path.join(__dirname, 'selector.html'), path.join(waw.base, 'selectors', waw.name, waw.name + '.component.html'), replace);
+	waw.readWrite(path.join(__dirname, 'selector.ts'), path.join(waw.base, 'selectors', waw.name, waw.name + '.component.ts'), replace);
 
 	console.log(`Module ${waw.name} has been created`);
 

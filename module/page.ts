@@ -5,7 +5,7 @@ import { TableComponent } from 'src/app/libs/table/table.component';
 import { CrudComponent } from 'wacom';
 import { NAMEForm } from '../../forms/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
-import { CNAMESelectorComponent } from '../../selectors/NAME/NAME-selector.component';
+import { CNAMESelectorComponent } from '../../selectors/NAME/NAME.component';
 import { CNAMEService } from '../../services/NAME.service';
 
 @Component({

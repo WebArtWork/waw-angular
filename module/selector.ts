@@ -15,8 +15,8 @@ import { CNAMEService } from '../../services/NAME.service';
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [SelectComponent, TranslatePipe],
-	selector: 'NAME-selector',
-	templateUrl: './NAME-selector.component.html',
+	selector: 'selector-NAME',
+	templateUrl: './NAME.component.html',
 })
 export class CNAMESelectorComponent extends CrudComponent<
 	CNAMEService,
