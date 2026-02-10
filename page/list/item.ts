@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Item } from '../NAME.interface';
+import { CNAMEItem } from '../NAME.interface';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -7,5 +7,5 @@ import { Item } from '../NAME.interface';
 	templateUrl: './NAME-item.component.html',
 })
 export class CNAMEItemComponent {
-	readonly item = input.required<Item>();
+	readonly item = input.required<CNAMEItem>();
 }
