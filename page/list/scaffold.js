@@ -26,8 +26,8 @@ module.exports = async (waw) => {
 	waw.readWrite(path.join(__dirname, 'const.ts'), path.join(waw.base, waw.pageName, waw.pageName + '.const.ts'), replace);
 	waw.readWrite(path.join(__dirname, 'interface.ts'), path.join(waw.base, waw.pageName, waw.pageName + '.interface.ts'), replace);
 	waw.ensureDir(waw.base, waw.pageName, waw.pageName + '-item');
-	waw.readWrite(path.join(__dirname, 'component.html'), path.join(waw.base, waw.pageName, waw.pageName + '-item', waw.pageName + '-item.component.html'), replace);
-	waw.readWrite(path.join(__dirname, 'component.ts'), path.join(waw.base, waw.pageName, waw.pageName + '-item', waw.pageName + '-item.component.ts'), replace);
+	waw.readWrite(path.join(__dirname, 'item.html'), path.join(waw.base, waw.pageName, waw.pageName + '-item', waw.pageName + '-item.component.html'), replace);
+	waw.readWrite(path.join(__dirname, 'item.ts'), path.join(waw.base, waw.pageName, waw.pageName + '-item', waw.pageName + '-item.component.ts'), replace);
 
 	const appRoutes = path.join(waw.projectPath, 'src/app/app.routes.ts');
 	const replaceRoutes = {};
