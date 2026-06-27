@@ -5,7 +5,7 @@ import {
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
-import { FormService } from '@lib/form/form.service';
+import { FormService } from '@wawjs/ngx-form';
 
 interface Interface {}
 

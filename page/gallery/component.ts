@@ -5,7 +5,7 @@ import {
 	computed,
 	signal,
 } from '@angular/core';
-import { ButtonComponent } from '@lib/button';
+import { ButtonComponent } from '@wawjs/ngx-ui';
 import { images } from './NAME.const';
 import { CNAMEImage } from './NAME.interface';
 

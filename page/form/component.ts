@@ -8,9 +8,7 @@ import {
 } from '@angular/core';
 import { form, submit } from '@angular/forms/signals';
 import { FooterComponent } from '@layout/footer';
-import { AlertService } from '@lib/alert';
-import { ButtonComponent } from '@lib/button';
-import { InputComponent } from '@lib/input';
+import { AlertService, ButtonComponent, InputComponent } from '@wawjs/ngx-ui';
 import { CartItem, CheckoutModel } from './NAME.interface';
 import { checkoutSchema } from './NAME.schema';
 

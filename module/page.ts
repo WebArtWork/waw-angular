@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormInterface } from 'src/app/libs/form/interfaces/form.interface';
-import { FormService } from 'src/app/libs/form/services/form.service';
-import { TableComponent } from 'src/app/libs/table/table.component';
-import { CrudComponent } from 'wacom';
+import { CrudComponent } from '@wawjs/ngx-crud';
+import { FormInterface, FormService } from '@wawjs/ngx-form';
+import { TableComponent } from '@wawjs/ngx-ui';
 import { NAMEForm } from '../../forms/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
 import { CNAMEService } from '../../services/NAME.service';

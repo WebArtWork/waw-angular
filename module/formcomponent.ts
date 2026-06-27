@@ -6,9 +6,9 @@ import {
 	inject,
 	viewChild,
 } from '@angular/core';
-import { FormInterface, FormService } from '@lib/form';
-import { SelectComponent, selectDefaults } from '@lib/select';
-import { CrudComponent } from 'wacom';
+import { CrudComponent } from '@wawjs/ngx-crud';
+import { FormInterface, FormService } from '@wawjs/ngx-form';
+import { SelectComponent, selectDefaults } from '@wawjs/ngx-ui';
 import { NAMEForm } from '../../forms/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
 import { CNAMEService } from '../../services/NAME.service';

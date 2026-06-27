@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CrudService } from 'wacom';
+import { CrudService } from '@wawjs/ngx-crud';
 import { CNAME } from '../interfaces/NAME.interface';
 
 @Injectable({

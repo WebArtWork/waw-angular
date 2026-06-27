@@ -4,17 +4,17 @@ import {
 	input,
 	output,
 } from '@angular/core';
-import { FormInterface, FormService } from '@lib/form';
-import { SelectComponent, SelectValue } from '@lib/select';
-import { TranslatePipe } from '@lib/translate';
-import { CrudComponent } from 'wacom';
+import { CrudComponent } from '@wawjs/ngx-crud';
+import { FormInterface, FormService } from '@wawjs/ngx-form';
+import { TranslateDirective } from '@wawjs/ngx-translate';
+import { SelectComponent, SelectValue } from '@wawjs/ngx-ui';
 import { NAMEForm } from '../../forms/NAME.form';
 import { CNAME } from '../../interfaces/NAME.interface';
 import { CNAMEService } from '../../services/NAME.service';
 
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [SelectComponent, TranslatePipe],
+	imports: [SelectComponent, TranslateDirective],
 	selector: 'selector-NAME',
 	templateUrl: './NAME.component.html',
 })

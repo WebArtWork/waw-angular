@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FooterComponent } from '@layout/footer';
-import { TableComponent as LibTableComponent } from '@lib/table';
+import { TableComponent as LibTableComponent } from '@wawjs/ngx-ui';
 import { rows } from './NAME.const';
 import { CNAMERow } from './NAME.interface';
 
